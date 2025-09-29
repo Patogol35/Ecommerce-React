@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from "react";
+import { useEffect, useMemo } from "react";
 import { useCarrito } from "../context/CarritoContext";
 import { useAuth } from "../context/AuthContext";
 import { crearPedido } from "../api/api";
@@ -35,15 +35,15 @@ export default function Carrito() {
 
   useEffect(() => {
     cargarCarrito();
-  }, [cargarCarrito]);
+  }, []);
 
-  // Calcular total con memo
+  // Calcular total con memo para evitar recalcular en cada render
   const total = useMemo(
     () => items.reduce((acc, it) => acc + calcularSubtotal(it), 0),
     [items]
   );
 
-  const comprar = useCallback(async () => {
+  const comprar = async () => {
     try {
       const res = await crearPedido(access);
       if (res?.error) {
@@ -56,56 +56,32 @@ export default function Carrito() {
     } catch (e) {
       toast.error(e.message || "Ocurrió un error en la compra");
     }
-  }, [access, limpiarLocal, navigate]);
+  };
 
-  const incrementar = useCallback(
-    (it) => {
-      const stock = it.producto?.stock ?? 0;
-      if (it.cantidad < stock) {
-        setCantidad(it.id, it.cantidad + 1);
-      } else {
-        toast.warning(`Solo hay ${stock} unidades disponibles`);
-      }
-    },
-    [setCantidad]
-  );
+  const incrementar = (it) => {
+    const stock = it.producto?.stock ?? 0;
+    if (it.cantidad < stock) {
+      setCantidad(it.id, it.cantidad + 1);
+    } else {
+      toast.warning(`Solo hay ${stock} unidades disponibles`);
+    }
+  };
 
-  const decrementar = useCallback(
-    (it) => {
-      if (it.cantidad > 1) setCantidad(it.id, it.cantidad - 1);
-    },
-    [setCantidad]
-  );
-
-  const handleSetCantidad = useCallback(
-    (id, nuevaCantidad) => setCantidad(id, nuevaCantidad),
-    [setCantidad]
-  );
-
-  const handleEliminarItem = useCallback(
-    (id) => eliminarItem(id),
-    [eliminarItem]
-  );
+  const decrementar = (it) =>
+    it.cantidad > 1 && setCantidad(it.id, it.cantidad - 1);
 
   return (
     <Box sx={{ pb: { xs: 14, sm: 6 } }}>
       <Typography
-        variant="h4"
-        gutterBottom
-        fontWeight="bold"
-        align="center"
-        sx={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
-          gap: 1,
-          color: "primary.main",
-          mt: 3,
-        }}
-      >
-        <ShoppingCartIcon color="primary" sx={{ fontSize: 36 }} />
-        Mi Carrito
-      </Typography>
+  variant="h4"
+  gutterBottom
+  fontWeight="bold"
+  align="center"   
+  sx={{ display: "flex", justifyContent: "center", alignItems: "center", gap: 1, color: "primary.main", mt: 3,}}
+>
+  <ShoppingCartIcon color="primary" sx={{ fontSize: 36 }} />
+  Mi Carrito
+</Typography>
 
       {loading && <Typography>Cargando carrito...</Typography>}
       {!loading && items.length === 0 && (
@@ -120,8 +96,8 @@ export default function Carrito() {
             theme={theme}
             incrementar={incrementar}
             decrementar={decrementar}
-            setCantidad={handleSetCantidad}
-            eliminarItem={handleEliminarItem}
+            setCantidad={setCantidad}
+            eliminarItem={eliminarItem}
           />
         ))}
 
