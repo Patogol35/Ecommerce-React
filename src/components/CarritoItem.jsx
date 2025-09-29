@@ -1,4 +1,3 @@
-import React from "react";
 import {
   Card,
   CardMedia,
@@ -16,7 +15,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { toast } from "react-toastify";
 import { calcularSubtotal } from "../utils/carritoUtils";
 
-function CarritoItem({
+export default function CarritoItem({
   it,
   theme,
   incrementar,
@@ -51,7 +50,9 @@ function CarritoItem({
           border: "1px solid #eee",
           p: 1,
           transition: "transform 0.3s ease",
-          "&:hover": { transform: "scale(1.05)" },
+          "&:hover": {
+            transform: "scale(1.05)",
+          },
         }}
       />
 
@@ -147,10 +148,7 @@ function CarritoItem({
 
         <IconButton
           onClick={() => eliminarItem(it.id)}
-          sx={{
-            color: "error.main",
-            "&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
-          }}
+          sx={{ color: "error.main", "&:hover": { bgcolor: "rgba(211,47,47,0.1)" } }}
         >
           <DeleteIcon />
         </IconButton>
@@ -158,5 +156,3 @@ function CarritoItem({
     </Card>
   );
 }
-
-export default React.memo(CarritoItem);
