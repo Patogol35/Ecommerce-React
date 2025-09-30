@@ -1,163 +1,109 @@
-import { createContext, useContext, useState, useEffect } from "react";
+Carritocontext2 import { createContext, useContext, useEffect, useState } from "react";
+import {
+  agregarAlCarrito as apiAgregar,
+  getCarrito as apiGetCarrito,
+  eliminarDelCarrito as apiEliminar,
+  setCantidadItem as apiSetCantidad,
+} from "../api/api";
 import { useAuth } from "./AuthContext";
+import { toast } from "react-toastify";
 
 const CarritoContext = createContext();
 
 export function CarritoProvider({ children }) {
-  const { token } = useAuth();
-  const [carrito, setCarrito] = useState(null);
+  const { access } = useAuth();
+  const [carrito, setCarrito] = useState({ items: [] });
   const [loading, setLoading] = useState(false);
 
-  // ---------------------------
-  // 🔄 Obtener carrito del backend
-  // ---------------------------
-  const fetchCarrito = async () => {
-    if (!token) return;
+  const cargarCarrito = async () => {
+    if (!access) {
+      setCarrito({ items: [] });
+      return;
+    }
+    setLoading(true);
     try {
-      const res = await fetch("/api/carrito/", {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (!res.ok) throw new Error("Error al obtener el carrito");
-
-      const data = await res.json();
+      const data = await apiGetCarrito(access);
       setCarrito(data);
-    } catch (err) {
-      console.error(err);
+    } catch (e) {
+      console.error(e);
+      setCarrito({ items: [] });
+    } finally {
+      setLoading(false);
     }
   };
 
-  // ---------------------------
-  // ➕ Agregar producto
-  // ---------------------------
-  const agregarAlCarrito = async (productoId, cantidad = 1) => {
-    if (!token) throw new Error("Debes iniciar sesión");
-
-    try {
-      const res = await fetch("/api/agregar-al-carrito/", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ producto_id: productoId, cantidad }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        // 👀 Lanzar error con el mensaje real del backend
-        throw new Error(data.error || "Error al agregar al carrito");
-      }
-
-      // ✅ Actualizamos el carrito en memoria
-      fetchCarrito();
-      return data;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  // ---------------------------
-  // ❌ Eliminar item
-  // ---------------------------
-  const eliminarDelCarrito = async (itemId) => {
-    try {
-      const res = await fetch(`/api/eliminar-del-carrito/${itemId}/`, {
-        method: "DELETE",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Error al eliminar del carrito");
-      }
-
-      fetchCarrito();
-      return data;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  // ---------------------------
-  // 🔄 Actualizar cantidad
-  // ---------------------------
-  const actualizarCantidad = async (itemId, cantidad) => {
-    try {
-      const res = await fetch(`/api/actualizar-cantidad/${itemId}/`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({ cantidad }),
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Error al actualizar cantidad");
-      }
-
-      fetchCarrito();
-      return data;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  // ---------------------------
-  // 🛒 Crear pedido
-  // ---------------------------
-  const crearPedido = async () => {
-    try {
-      const res = await fetch("/api/crear-pedido/", {
-        method: "POST",
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      const data = await res.json();
-
-      if (!res.ok) {
-        throw new Error(data.error || "Error al crear pedido");
-      }
-
-      fetchCarrito(); // limpiar carrito tras pedido
-      return data;
-    } catch (err) {
-      throw err;
-    }
-  };
-
-  // ---------------------------
-  // Cargar carrito al iniciar
-  // ---------------------------
   useEffect(() => {
-    if (token) {
-      fetchCarrito();
-    } else {
-      setCarrito(null);
+    cargarCarrito();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [access]);
+
+  // Set cantidad absoluta y sincronizada con backend
+  const setCantidad = async (itemId, cantidad) => {
+    if (!access) throw new Error("Debes iniciar sesión.");
+    if (cantidad < 1) return;
+
+    try {
+      const res = await apiSetCantidad(itemId, cantidad, access);
+
+      const cantidadFinal = res?.cantidad ?? cantidad;
+
+      setCarrito((prev) => ({
+        ...prev,
+        items: prev.items.map((it) =>
+          it.id === itemId
+            ? {
+                ...it,
+                cantidad: cantidadFinal,
+                subtotal: cantidadFinal * it.producto.precio,
+              }
+            : it
+        ),
+      }));
+    } catch (e) {
+      console.error(e);
+      toast.error(e.message || "No se pudo actualizar la cantidad"); // ✅ mensaje real del back
     }
-  }, [token]);
+  };
+
+  const agregarAlCarrito = async (producto_id, cantidad = 1) => {
+    if (!access) throw new Error("Debes iniciar sesión.");
+    try {
+      await apiAgregar(producto_id, cantidad, access);
+      await cargarCarrito();
+    } catch (e) {
+      console.error(e);
+      toast.error(e.message || "No se pudo agregar el producto"); // ✅ mensaje real del back
+    }
+  };
+
+  const eliminarItem = async (itemId) => {
+    if (!access) throw new Error("Debes iniciar sesión.");
+    try {
+      await apiEliminar(itemId, access);
+      setCarrito((prev) => ({
+        ...prev,
+        items: prev.items.filter((it) => it.id !== itemId),
+      }));
+      toast.warn("Producto eliminado ❌");
+    } catch (e) {
+      console.error(e);
+      toast.error(e.message || "No se pudo eliminar el producto");
+    }
+  };
+
+  const limpiarLocal = () => setCarrito({ items: [] });
 
   return (
     <CarritoContext.Provider
       value={{
         carrito,
+        items: carrito.items || [],
         loading,
+        cargarCarrito,
         agregarAlCarrito,
-        eliminarDelCarrito,
-        actualizarCantidad,
-        crearPedido,
-        fetchCarrito,
+        setCantidad,
+        eliminarItem,
+        limpiarLocal,
       }}
     >
       {children}
