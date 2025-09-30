@@ -1,3 +1,8 @@
+Usecarritohandler import { useCarrito } from "../context/CarritoContext";
+import { useAuth } from "../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+
 export function useCarritoHandler() {
   const { agregarAlCarrito } = useCarrito();
   const { user } = useAuth();
@@ -5,15 +10,10 @@ export function useCarritoHandler() {
 
   const handleAdd = async (prod) => {
     try {
-      // 👀 recibir respuesta del backend
-      const res = await agregarAlCarrito(prod.id, 1);
-
-      // ✅ Solo mostrar éxito si realmente se agregó
+      await agregarAlCarrito(prod.id, 1);
       toast.success(`${prod.nombre} agregado al carrito ✅`);
-      return res;
     } catch (e) {
-      // 👀 mostrar error real del backend
-      toast.error(e.message || "Error al agregar al carrito");
+      toast.error(e.message);
     }
   };
 
