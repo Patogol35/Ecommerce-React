@@ -61,18 +61,48 @@ export function CarritoProvider({ children }) {
       }));
     } catch (e) {
       console.error(e);
-      toast.error(e.message || "No se pudo actualizar la cantidad"); // ✅ mensaje real del back
+      toast.error(e.message || "No se pudo actualizar la cantidad");
     }
   };
 
+  // Optimizado: no recarga todo el carrito
   const agregarAlCarrito = async (producto_id, cantidad = 1) => {
     if (!access) throw new Error("Debes iniciar sesión.");
     try {
-      await apiAgregar(producto_id, cantidad, access);
-      await cargarCarrito();
+      const res = await apiAgregar(producto_id, cantidad, access);
+
+      setCarrito((prev) => {
+        // ¿El producto ya está en el carrito?
+        const existe = prev.items.find(
+          (it) => it.producto.id === producto_id
+        );
+
+        if (existe) {
+          // Actualizar cantidad y subtotal
+          const nuevaCantidad = res?.cantidad ?? existe.cantidad + cantidad;
+          return {
+            ...prev,
+            items: prev.items.map((it) =>
+              it.id === existe.id
+                ? {
+                    ...it,
+                    cantidad: nuevaCantidad,
+                    subtotal: nuevaCantidad * it.producto.precio,
+                  }
+                : it
+            ),
+          };
+        } else {
+          // Agregar nuevo item (el back debe devolverlo)
+          return {
+            ...prev,
+            items: [...prev.items, res],
+          };
+        }
+      });
     } catch (e) {
       console.error(e);
-      toast.error(e.message || "No se pudo agregar el producto"); // ✅ mensaje real del back
+      toast.error(e.message || "No se pudo agregar el producto");
     }
   };
 
