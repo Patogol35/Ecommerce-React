@@ -1,4 +1,4 @@
-Carritocontext2 import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState } from "react";
 import {
   agregarAlCarrito as apiAgregar,
   getCarrito as apiGetCarrito,
