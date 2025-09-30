@@ -14,7 +14,7 @@ import {
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn"; // 👈 cambio aquí
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { isAuthenticated } = useAuth();
@@ -35,7 +35,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
     try {
       await agregarAlCarrito(producto.id, 1);
-      toast.success(`${producto.nombre} agregado al carrito ✅`);
+      // ✅ ya no mostramos el toast aquí, solo en CarritoContext
     } catch (e) {
       toast.error(e.message);
     }
@@ -110,7 +110,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
         {/* Precio */}
         <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 2 }}>
-          <MonetizationOnIcon color="primary" /> {/* 👈 ícono actualizado */}
+          <MonetizationOnIcon color="primary" />
           <Typography variant="h6" color="primary" fontWeight="bold">
             {producto.precio}
           </Typography>
