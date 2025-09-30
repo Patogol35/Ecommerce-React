@@ -61,7 +61,7 @@ export function CarritoProvider({ children }) {
       }));
     } catch (e) {
       console.error(e);
-      toast.error(e.message || "No se pudo actualizar la cantidad"); // ✅ mensaje real del back
+      toast.error(e.message || "No se pudo actualizar la cantidad");
     }
   };
 
@@ -70,9 +70,10 @@ export function CarritoProvider({ children }) {
     try {
       await apiAgregar(producto_id, cantidad, access);
       await cargarCarrito();
+      toast.success("Producto agregado al carrito ✅"); // ✅ solo se lanza aquí
     } catch (e) {
       console.error(e);
-      toast.error(e.message || "No se pudo agregar el producto"); // ✅ mensaje real del back
+      toast.error(e.message || "No se pudo agregar el producto");
     }
   };
 
