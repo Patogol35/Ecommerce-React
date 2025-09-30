@@ -14,7 +14,7 @@ import {
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn"; // 👈 cambio aquí
 
 export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { isAuthenticated } = useAuth();
@@ -37,8 +37,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       await agregarAlCarrito(producto.id, 1);
       toast.success(`${producto.nombre} agregado al carrito ✅`);
     } catch (e) {
-      // 👇 Aquí mostramos el mensaje del backend o del contexto
-      toast.error(e.message || "Error al agregar al carrito ❌");
+      toast.error(e.message);
     }
   };
 
@@ -111,7 +110,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
         {/* Precio */}
         <Stack direction="row" alignItems="center" spacing={0.5} sx={{ mb: 2 }}>
-          <MonetizationOnIcon color="primary" />
+          <MonetizationOnIcon color="primary" /> {/* 👈 ícono actualizado */}
           <Typography variant="h6" color="primary" fontWeight="bold">
             {producto.precio}
           </Typography>
