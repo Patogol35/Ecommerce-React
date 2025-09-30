@@ -45,64 +45,32 @@ export function CarritoProvider({ children }) {
     try {
       const res = await apiSetCantidad(itemId, cantidad, access);
 
+      // La API debería devolver la cantidad final confirmada
       const cantidadFinal = res?.cantidad ?? cantidad;
 
-      setCarrito((prev) => ({
+      setCarrito(prev => ({
         ...prev,
-        items: prev.items.map((it) =>
+        items: prev.items.map(it =>
           it.id === itemId
-            ? {
-                ...it,
-                cantidad: cantidadFinal,
-                subtotal: cantidadFinal * it.producto.precio,
-              }
+            ? { ...it, cantidad: cantidadFinal, subtotal: cantidadFinal * it.producto.precio }
             : it
-        ),
+        )
       }));
     } catch (e) {
       console.error(e);
-      toast.error(e.message || "No se pudo actualizar la cantidad");
+      toast.error("No se pudo actualizar la cantidad");
     }
   };
 
-  // Optimizado: no recarga todo el carrito
   const agregarAlCarrito = async (producto_id, cantidad = 1) => {
     if (!access) throw new Error("Debes iniciar sesión.");
     try {
-      const res = await apiAgregar(producto_id, cantidad, access);
-
-      setCarrito((prev) => {
-        // ¿El producto ya está en el carrito?
-        const existe = prev.items.find(
-          (it) => it.producto.id === producto_id
-        );
-
-        if (existe) {
-          // Actualizar cantidad y subtotal
-          const nuevaCantidad = res?.cantidad ?? existe.cantidad + cantidad;
-          return {
-            ...prev,
-            items: prev.items.map((it) =>
-              it.id === existe.id
-                ? {
-                    ...it,
-                    cantidad: nuevaCantidad,
-                    subtotal: nuevaCantidad * it.producto.precio,
-                  }
-                : it
-            ),
-          };
-        } else {
-          // Agregar nuevo item (el back debe devolverlo)
-          return {
-            ...prev,
-            items: [...prev.items, res],
-          };
-        }
-      });
+      await apiAgregar(producto_id, cantidad, access);
+      await cargarCarrito();
+      // toast.success("Producto agregado 🛒"); // Toast eliminado
     } catch (e) {
       console.error(e);
-      toast.error(e.message || "No se pudo agregar el producto");
+      toast.error("No se pudo agregar el producto");
     }
   };
 
@@ -110,14 +78,14 @@ export function CarritoProvider({ children }) {
     if (!access) throw new Error("Debes iniciar sesión.");
     try {
       await apiEliminar(itemId, access);
-      setCarrito((prev) => ({
+      setCarrito(prev => ({
         ...prev,
-        items: prev.items.filter((it) => it.id !== itemId),
+        items: prev.items.filter(it => it.id !== itemId)
       }));
       toast.warn("Producto eliminado ❌");
     } catch (e) {
       console.error(e);
-      toast.error(e.message || "No se pudo eliminar el producto");
+      toast.error("No se pudo eliminar el producto");
     }
   };
 
