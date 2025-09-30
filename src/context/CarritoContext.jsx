@@ -6,6 +6,7 @@ import {
   setCantidadItem as apiSetCantidad,
 } from "../api/api";
 import { useAuth } from "./AuthContext";
+import { toast } from "react-toastify";
 
 const CarritoContext = createContext();
 
@@ -36,7 +37,7 @@ export function CarritoProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [access]);
 
-  // ✅ Set cantidad absoluta y sincronizada con backend
+  // Set cantidad absoluta y sincronizada con backend
   const setCantidad = async (itemId, cantidad) => {
     if (!access) throw new Error("Debes iniciar sesión.");
     if (cantidad < 1) return;
@@ -60,30 +61,21 @@ export function CarritoProvider({ children }) {
       }));
     } catch (e) {
       console.error(e);
-      throw e; // 👈 que lo maneje el componente
+      toast.error(e.message || "No se pudo actualizar la cantidad"); // ✅ mensaje real del back
     }
   };
 
-  // ✅ Agregar producto al carrito con validación de stock
   const agregarAlCarrito = async (producto_id, cantidad = 1) => {
     if (!access) throw new Error("Debes iniciar sesión.");
-
-    // 🔹 Validación en frontend
-    const existente = carrito.items.find((it) => it.producto.id === producto_id);
-    if (existente && existente.cantidad >= existente.producto.stock) {
-      throw new Error(`Solo hay ${existente.producto.stock} unidades disponibles 🚨`);
-    }
-
     try {
       await apiAgregar(producto_id, cantidad, access);
       await cargarCarrito();
     } catch (e) {
       console.error(e);
-      throw e; // 👈 que lo maneje el componente
+      toast.error(e.message || "No se pudo agregar el producto"); // ✅ mensaje real del back
     }
   };
 
-  // ✅ Eliminar item
   const eliminarItem = async (itemId) => {
     if (!access) throw new Error("Debes iniciar sesión.");
     try {
@@ -92,9 +84,10 @@ export function CarritoProvider({ children }) {
         ...prev,
         items: prev.items.filter((it) => it.id !== itemId),
       }));
+      toast.warn("Producto eliminado ❌");
     } catch (e) {
       console.error(e);
-      throw e; // 👈 que lo maneje el componente
+      toast.error(e.message || "No se pudo eliminar el producto");
     }
   };
 
