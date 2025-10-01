@@ -37,9 +37,9 @@ export function CarritoProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [access]);
 
-  // âœ… Actualiza cantidad absoluta y sincronizada con backend
+  // ✅ Actualizar cantidad
   const setCantidad = async (itemId, cantidad) => {
-    if (!access) throw new Error("Debes iniciar sesiÃ³n.");
+    if (!access) throw new Error("Debes iniciar sesión.");
     if (cantidad < 1) return;
 
     try {
@@ -64,27 +64,61 @@ export function CarritoProvider({ children }) {
     }
   };
 
-  // âœ… Corregido: ahora relanza error en caso de fallo
-  const agregarAlCarrito = async (producto_id, cantidad = 1) => {
-    if (!access) throw new Error("Debes iniciar sesiÃ³n.");
+  // ✅ Agregar producto (optimista)
+  const agregarAlCarrito = async (producto_id, cantidad = 1, productoInfo = null) => {
+    if (!access) throw new Error("Debes iniciar sesión.");
+
+    // Estado anterior por si falla
+    const prevCarrito = JSON.parse(JSON.stringify(carrito));
+
+    // Optimista: actualizamos al instante
+    if (productoInfo) {
+      setCarrito((prev) => {
+        const existe = prev.items.find((it) => it.producto.id === producto_id);
+        if (existe) {
+          return {
+            ...prev,
+            items: prev.items.map((it) =>
+              it.producto.id === producto_id
+                ? { ...it, cantidad: it.cantidad + cantidad }
+                : it
+            ),
+          };
+        }
+        return {
+          ...prev,
+          items: [
+            ...prev.items,
+            {
+              id: Date.now(), // id temporal
+              producto: productoInfo,
+              cantidad,
+              subtotal: productoInfo.precio * cantidad,
+            },
+          ],
+        };
+      });
+    }
+
     try {
       await apiAgregar(producto_id, cantidad, access);
-      await cargarCarrito();
+      await cargarCarrito(); // sincronizamos con backend
     } catch (e) {
       console.error(e);
-      throw new Error(e.message || "No se pudo agregar el producto"); // ðŸ‘ˆ relanza
+      toast.error(e.message || "No se pudo agregar el producto");
+      setCarrito(prevCarrito); // rollback
     }
   };
 
   const eliminarItem = async (itemId) => {
-    if (!access) throw new Error("Debes iniciar sesiÃ³n.");
+    if (!access) throw new Error("Debes iniciar sesión.");
     try {
       await apiEliminar(itemId, access);
       setCarrito((prev) => ({
         ...prev,
         items: prev.items.filter((it) => it.id !== itemId),
       }));
-      toast.warn("Producto eliminado âŒ");
+      toast.warn("Producto eliminado ❌");
     } catch (e) {
       console.error(e);
       toast.error(e.message || "No se pudo eliminar el producto");
