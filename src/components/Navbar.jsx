@@ -27,6 +27,8 @@ import {
 } from "@mui/icons-material";
 import { motion } from "framer-motion";
 
+import styles from "./Navbar.styles";
+
 export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
   const { mode, toggleMode } = useThemeMode();
@@ -54,25 +56,14 @@ export default function Navbar() {
         direction={isMobile ? "column" : "row"}
         spacing={1.5}
         alignItems="center"
-        sx={{ my: isMobile ? 2 : 0, textAlign: "center" }}
+        sx={styles.userSection(isMobile)}
       >
         <AccountCircleIcon sx={{ color: "#fff" }} />
         <Typography sx={{ color: "#fff", fontWeight: 600 }}>
           {user?.username}
         </Typography>
         {showLogout && (
-          <Button
-            onClick={handleLogout}
-            startIcon={<LogoutIcon />}
-            sx={{
-              fontWeight: 600,
-              color: "#fff",
-              background: "linear-gradient(135deg, #d32f2f, #f44336)",
-              borderRadius: "12px",
-              px: 2.5,
-              py: 1,
-            }}
-          >
+          <Button onClick={handleLogout} startIcon={<LogoutIcon />} sx={styles.logoutBtn}>
             Cerrar sesión
           </Button>
         )}
@@ -82,68 +73,26 @@ export default function Navbar() {
   return (
     <>
       {/* Navbar Desktop */}
-      <motion.div
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
-        transition={{ duration: 0.6 }}
-      >
-        <AppBar
-          position="fixed"
-          elevation={scrolled ? 6 : 2}
-          sx={{
-            backgroundColor: "#1976d2",
-            boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.3)" : "none",
-            zIndex: 1400,
-          }}
-        >
-          <Toolbar sx={{ display: "flex", justifyContent: "space-between" }}>
+      <motion.div initial={{ y: -80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6 }}>
+        <AppBar position="fixed" elevation={scrolled ? 6 : 2} sx={styles.appBar(scrolled)}>
+          <Toolbar sx={styles.toolbar}>
             {/* Logo */}
-            <Typography
-              variant="h6"
-              component={Link}
-              to="/"
-              sx={{
-                display: "flex",
-                alignItems: "center",
-                gap: 1,
-                fontWeight: "bold",
-                color: "#fff",
-                textDecoration: "none",
-              }}
-            >
-              <ShoppingBagIcon
-                sx={{
-                  fontSize: 28,
-                  background: "linear-gradient(135deg, #FF5722, #FFC107)",
-                  WebkitBackgroundClip: "text",
-                  WebkitTextFillColor: "transparent",
-                }}
-              />
-              E-commerce Patricio 
+            <Typography variant="h6" component={Link} to="/" sx={styles.logo}>
+              <ShoppingBagIcon sx={styles.logoIcon} />
+              E-commerce Patricio
             </Typography>
 
             {/* Desktop Menu */}
-            <Box
-              sx={{
-                display: { xs: "none", lg: "flex" },
-                gap: 2,
-                alignItems: "center",
-              }}
-            >
+            <Box sx={styles.desktopMenu}>
               {renderMenuItems()}
               <IconButton onClick={toggleMode} sx={{ color: "#fff" }}>
                 {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
-              {renderUserSection(true, false)} {/* Desktop */}
+              {renderUserSection(true, false)}
             </Box>
 
             {/* Botón menú móvil */}
-            <IconButton
-              sx={{ display: { xs: "block", lg: "none" }, color: "#fff" }}
-              onClick={() => setOpen(true)}
-              aria-label="Abrir menú"
-              aria-expanded={open}
-            >
+            <IconButton sx={styles.menuBtnMobile} onClick={() => setOpen(true)} aria-label="Abrir menú" aria-expanded={open}>
               <MenuIcon fontSize="large" />
             </IconButton>
           </Toolbar>
@@ -151,28 +100,10 @@ export default function Navbar() {
       </motion.div>
 
       {/* Drawer Móvil */}
-      <Drawer
-        anchor="right"
-        open={open}
-        onClose={() => setOpen(false)}
-        PaperProps={{
-          sx: {
-            width: 280,
-            background: "#1976d2",
-            borderRadius: "16px 0 0 16px",
-            p: 2,
-            display: "flex",
-            flexDirection: "column",
-          },
-        }}
-      >
+      <Drawer anchor="right" open={open} onClose={() => setOpen(false)} PaperProps={{ sx: styles.drawerPaper }}>
         {/* Header drawer */}
-        <Box sx={{ display: "flex", justifyContent: "flex-end" }}>
-          <IconButton
-            onClick={() => setOpen(false)}
-            sx={{ color: "#fff" }}
-            aria-label="Cerrar menú"
-          >
+        <Box sx={styles.drawerHeader}>
+          <IconButton onClick={() => setOpen(false)} sx={{ color: "#fff" }} aria-label="Cerrar menú">
             <CloseIcon />
           </IconButton>
         </Box>
@@ -181,49 +112,21 @@ export default function Navbar() {
         {renderUserSection(false, true)}
 
         {/* Menú items */}
-        <Stack spacing={2} sx={{ flex: 1, mt: 2 }}>
+        <Stack spacing={2} sx={styles.drawerStack}>
           {renderMenuItems(() => setOpen(false))}
           {isAuthenticated && (
-            <Button
-              onClick={handleLogout}
-              startIcon={<LogoutIcon />}
-              sx={{
-                fontWeight: 600,
-                color: "#fff",
-                borderRadius: "12px",
-                background: "linear-gradient(135deg, #d32f2f, #f44336)",
-              }}
-            >
+            <Button onClick={handleLogout} startIcon={<LogoutIcon />} sx={styles.logoutBtn}>
               Cerrar sesión
             </Button>
           )}
 
           {/* Botones utilitarios */}
-          <Stack spacing={2} alignItems="center" sx={{ mt: 3, pb: 2 }}>
-            <IconButton
-              onClick={toggleMode}
-              sx={{
-                color: "#fff",
-                background: "rgba(0,0,0,0.4)",
-                "&:hover": { background: "rgba(0,0,0,0.7)" },
-                width: 48,
-                height: 48,
-              }}
-            >
+          <Stack spacing={2} alignItems="center" sx={styles.drawerUtilStack}>
+            <IconButton onClick={toggleMode} sx={styles.toggleModeBtn}>
               {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
             </IconButton>
 
-            <IconButton
-              onClick={() => setOpen(false)}
-              sx={{
-                color: "#fff",
-                background: "rgba(0,0,0,0.6)",
-                "&:hover": { background: "rgba(0,0,0,0.9)" },
-                width: 42,
-                height: 42,
-              }}
-              aria-label="Cerrar menú"
-            >
+            <IconButton onClick={() => setOpen(false)} sx={styles.closeDrawerBtn} aria-label="Cerrar menú">
               <CloseIcon sx={{ fontSize: 26 }} />
             </IconButton>
           </Stack>
@@ -231,4 +134,4 @@ export default function Navbar() {
       </Drawer>
     </>
   );
-              }
+}
