@@ -2,7 +2,6 @@ import { useState, useMemo } from "react";
 import {
   Box,
   Typography,
-  Divider,
   TextField,
   InputAdornment,
   MenuItem,
@@ -17,26 +16,18 @@ import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SortIcon from "@mui/icons-material/Sort";
-import CloseIcon from "@mui/icons-material/Close";
-import CategoryIcon from '@mui/icons-material/Category';
+import CategoryIcon from "@mui/icons-material/Category";
+
 import ProductoCard from "../components/ProductoCard";
 import { useProductos } from "../hooks/useProductos";
 import { useCategorias } from "../hooks/useCategorias";
 import { useCarritoHandler } from "../hooks/useCarritoHandler";
-
 import DetalleModal from "../components/DetalleModal";
 import LightboxModal from "../components/LightboxModal";
 
-const ITEMS_PER_PAGE = 8;
+import styles from "./Home.styles"; // 👈 Importamos estilos externos
 
-const botonCerrarSx = {
-  position: "absolute",
-  top: 12,
-  right: 12,
-  bgcolor: "rgba(0,0,0,0.6)",
-  color: "white",
-  "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
-};
+const ITEMS_PER_PAGE = 8;
 
 export default function Home() {
   const [categoria, setCategoria] = useState("");
@@ -64,7 +55,7 @@ export default function Home() {
 
   if (loading) {
     return (
-      <Box sx={{ mt: 8, display: "flex", justifyContent: "center" }}>
+      <Box sx={styles.loadingBox}>
         <CircularProgress />
       </Box>
     );
@@ -73,104 +64,78 @@ export default function Home() {
   return (
     <>
       {/* ================== ENCABEZADO ================== */}
-      <Box sx={{ mb: 4, textAlign: "center" }}>
-        <Typography
-          variant="h4"
-          fontWeight="bold"
-          sx={{
-            color: "primary.main",
-            mt: 4,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
+      <Box sx={styles.header}>
+        <Typography variant="h4" sx={styles.headerTitle}>
           <HomeIcon sx={{ fontSize: 32, mr: 1 }} />
           Inicio
         </Typography>
-        
       </Box>
 
       {/* ================== FILTROS ================== */}
-      <Paper
-elevation={4}
-sx={{
-p: 3,
-borderRadius: 3,
-display: "flex",
-flexDirection: { xs: "column", sm: "row" },
-gap: 2,
-justifyContent: "center",
-alignItems: "center",
-mb: 4,
-}}
+      <Paper elevation={4} sx={styles.filtersContainer}>
+        {/* Buscar */}
+        <TextField
+          label="Buscar producto"
+          size="small"
+          value={search}
+          onChange={(e) => setSearch(e.target.value)}
+          variant="outlined"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SearchIcon color="action" />
+              </InputAdornment>
+            ),
+          }}
+          sx={styles.searchField}
+        />
 
-> 
+        {/* Categoría */}
+        <TextField
+          select
+          label="Categoría"
+          size="small"
+          value={categoria}
+          onChange={(e) => setCategoria(e.target.value)}
+          variant="outlined"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <CategoryIcon color="action" />
+              </InputAdornment>
+            ),
+          }}
+          sx={styles.categoryField}
+        >
+          <MenuItem value="">Todas</MenuItem>
+          {categorias.map((cat) => (
+            <MenuItem key={cat.id} value={cat.id}>
+              {cat.nombre}
+            </MenuItem>
+          ))}
+        </TextField>
 
-{/* Buscar */}
-<TextField
-label="Buscar producto"
-size="small"
-value={search}
-onChange={(e) => setSearch(e.target.value)}
-variant="outlined"
-InputProps={{
-startAdornment: (
-<InputAdornment position="start">
-<SearchIcon color="action" />
-</InputAdornment>
-),
-}}
-sx={{ minWidth: 250 }}
-/>
-
-{/* Categoría */}
-<TextField
-select
-label="Categoría"
-size="small"
-value={categoria}
-onChange={(e) => setCategoria(e.target.value)}
-variant="outlined"
-InputProps={{
-startAdornment: (
-<InputAdornment position="start">
-<CategoryIcon color="action" />
-</InputAdornment>
-),
-}}
-sx={{ minWidth: 200 }}
->
-<MenuItem value="">Todas</MenuItem>
-{categorias.map((cat) => (
-<MenuItem key={cat.id} value={cat.id}>
-{cat.nombre}
-</MenuItem>
-))}
-</TextField>
-
-{/* Ordenar */}    
-<TextField    
-  select    
-  label="Ordenar por"    
-  size="small"    
-  value={sort}    
-  onChange={(e) => setSort(e.target.value)}    
-  variant="outlined"    
-  InputProps={{    
-    startAdornment: (    
-      <InputAdornment position="start">    
-        <SortIcon color="action" />    
-      </InputAdornment>    
-    ),    
-  }}    
-  sx={{ minWidth: 220 }}    
->    
-  <MenuItem value="asc">Precio: menor a mayor</MenuItem>    
-  <MenuItem value="desc">Precio: mayor a menor</MenuItem>    
-</TextField>
-
-</Paper> 
+        {/* Ordenar */}
+        <TextField
+          select
+          label="Ordenar por"
+          size="small"
+          value={sort}
+          onChange={(e) => setSort(e.target.value)}
+          variant="outlined"
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <SortIcon color="action" />
+              </InputAdornment>
+            ),
+          }}
+          sx={styles.sortField}
+        >
+          <MenuItem value="asc">Precio: menor a mayor</MenuItem>
+          <MenuItem value="desc">Precio: mayor a menor</MenuItem>
+        </TextField>
+      </Paper>
 
       {/* ================== PRODUCTOS ================== */}
       <Grid container spacing={3} justifyContent="center">
@@ -188,7 +153,7 @@ sx={{ minWidth: 200 }}
       </Grid>
 
       {/* ================== PAGINACIÓN ================== */}
-      <Box sx={{ mt: 4, display: "flex", justifyContent: "center" }}>
+      <Box sx={styles.paginationBox}>
         <Pagination
           count={Math.ceil(filtered.length / ITEMS_PER_PAGE)}
           page={page}
@@ -200,14 +165,7 @@ sx={{ minWidth: 200 }}
       {/* ================== BOTÓN CARRITO ================== */}
       <IconButton
         onClick={handleCarritoClick}
-        sx={{
-          position: "fixed",
-          bottom: 24,
-          right: 24,
-          bgcolor: "primary.main",
-          color: "white",
-          "&:hover": { bgcolor: "primary.dark" },
-        }}
+        sx={styles.carritoBtn}
         aria-label="Abrir carrito"
       >
         <ShoppingCartIcon />
