@@ -37,9 +37,9 @@ export function CarritoProvider({ children }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [access]);
 
-  // Ã¢Å“â€¦ Actualiza cantidad absoluta y sincronizada con backend
+  // ✅ Actualiza cantidad de un item
   const setCantidad = async (itemId, cantidad) => {
-    if (!access) throw new Error("Debes iniciar sesiÃƒÂ³n.");
+    if (!access) throw new Error("Debes iniciar sesión.");
     if (cantidad < 1) return;
 
     try {
@@ -60,34 +60,44 @@ export function CarritoProvider({ children }) {
       }));
     } catch (e) {
       console.error(e);
-      toast.error(e.message || "No se pudo actualizar la cantidad");
+      toast.error(
+        e?.response?.data?.error || e.message || "No se pudo actualizar la cantidad"
+      );
     }
   };
 
-  // Ã¢Å“â€¦ Corregido: ahora relanza error en caso de fallo
+  // ✅ Optimizado: agrega producto y actualiza localmente
   const agregarAlCarrito = async (producto_id, cantidad = 1) => {
-    if (!access) throw new Error("Debes iniciar sesiÃƒÂ³n.");
+    if (!access) throw new Error("Debes iniciar sesión.");
     try {
-      await apiAgregar(producto_id, cantidad, access);
-      await cargarCarrito();
+      const nuevoItem = await apiAgregar(producto_id, cantidad, access);
+      setCarrito((prev) => {
+        const items = prev.items.filter((it) => it.id !== nuevoItem.id);
+        return { ...prev, items: [...items, nuevoItem] };
+      });
     } catch (e) {
       console.error(e);
-      throw new Error(e.message || "No se pudo agregar el producto"); // Ã°Å¸â€˜Ë† relanza
+      throw new Error(
+        e?.response?.data?.error || e.message || "No se pudo agregar el producto"
+      );
     }
   };
 
+  // ✅ Optimizado: elimina localmente
   const eliminarItem = async (itemId) => {
-    if (!access) throw new Error("Debes iniciar sesiÃƒÂ³n.");
+    if (!access) throw new Error("Debes iniciar sesión.");
     try {
       await apiEliminar(itemId, access);
       setCarrito((prev) => ({
         ...prev,
         items: prev.items.filter((it) => it.id !== itemId),
       }));
-      toast.warn("Producto eliminado Ã¢ÂÅ’");
+      toast.warn("Producto eliminado 🗑️");
     } catch (e) {
       console.error(e);
-      toast.error(e.message || "No se pudo eliminar el producto");
+      toast.error(
+        e?.response?.data?.error || e.message || "No se pudo eliminar el producto"
+      );
     }
   };
 
