@@ -11,7 +11,6 @@ import {
   Box,
   LinearProgress,
   InputAdornment,
-  IconButton,
   FormControlLabel,
   Checkbox,
 } from "@mui/material";
@@ -21,6 +20,7 @@ import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import PersonOutline from "@mui/icons-material/PersonOutline";
 import EmailOutlined from "@mui/icons-material/EmailOutlined";
 import LockOutlined from "@mui/icons-material/LockOutlined";
+import registerStyles from "./Register.styles";
 
 export default function Register() {
   const theme = useTheme();
@@ -79,42 +79,14 @@ export default function Register() {
   const strength = passwordStrength(form.password);
 
   return (
-    <Container
-      maxWidth="xs"
-      sx={{
-        minHeight: "100vh",
-        display: "flex",
-        justifyContent: "center",
-        alignItems: "center",
-        p: 2,
-        background: theme.palette.mode === "dark"
-          ? "linear-gradient(135deg, #121212 0%, #1e1e1e 100%)"
-          : "linear-gradient(135deg, #42a5f5 0%, #1976d2 100%)",
-      }}
-    >
-      <Paper
-        elevation={8}
-        sx={{
-          p: 4,
-          borderRadius: 3,
-          width: "100%",
-          display: "flex",
-          flexDirection: "column",
-          gap: 3,
-          boxShadow: theme.palette.mode === "dark"
-            ? "0 12px 24px rgba(0,0,0,0.5)"
-            : "0 12px 24px rgba(0,0,0,0.15)",
-          backgroundColor: theme.palette.mode === "dark" ? "#1e1e1e" : "rgba(255,255,255,0.95)",
-          color: theme.palette.mode === "dark" ? "#fff" : "#000",
-          backdropFilter: "blur(8px)",
-        }}
-      >
+    <Container maxWidth="xs" sx={registerStyles.container(theme)}>
+      <Paper elevation={8} sx={registerStyles.paper(theme)}>
         <Typography
           variant="h4"
           align="center"
           fontWeight="bold"
           gutterBottom
-          sx={{ color: theme.palette.mode === "dark" ? "#42a5f5" : "#1976d2" }}
+          sx={registerStyles.titulo(theme)}
         >
           Crear cuenta
         </Typography>
@@ -122,7 +94,7 @@ export default function Register() {
           variant="body1"
           align="center"
           color="text.secondary"
-          sx={{ mb: 2 }}
+          sx={registerStyles.subtitulo}
         >
           Completa tus datos para registrarte
         </Typography>
@@ -182,21 +154,15 @@ export default function Register() {
 
           {/* Barra de fuerza */}
           {form.password && (
-            <Box sx={{ my: 1 }}>
+            <Box sx={registerStyles.strengthBox}>
               <LinearProgress
                 variant="determinate"
                 value={strength.value}
-                sx={{
-                  height: 8,
-                  borderRadius: 4,
-                  mb: 0.5,
-                  backgroundColor: theme.palette.mode === "dark" ? "#333" : "#ddd",
-                  "& .MuiLinearProgress-bar": { backgroundColor: strength.color },
-                }}
+                sx={registerStyles.strengthBar(theme, strength.color)}
               />
               <Typography
                 variant="caption"
-                sx={{ color: strength.color, fontWeight: "bold" }}
+                sx={registerStyles.strengthLabel(strength.color)}
               >
                 {strength.label}
               </Typography>
@@ -232,7 +198,7 @@ export default function Register() {
               />
             }
             label="Mostrar contraseñas"
-            sx={{ mt: 1 }}
+            sx={registerStyles.checkbox}
           />
 
           <Box mt={3}>
@@ -241,18 +207,7 @@ export default function Register() {
               variant="contained"
               fullWidth
               disabled={loading}
-              sx={{
-                py: 1.5,
-                fontWeight: "bold",
-                background: theme.palette.mode === "dark"
-                  ? "linear-gradient(135deg, #42a5f5, #1976d2)"
-                  : "linear-gradient(135deg, #1976d2, #42a5f5)",
-                "&:hover": {
-                  transform: "scale(1.03)",
-                  boxShadow: "0 6px 12px rgba(0,0,0,0.15)",
-                },
-                transition: "all 0.3s",
-              }}
+              sx={registerStyles.boton(theme)}
             >
               {loading ? "Creando cuenta..." : "Registrarse"}
             </Button>
@@ -261,4 +216,4 @@ export default function Register() {
       </Paper>
     </Container>
   );
-        }
+}
