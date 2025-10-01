@@ -1,6 +1,7 @@
 // Tarjeta principal
 export const cardSx = {
-  width: { xs: "100%", sm: 280, md: 320 }, // responsivo pero uniforme
+  width: 320,       // ancho fijo
+  height: 480,      // alto fijo
   borderRadius: 3,
   backgroundColor: "#fff",
   boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
