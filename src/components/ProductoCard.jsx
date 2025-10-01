@@ -36,7 +36,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   const onAdd = async () => {
     if (!isAuthenticated) {
-      toast.warn("Debes iniciar sesiÃ³n para agregar productos ðŸ›’");
+      toast.warn("Debes iniciar sesión para agregar productos 🛒");
       navigate("/login");
       return;
     }
@@ -48,7 +48,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
     try {
       await agregarAlCarrito(producto.id, 1);
-      toast.success(`${producto.nombre} agregado al carrito âœ…`);
+      toast.success(`${producto.nombre} agregado al carrito ✅`);
     } catch (e) {
       toast.error(e.message);
     }
@@ -83,7 +83,12 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         </Typography>
 
         {/* Precio */}
-        <Stack direction="row" alignItems="center" spacing={0.5} sx={precioStackSx}>
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={0.5}
+          sx={precioStackSx}
+        >
           <MonetizationOnIcon color="primary" />
           <Typography variant="h6" color="primary" fontWeight="bold">
             {producto.precio}
@@ -115,7 +120,9 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
             onClick={() =>
               onVerDetalle
                 ? onVerDetalle()
-                : navigate(`/producto/${producto.id}`, { state: { producto } })
+                : navigate(`/producto/${producto.id}`, {
+                    state: { producto },
+                  })
             }
           >
             Ver detalles
