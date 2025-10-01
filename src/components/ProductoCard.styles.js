@@ -1,3 +1,6 @@
+// src/components/ProductoCard.styles.js
+
+// CARD
 export const cardSx = {
   width: "100%",
   maxWidth: 320,
@@ -39,7 +42,7 @@ export const imagenSx = {
   "&:hover": { transform: "scale(1.15) rotate(1deg)" },
 };
 
-// Overlay efecto en hover
+// Overlay efecto en hover (opcional si lo usas)
 export const overlayImagenSx = {
   position: "absolute",
   top: 0,
@@ -100,6 +103,9 @@ export const precioSecundarioSx = {
   fontSize: "0.85rem",
   color: "text.secondary",
 };
+
+// DIVIDER ✅ (faltaba antes)
+export const dividerSx = { my: 1, borderColor: "rgba(0,0,0,0.08)" };
 
 // BOTONES
 export const botonAgregarSx = (stock) => ({
