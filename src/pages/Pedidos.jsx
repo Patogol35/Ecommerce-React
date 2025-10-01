@@ -16,30 +16,29 @@ import {
   Stack,
   Button,
 } from "@mui/material";
+import pedidosStyles from "./Pedidos.styles";
 
-const PAGE_SIZE = 10; // 👈 debe coincidir con la paginación del back
+const PAGE_SIZE = 10;
 
 export default function Pedidos() {
   const { access } = useAuth();
-  const [pedidos, setPedidos] = useState([]); // pedidos de la página actual
+  const [pedidos, setPedidos] = useState([]);
   const [loading, setLoading] = useState(true);
-  const [page, setPage] = useState(1); // página actual
-  const [totalCount, setTotalCount] = useState(0); // total de pedidos
+  const [page, setPage] = useState(1);
+  const [totalCount, setTotalCount] = useState(0);
 
   useEffect(() => {
     setLoading(true);
-    getPedidos(access, page) // ⚡️ importante: que acepte número de página
+    getPedidos(access, page)
       .then((data) => {
         if (!data?.results) return;
 
         setTotalCount(data.count);
 
-        // ordenar por fecha descendente (por si acaso)
         const ordenados = [...data.results].sort(
           (a, b) => new Date(b.fecha) - new Date(a.fecha)
         );
 
-        // numeración global (más reciente = mayor número)
         const pedidosNumerados = ordenados.map((p, index) => ({
           ...p,
           numeroLocal: data.count - ((page - 1) * PAGE_SIZE + index),
@@ -60,44 +59,21 @@ export default function Pedidos() {
     return <Container sx={{ mt: 4 }}>Aún no tienes pedidos.</Container>;
 
   return (
-    <Container sx={{ mt: 4, mb: 6 }}>
-
-<Typography
-  variant="h4"
-  gutterBottom
-  fontWeight="bold"
-  align="center"
-  sx={{
-    display: "flex",
-    justifyContent: "center",
-    alignItems: "center",
-    gap: 1,
-    color: "primary.main",
-    mb:4,
-  }}
->
-  <ListAltIcon color="primary" sx={{ fontSize: 36 }} />
-  Mis Pedidos
-</Typography>
+    <Container sx={pedidosStyles.container}>
+      <Typography variant="h4" gutterBottom fontWeight="bold" align="center" sx={pedidosStyles.titulo}>
+        <ListAltIcon color="primary" sx={pedidosStyles.icono} />
+        Mis Pedidos
+      </Typography>
 
       {pedidos.map((p) => (
-        <Card
-          key={p.id}
-          sx={{
-            mb: 3,
-            borderRadius: 3,
-            boxShadow: 3,
-            transition: "all 0.3s",
-            "&:hover": { boxShadow: 6, transform: "scale(1.01)" },
-          }}
-        >
+        <Card key={p.id} sx={pedidosStyles.card}>
           <CardContent>
             <Stack
               direction={{ xs: "column", sm: "row" }}
               justifyContent="space-between"
               alignItems={{ xs: "flex-start", sm: "center" }}
               spacing={1}
-              sx={{ mb: 1 }}
+              sx={pedidosStyles.header}
             >
               <Typography variant="h6" fontWeight="bold">
                 Pedido #{p.numeroLocal}
@@ -113,15 +89,7 @@ export default function Pedidos() {
             <List dense>
               {(p.items ?? p.detalles)?.map((item, i, arr) => (
                 <Box key={i}>
-                  <ListItem
-                    sx={{
-                      display: "flex",
-                      flexDirection: { xs: "column", sm: "row" },
-                      justifyContent: "space-between",
-                      alignItems: { xs: "flex-start", sm: "center" },
-                      py: 1,
-                    }}
-                  >
+                  <ListItem sx={pedidosStyles.listItem}>
                     <ListItemText
                       primary={`${item.cantidad} x ${
                         item.producto?.nombre ?? "Producto"
@@ -143,7 +111,7 @@ export default function Pedidos() {
                             : "error"
                         }
                         size="small"
-                        sx={{ mt: { xs: 1, sm: 0 } }}
+                        sx={pedidosStyles.chip}
                       />
                     )}
                   </ListItem>
@@ -155,7 +123,6 @@ export default function Pedidos() {
         </Card>
       ))}
 
-      {/* Controles de paginación */}
       <Stack direction="row" justifyContent="center" spacing={2} mt={3}>
         <Button
           variant="outlined"
