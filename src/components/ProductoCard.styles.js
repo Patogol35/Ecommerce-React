@@ -1,37 +1,40 @@
 export const cardSx = {
   width: "100%",
-  maxWidth: 320,
-  borderRadius: 4,
+  maxWidth: 340,
+  borderRadius: 3,
   backgroundColor: "#fff",
-  boxShadow: "0 6px 18px rgba(0,0,0,0.08)",
+  boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
   overflow: "hidden",
   display: "flex",
   flexDirection: "column",
-  transition: "transform 0.25s ease, box-shadow 0.25s ease",
+  transition: "all 0.3s ease",
   "&:hover": {
-    transform: "translateY(-8px)",
-    boxShadow: "0 12px 28px rgba(0,0,0,0.15)",
+    transform: "translateY(-6px)",
+    boxShadow: "0 12px 32px rgba(0,0,0,0.12)",
   },
 };
 
+// Imagen contenedor
 export const imagenBoxSx = {
   position: "relative",
-  height: 220,
+  height: 240,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  bgcolor: "#fafafa",
+  background: "linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%)",
   overflow: "hidden",
 };
 
+// Imagen con efecto
 export const imagenSx = {
   maxWidth: "100%",
   maxHeight: "100%",
   objectFit: "contain",
-  transition: "transform 0.6s ease",
-  "&:hover": { transform: "scale(1.1)" },
+  transition: "transform 0.5s ease",
+  "&:hover": { transform: "scale(1.08) rotate(1deg)" },
 };
 
+// Overlay sutil
 export const overlayImagenSx = {
   position: "absolute",
   top: 0,
@@ -44,72 +47,87 @@ export const overlayImagenSx = {
   "&:hover": { opacity: 1 },
 };
 
+// Chip "Nuevo"
 export const chipNuevoSx = {
   position: "absolute",
-  top: 12,
-  left: 12,
+  top: 14,
+  left: 14,
   fontWeight: "bold",
-  bgcolor: "secondary.main",
-  color: "white",
-  borderRadius: 2,
-  px: 1.2,
+  background: "linear-gradient(90deg, #FF6B6B, #FF8E53)",
+  color: "#fff",
+  borderRadius: "12px",
+  px: 1.5,
   py: 0.5,
   fontSize: "0.75rem",
-  boxShadow: "0 3px 8px rgba(0,0,0,0.25)",
+  boxShadow: "0 3px 8px rgba(0,0,0,0.2)",
 };
 
+// Contenido
 export const contenidoSx = {
-  p: 2,
+  p: 2.2,
   flexGrow: 1,
   display: "flex",
   flexDirection: "column",
 };
 
-export const tituloSx = { 
-  mb: 1, 
-  fontWeight: "600", 
-  fontSize: "1.1rem", 
-  lineHeight: 1.3 
+// Título
+export const tituloSx = {
+  mb: 1,
+  fontWeight: 600,
+  fontSize: "1.1rem",
+  lineHeight: 1.35,
+  color: "text.primary",
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
 };
 
-export const precioStackSx = { 
-  mb: 2, 
-  fontSize: "1.2rem", 
-  fontWeight: "bold", 
-  color: "primary.main" 
+// Precio
+export const precioStackSx = {
+  mb: 2,
+  fontSize: "1.25rem",
+  fontWeight: "bold",
+  color: "primary.main",
 };
 
-export const dividerSx = { my: 1 };
+// Divider
+export const dividerSx = { my: 1.2 };
 
+// Botón agregar
 export const botonAgregarSx = (stock) => ({
-  borderRadius: 3,
+  borderRadius: 2,
   textTransform: "none",
-  py: 1.2,
-  fontWeight: "600",
+  py: 1.1,
+  fontWeight: 600,
   fontSize: "0.95rem",
-  bgcolor: stock > 0 ? "primary.main" : "grey.400",
+  background: stock > 0
+    ? "linear-gradient(90deg, #1976d2, #42a5f5)"
+    : "grey.400",
   color: "white",
   transition: "all 0.3s ease",
   "&:hover": {
-    transform: stock > 0 ? "scale(1.06)" : "none",
-    bgcolor: stock > 0 ? "primary.dark" : "grey.400",
-    boxShadow: stock > 0 ? "0 6px 15px rgba(0,0,0,0.2)" : "none",
+    transform: stock > 0 ? "scale(1.05)" : "none",
+    background: stock > 0
+      ? "linear-gradient(90deg, #1565c0, #1e88e5)"
+      : "grey.400",
+    boxShadow: stock > 0 ? "0 6px 18px rgba(0,0,0,0.18)" : "none",
   },
 });
 
+// Botón detalles
 export const botonDetallesSx = {
-  borderRadius: 3,
+  borderRadius: 2,
   textTransform: "none",
-  py: 1,
-  fontWeight: "500",
+  py: 0.9,
+  fontWeight: 500,
   fontSize: "0.9rem",
   border: "1px solid",
   borderColor: "grey.300",
-  color: "text.primary",
+  color: "text.secondary",
   transition: "all 0.3s ease",
   "&:hover": {
-    transform: "scale(1.05)",
+    transform: "scale(1.04)",
     bgcolor: "grey.100",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
   },
 };
