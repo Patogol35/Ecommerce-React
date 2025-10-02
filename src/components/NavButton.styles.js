@@ -29,6 +29,10 @@ const navButtonStyles = (theme, isActive, item, alwaysColoredPaths) => ({
     filter: "brightness(1.1)",
   },
 
+  menuBtnMobileMotion: {
+  display: "flex",
+},
+
   // Ajuste dark mode
   ...(theme.palette.mode === "dark" && {
     color: "#fff",
