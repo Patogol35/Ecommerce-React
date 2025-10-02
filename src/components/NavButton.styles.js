@@ -1,3 +1,4 @@
+ // Navbar.styles.js
 const styles = {
 appBar: (scrolled) => ({
 backgroundColor: "#1976d2",
