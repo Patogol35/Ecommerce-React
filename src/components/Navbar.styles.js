@@ -47,11 +47,6 @@ const styles = {
     flexDirection: "column",
   },
 
-  drawerHeader: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
-
   userSection: (isMobile) => ({
     my: isMobile ? 2 : 0,
     textAlign: "center",
@@ -82,14 +77,6 @@ const styles = {
     "&:hover": { background: "rgba(0,0,0,0.7)" },
     width: 48,
     height: 48,
-  },
-
-  closeDrawerBtn: {
-    color: "#fff",
-    background: "rgba(0,0,0,0.6)",
-    "&:hover": { background: "rgba(0,0,0,0.9)" },
-    width: 42,
-    height: 42,
   },
 };
 
