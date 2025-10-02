@@ -35,11 +35,8 @@ export default function Pedidos() {
 
         setTotalCount(data.count);
 
-        const ordenados = [...data.results].sort(
-          (a, b) => new Date(b.fecha) - new Date(a.fecha)
-        );
-
-        const pedidosNumerados = ordenados.map((p, index) => ({
+        // ✅ Ya no reordenamos en el front, backend ya devuelve ordenados por fecha
+        const pedidosNumerados = data.results.map((p, index) => ({
           ...p,
           numeroLocal: data.count - ((page - 1) * PAGE_SIZE + index),
         }));
@@ -60,7 +57,13 @@ export default function Pedidos() {
 
   return (
     <Container sx={pedidosStyles.container}>
-      <Typography variant="h4" gutterBottom fontWeight="bold" align="center" sx={pedidosStyles.titulo}>
+      <Typography
+        variant="h4"
+        gutterBottom
+        fontWeight="bold"
+        align="center"
+        sx={pedidosStyles.titulo}
+      >
         <ListAltIcon color="primary" sx={pedidosStyles.icono} />
         Mis Pedidos
       </Typography>
