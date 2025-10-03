@@ -1,12 +1,12 @@
 import {
-Card,
-CardMedia,
-CardContent,
-Box,
-Typography,
-Chip,
-TextField,
-IconButton,
+  Card,
+  CardMedia,
+  CardContent,
+  Box,
+  Typography,
+  Chip,
+  TextField,
+  IconButton,
 } from "@mui/material";
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
@@ -17,203 +17,92 @@ import { calcularSubtotal } from "../utils/carritoUtils";
 import carritoItemStyles from "./CarritoItem.styles";
 
 export default function CarritoItem({
-it,
-theme,
-incrementar,
-decrementar,
-setCantidad,
-eliminarItem,
+  it,
+  theme,
+  incrementar,
+  decrementar,
+  setCantidad,
+  eliminarItem,
 }) {
-const stock = it.producto?.stock ?? 0;
+  const stock = it.producto?.stock ?? 0;
 
-return (
-<Card sx={carritoItemStyles.card}>
-<CardMedia
-component="img"
-image={it.producto?.imagen || undefined}
-alt={it.producto?.nombre}
-sx={(theme) => carritoItemStyles.media(theme)}
-/>
+  return (
+    <Card sx={carritoItemStyles.card}>
+      <CardMedia
+        component="img"
+        image={it.producto?.imagen || undefined}
+        alt={it.producto?.nombre}
+        sx={(theme) => carritoItemStyles.media(theme)}
+      />
 
-<CardContent sx={carritoItemStyles.content}>  
-    <Box>  
-      <Typography variant="h6" fontWeight="bold" gutterBottom>  
-        {it.producto?.nombre}  
-      </Typography>  
-      <Typography  
-        variant="body2"  
-        color="text.secondary"  
-        sx={carritoItemStyles.descripcion}  
-      >  
-        {it.producto?.descripcion}  
-      </Typography>  
-    </Box>  
+      <CardContent sx={carritoItemStyles.content}>
+        <Box>
+          <Typography variant="h6" fontWeight="bold" gutterBottom>
+            {it.producto?.nombre}
+          </Typography>
+          <Typography
+            variant="body2"
+            color="text.secondary"
+            sx={carritoItemStyles.descripcion}
+          >
+            {it.producto?.descripcion}
+          </Typography>
+        </Box>
 
-    <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>  
-      <Chip  
-        icon={<MonetizationOnIcon />}  
-        label={`$${calcularSubtotal(it).toFixed(2)}`}  
-        color="success"  
-        sx={carritoItemStyles.chipSubtotal}  
-      />  
-      <Chip  
-        label={`Stock: ${stock} unidades`}  
-        color={stock > 0 ? "info" : "default"}  
-        sx={carritoItemStyles.chipStock}  
-      />  
-    </Box>  
-  </CardContent>  
+        <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
+          <Chip
+            icon={<MonetizationOnIcon />}
+            label={`$${calcularSubtotal(it).toFixed(2)}`}
+            color="success"
+            sx={carritoItemStyles.chipSubtotal}
+          />
+          <Chip
+            label={`Stock: ${stock} unidades`}
+            color={stock > 0 ? "info" : "default"}
+            sx={carritoItemStyles.chipStock}
+          />
+        </Box>
+      </CardContent>
 
-  {/* Controles cantidad + eliminar */}  
-  <Box sx={carritoItemStyles.controlesWrapper}>  
-    <Box sx={carritoItemStyles.cantidadWrapper}>  
-      <IconButton onClick={() => decrementar(it)}>  
-        <RemoveIcon />  
-      </IconButton>  
+      {/* Controles cantidad + eliminar */}
+      <Box sx={carritoItemStyles.controlesWrapper}>
+        <Box sx={carritoItemStyles.cantidadWrapper}>
+          <IconButton onClick={() => decrementar(it)}>
+            <RemoveIcon />
+          </IconButton>
 
-      <TextField  
-        type="number"  
-        size="small"  
-        value={it.cantidad}  
-        inputProps={{ min: 1, max: stock }}  
-        onChange={(e) => {  
-          const nuevaCantidad = Number(e.target.value);  
-          if (nuevaCantidad >= 1 && nuevaCantidad <= stock) {  
-            setCantidad(it.id, nuevaCantidad);  
-          } else if (nuevaCantidad > stock) {  
-            toast.warning(`No puedes pedir más de ${stock} unidades`);  
-            setCantidad(it.id, stock);  
-          }  
-        }}  
-        sx={carritoItemStyles.cantidadInput}  
-      />  
+          <TextField
+            type="number"
+            size="small"
+            value={it.cantidad}
+            inputProps={{ min: 1, max: stock }}
+            onChange={(e) => {
+              const nuevaCantidad = Number(e.target.value);
+              if (nuevaCantidad >= 1 && nuevaCantidad <= stock) {
+                setCantidad(it.id, nuevaCantidad);
+              } else if (nuevaCantidad > stock) {
+                toast.warning(`No puedes pedir más de ${stock} unidades`);
+                setCantidad(it.id, stock);
+              }
+            }}
+            sx={carritoItemStyles.cantidadInput}
+          />
 
-      <IconButton  
-        onClick={() => incrementar(it)}  
-        disabled={it.cantidad >= stock}  
-      >  
-        <AddIcon />  
-      </IconButton>  
-    </Box>  
+          <IconButton
+            onClick={() => incrementar(it)}
+            disabled={it.cantidad >= stock}
+          >
+            <AddIcon />
+          </IconButton>
+        </Box>
 
-    <IconButton  
-      onClick={() => eliminarItem(it.id)}  
-      sx={carritoItemStyles.botonEliminar}  
-    >  
-      <DeleteIcon />  
-    </IconButton>  
-  </Box>  
-</Card>
-
-);
+        <IconButton
+          onClick={() => eliminarItem(it.id)}
+          sx={carritoItemStyles.botonEliminar}
+        >
+          <DeleteIcon />
+        </IconButton>
+      </Box>
+    </Card>
+  );
 }
-Y
-const carritoItemStyles = {
-card: (theme) => ({
-display: "flex",
-flexDirection: { xs: "column", sm: "row" },
-mb: 3,
-mx: { xs: 2, sm: 0 },
-borderRadius: 4,
-border: "1px solid",
-borderColor: theme.palette.divider,
-overflow: "hidden",
-backgroundColor: theme.palette.background.paper,
-boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-transition: "all 0.3s ease",
-"&:hover": {
-boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
-transform: "translateY(-2px)",
-},
-}),
-
-media: (theme) => ({
-width: { xs: "100%", sm: 180 },
-height: { xs: 200, sm: 180 },
-objectFit: "contain",
-borderRadius: { xs: "16px 16px 0 0", sm: "16px 0 0 16px" },
-bgcolor: theme.palette.mode === "dark" ? "#2c2c2c" : "#f9f9f9",
-p: 2,
-transition: "transform 0.35s ease",
-"&:hover": { transform: "scale(1.08)" },
-}),
-
-content: {
-flex: 1,
-display: "flex",
-flexDirection: "column",
-justifyContent: "space-between",
-p: 2.5,
-gap: 1,
-},
-
-titulo: {
-fontWeight: 600,
-fontSize: "1.1rem",
-lineHeight: 1.4,
-mb: 0.5,
-},
-
-descripcion: {
-display: "-webkit-box",
-WebkitLineClamp: 2,
-WebkitBoxOrient: "vertical",
-overflow: "hidden",
-textOverflow: "ellipsis",
-color: "text.secondary",
-fontSize: "0.9rem",
-mb: 1.5,
-},
-
-chipSubtotal: {
-fontWeight: "bold",
-fontSize: "0.95rem",
-},
-
-chipStock: {
-fontWeight: "bold",
-fontSize: "0.85rem",
-opacity: 0.8,
-},
-
-controlesWrapper: {
-display: "flex",
-flexDirection: { xs: "row", sm: "column" },
-justifyContent: "center",
-alignItems: "center",
-p: 2,
-gap: 1.5,
-borderLeft: { sm: "1px solid rgba(0,0,0,0.08)" },
-borderTop: { xs: "1px solid rgba(0,0,0,0.08)", sm: "none" },
-},
-
-cantidadWrapper: {
-display: "flex",
-alignItems: "center",
-gap: 1,
-bgcolor: "action.hover",
-borderRadius: 2,
-px: 1,
-py: 0.5,
-},
-
-cantidadInput: {
-width: 60,
-"& input": {
-textAlign: "center",
-fontWeight: "bold",
-fontSize: "1rem",
-borderRadius: 2,
-},
-},
-
-botonEliminar: {
-color: "error.main",
-borderRadius: 2,
-px: 2,
-"&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
-},
-};
-
-export default carritoItemStyles;
-
