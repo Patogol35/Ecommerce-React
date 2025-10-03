@@ -1,4 +1,4 @@
-const carritoItemStyles = {
+  const carritoItemStyles = {
   card: (theme) => ({
     display: "flex",
     flexDirection: { xs: "column", sm: "row" },
@@ -13,7 +13,7 @@ const carritoItemStyles = {
     transition: "all 0.3s ease",
     "&:hover": {
       boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
-      transform: "translateY(-3px)",
+      transform: "translateY(-2px)",
     },
   }),
 
@@ -24,11 +24,8 @@ const carritoItemStyles = {
     borderRadius: { xs: "16px 16px 0 0", sm: "16px 0 0 16px" },
     bgcolor: theme.palette.mode === "dark" ? "#2c2c2c" : "#f9f9f9",
     p: 2,
-    transition: "transform 0.35s ease, box-shadow 0.3s ease",
-    "&:hover": {
-      transform: "scale(1.08)",
-      boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
-    },
+    transition: "transform 0.35s ease",
+    "&:hover": { transform: "scale(1.08)" },
   }),
 
   content: {
@@ -37,12 +34,12 @@ const carritoItemStyles = {
     flexDirection: "column",
     justifyContent: "space-between",
     p: 2.5,
-    gap: 1.2,
+    gap: 1,
   },
 
   titulo: {
-    fontWeight: 700,
-    fontSize: "1.15rem",
+    fontWeight: 600,
+    fontSize: "1.1rem",
     lineHeight: 1.4,
     mb: 0.5,
   },
@@ -60,14 +57,13 @@ const carritoItemStyles = {
 
   chipSubtotal: {
     fontWeight: "bold",
-    fontSize: "1rem",
-    color: "primary.main",
+    fontSize: "0.95rem",
   },
 
   chipStock: {
-    fontWeight: 500,
+    fontWeight: "bold",
     fontSize: "0.85rem",
-    opacity: 0.9,
+    opacity: 0.8,
   },
 
   controlesWrapper: {
@@ -79,7 +75,6 @@ const carritoItemStyles = {
     gap: 1.5,
     borderLeft: { sm: "1px solid rgba(0,0,0,0.08)" },
     borderTop: { xs: "1px solid rgba(0,0,0,0.08)", sm: "none" },
-    bgcolor: "background.default",
   },
 
   cantidadWrapper: {
@@ -90,26 +85,15 @@ const carritoItemStyles = {
     borderRadius: 2,
     px: 1,
     py: 0.5,
-    transition: "all 0.25s ease",
-    "&:hover": {
-      transform: "scale(1.03)",
-      boxShadow: "0 2px 6px rgba(0,0,0,0.12)",
-    },
   },
 
   cantidadInput: {
-    width: 64,
+    width: 60,
     "& input": {
       textAlign: "center",
       fontWeight: "bold",
       fontSize: "1rem",
       borderRadius: 2,
-      transition: "all 0.2s ease",
-    },
-    "& input:focus": {
-      outline: "none",
-      transform: "scale(1.05)",
-      color: "primary.main",
     },
   },
 
@@ -117,7 +101,6 @@ const carritoItemStyles = {
     color: "error.main",
     borderRadius: 2,
     px: 2,
-    fontWeight: 600,
     "&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
   },
 };
