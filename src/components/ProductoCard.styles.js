@@ -1,9 +1,9 @@
 // Tarjeta principal
 export const cardSx = {
-  width: 320,       // ancho fijo
-  height: 480,      // alto fijo
+  width: 320,
+  height: 480,
   borderRadius: 3,
-  backgroundColor: "#fff",
+  bgcolor: "background.paper", // ✅ adapta light/dark
   boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
   overflow: "hidden",
   display: "flex",
@@ -11,7 +11,7 @@ export const cardSx = {
   transition: "all 0.3s ease",
   "&:hover": {
     transform: "translateY(-6px)",
-    boxShadow: "0 12px 32px rgba(0,0,0,0.12)",
+    boxShadow: "0 12px 32px rgba(0,0,0,0.18)",
   },
 };
 
@@ -22,7 +22,7 @@ export const imagenBoxSx = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  background: "linear-gradient(135deg, #fafafa 0%, #f0f0f0 100%)",
+  bgcolor: "background.default", // ✅ ya no se pierde en dark
   overflow: "hidden",
 };
 
@@ -33,19 +33,6 @@ export const imagenSx = {
   objectFit: "contain",
   transition: "transform 0.5s ease",
   "&:hover": { transform: "scale(1.08) rotate(1deg)" },
-};
-
-// Overlay sutil
-export const overlayImagenSx = {
-  position: "absolute",
-  top: 0,
-  left: 0,
-  width: "100%",
-  height: "100%",
-  bgcolor: "rgba(0,0,0,0.05)",
-  opacity: 0,
-  transition: "opacity 0.4s ease",
-  "&:hover": { opacity: 1 },
 };
 
 // Chip "Nuevo"
@@ -60,7 +47,7 @@ export const chipNuevoSx = {
   px: 1.5,
   py: 0.5,
   fontSize: "0.75rem",
-  boxShadow: "0 3px 8px rgba(0,0,0,0.2)",
+  boxShadow: "0 3px 8px rgba(0,0,0,0.3)",
 };
 
 // Contenido
@@ -77,7 +64,7 @@ export const tituloSx = {
   fontWeight: 600,
   fontSize: "1.1rem",
   lineHeight: 1.35,
-  color: "text.primary",
+  color: "text.primary", // ✅ texto adaptable
   overflow: "hidden",
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
@@ -88,7 +75,7 @@ export const precioStackSx = {
   mb: 2,
   fontSize: "1.25rem",
   fontWeight: "bold",
-  color: "primary.main",
+  color: "primary.main", // ✅ mantiene color del tema
 };
 
 // Divider
@@ -123,12 +110,12 @@ export const botonDetallesSx = {
   fontWeight: 500,
   fontSize: "0.9rem",
   border: "1px solid",
-  borderColor: "grey.300",
-  color: "text.secondary",
+  borderColor: "divider", // ✅ se adapta al tema
+  color: "text.secondary", // ✅ gris adaptable
   transition: "all 0.3s ease",
   "&:hover": {
     transform: "scale(1.04)",
-    bgcolor: "grey.100",
+    bgcolor: "action.hover", // ✅ usa color dinámico
     boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
   },
 };
