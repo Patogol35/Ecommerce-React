@@ -13,31 +13,35 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { toast } from "react-toastify";
-import { useRef } from "react";
 import { calcularSubtotal } from "../utils/carritoUtils";
 import carritoItemStyles from "./CarritoItem.styles";
 
 export default function CarritoItem({
   it,
+  theme,
   incrementar,
   decrementar,
   setCantidad,
   eliminarItem,
 }) {
   const stock = it.producto?.stock ?? 0;
-  const intervalRef = useRef(null);
 
-  // Mantener presionado botón
-  const handleHold = (action) => {
-    action(it); // acción inmediata
-    intervalRef.current = setInterval(() => {
-      action(it);
-    }, 120); // velocidad (ms) → cuanto más bajo, más rápido
-  };
+  // Manejo de mantener presionado botones
+  const handleHold = (action, item) => {
+    // Ejecutar de una vez en el click
+    if (action === "inc" && item.cantidad < stock) incrementar(item);
+    if (action === "dec" && item.cantidad > 1) decrementar(item);
 
-  const stopHold = () => {
-    clearInterval(intervalRef.current);
-    intervalRef.current = null;
+    // Luego repetir mientras se mantenga
+    let interval = setInterval(() => {
+      if (action === "inc" && item.cantidad < stock) incrementar(item);
+      if (action === "dec" && item.cantidad > 1) decrementar(item);
+    }, 120); // velocidad (ms)
+
+    const stop = () => clearInterval(interval);
+
+    document.addEventListener("mouseup", stop, { once: true });
+    document.addEventListener("touchend", stop, { once: true });
   };
 
   return (
@@ -81,33 +85,20 @@ export default function CarritoItem({
       {/* Controles cantidad + eliminar */}
       <Box sx={carritoItemStyles.controlesWrapper}>
         <Box sx={carritoItemStyles.cantidadWrapper}>
-          {/* Botón decrementar con hold */}
           <IconButton
-            onMouseDown={() => handleHold(decrementar)}
-            onMouseUp={stopHold}
-            onMouseLeave={stopHold}
-            onTouchStart={() => handleHold(decrementar)}
-            onTouchEnd={stopHold}
+            onMouseDown={() => handleHold("dec", it)}
+            onTouchStart={() => handleHold("dec", it)}
           >
             <RemoveIcon />
           </IconButton>
 
-          {/* Campo de cantidad editable */}
           <TextField
             type="number"
             size="small"
             value={it.cantidad}
             inputProps={{ min: 1, max: stock }}
             onChange={(e) => {
-              const valor = e.target.value;
-
-              if (valor === "") {
-                // permitir borrar con teclado
-                setCantidad(it.id, "");
-                return;
-              }
-
-              const nuevaCantidad = Number(valor);
+              const nuevaCantidad = Number(e.target.value);
               if (nuevaCantidad >= 1 && nuevaCantidad <= stock) {
                 setCantidad(it.id, nuevaCantidad);
               } else if (nuevaCantidad > stock) {
@@ -115,29 +106,18 @@ export default function CarritoItem({
                 setCantidad(it.id, stock);
               }
             }}
-            onBlur={(e) => {
-              // si el input queda vacío, volver a 1
-              if (e.target.value === "") {
-                setCantidad(it.id, 1);
-              }
-            }}
             sx={carritoItemStyles.cantidadInput}
           />
 
-          {/* Botón incrementar con hold */}
           <IconButton
-            onMouseDown={() => handleHold(incrementar)}
-            onMouseUp={stopHold}
-            onMouseLeave={stopHold}
-            onTouchStart={() => handleHold(incrementar)}
-            onTouchEnd={stopHold}
+            onMouseDown={() => handleHold("inc", it)}
+            onTouchStart={() => handleHold("inc", it)}
             disabled={it.cantidad >= stock}
           >
             <AddIcon />
           </IconButton>
         </Box>
 
-        {/* Botón eliminar */}
         <IconButton
           onClick={() => eliminarItem(it.id)}
           sx={carritoItemStyles.botonEliminar}
