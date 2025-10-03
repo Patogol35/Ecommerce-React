@@ -4,9 +4,11 @@ import { useAuth } from "../context/AuthContext";
 import { crearPedido } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
-// MUI
+import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+
 import {
   Typography,
   Box,
@@ -14,13 +16,11 @@ import {
   Button,
   useTheme,
 } from "@mui/material";
-import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 import CarritoItem from "../components/CarritoItem";
 import { calcularSubtotal } from "../utils/carritoUtils";
 
-import styles from "./Carrito.styles"; // estilos externos
+import styles from "./Carrito.styles";
 
 export default function Carrito() {
   const theme = useTheme();
@@ -32,6 +32,7 @@ export default function Carrito() {
     setCantidad,
     eliminarItem,
   } = useCarrito();
+
   const { access } = useAuth();
   const navigate = useNavigate();
 
@@ -73,18 +74,13 @@ export default function Carrito() {
 
   return (
     <Box sx={styles.root}>
-      <Typography
-        variant="h4"
-        gutterBottom
-        fontWeight="bold"
-        align="center"
-        sx={styles.header}
-      >
-        <ShoppingCartIcon color="primary" sx={styles.headerIcon} />
-        Mi Carrito
-      </Typography>
+      <Box sx={styles.header}>
+        <ShoppingCartIcon sx={styles.headerIcon} />
+        <Typography variant="h5">Mi Carrito</Typography>
+      </Box>
 
       {loading && <Typography>Cargando carrito...</Typography>}
+
       {!loading && items.length === 0 && (
         <Typography>Tu carrito está vacío.</Typography>
       )}
@@ -103,28 +99,27 @@ export default function Carrito() {
         ))}
 
       {!loading && items.length > 0 && (
-        <>
-          <Box sx={styles.footerBox(theme)} mt={3}>
-            <Divider sx={styles.divider} />
-            <Typography variant="h6" gutterBottom textAlign="right">
-              Total:{" "}
-              <strong>
-                ${total.toFixed(2)} <MonetizationOnIcon fontSize="small" />
-              </strong>
-            </Typography>
-          </Box>
+        <Box sx={styles.footerBox(theme)} mt={3}>
+          <Divider sx={styles.divider} />
 
-          {/* 🚀 Botón flotante */}
+          <Typography variant="h6" gutterBottom>
+            Total:{" "}
+            <strong>
+              ${total.toFixed(2)} <MonetizationOnIcon fontSize="small" />
+            </strong>
+          </Typography>
+
           <Button
             variant="contained"
+            color="primary"
             size="large"
             startIcon={<ShoppingCartCheckoutIcon />}
-            sx={styles.floatingButton(theme)}
+            sx={styles.button}
             onClick={comprar}
           >
             Finalizar compra
           </Button>
-        </>
+        </Box>
       )}
     </Box>
   );
