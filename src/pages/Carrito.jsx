@@ -1,4 +1,4 @@
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useCarrito } from "../context/CarritoContext";
 import { useAuth } from "../context/AuthContext";
 import { crearPedido } from "../api/api";
@@ -72,7 +72,7 @@ export default function Carrito() {
   const { access } = useAuth();
   const navigate = useNavigate();
 
-  const [loadingCompra, setLoadingCompra] = React.useState(false);
+  const [loadingCompra, setLoadingCompra] = useState(false);
 
   useEffect(() => {
     cargarCarrito();
@@ -176,4 +176,4 @@ export default function Carrito() {
       )}
     </Box>
   );
-}
+          }
