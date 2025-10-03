@@ -28,6 +28,7 @@ export default function CarritoItem({
 
   return (
     <Card sx={carritoItemStyles.card}>
+      {/* Imagen producto */}
       <CardMedia
         component="img"
         image={it.producto?.imagen || undefined}
@@ -35,6 +36,7 @@ export default function CarritoItem({
         sx={(theme) => carritoItemStyles.media(theme)}
       />
 
+      {/* Info producto */}
       <CardContent sx={carritoItemStyles.content}>
         <Box>
           <Typography variant="h6" fontWeight="bold" gutterBottom>
@@ -49,6 +51,7 @@ export default function CarritoItem({
           </Typography>
         </Box>
 
+        {/* Precio + Stock */}
         <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
           <Chip
             icon={<MonetizationOnIcon />}
@@ -67,7 +70,10 @@ export default function CarritoItem({
       {/* Controles cantidad + eliminar */}
       <Box sx={carritoItemStyles.controlesWrapper}>
         <Box sx={carritoItemStyles.cantidadWrapper}>
-          <IconButton onClick={() => decrementar(it)}>
+          <IconButton
+            onClick={() => decrementar(it)}
+            sx={carritoItemStyles.botonCantidad}
+          >
             <RemoveIcon />
           </IconButton>
 
@@ -91,6 +97,7 @@ export default function CarritoItem({
           <IconButton
             onClick={() => incrementar(it)}
             disabled={it.cantidad >= stock}
+            sx={carritoItemStyles.botonCantidad}
           >
             <AddIcon />
           </IconButton>
