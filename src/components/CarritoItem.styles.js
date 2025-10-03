@@ -1,78 +1,108 @@
 const carritoItemStyles = {
-card: (theme) => ({
-display: "flex",
-flexDirection: { xs: "column", sm: "row" },
-mb: 2,
-mx: { xs: 2, sm: 0 }, // margen lateral en móvil
-borderRadius: 3,
-border: "1px solid",
-borderColor: theme.palette.divider, // ✅ borde completo
-overflow: "hidden", // ✅ asegura bordes redondeados
-boxShadow: "0 3px 8px rgba(0,0,0,0.12)",
-transition: "all 0.3s",
-"&:hover": { boxShadow: "0 6px 16px rgba(0,0,0,0.2)" },
-}),
+  card: (theme) => ({
+    display: "flex",
+    flexDirection: { xs: "column", sm: "row" },
+    mb: 3,
+    mx: { xs: 2, sm: 0 },
+    borderRadius: 4,
+    border: "1px solid",
+    borderColor: theme.palette.divider,
+    overflow: "hidden",
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    transition: "all 0.3s ease",
+    "&:hover": {
+      boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
+      transform: "translateY(-2px)",
+    },
+  }),
 
-media: (theme) => ({
-width: { xs: "100%", sm: 160 },
-height: { xs: 200, sm: 160 },
-objectFit: "contain",
-borderRadius: { xs: "12px 12px 0 0", sm: "12px 0 0 12px" },
-bgcolor: theme.palette.mode === "dark" ? "#333" : "#fafafa",
-p: 1,
-transition: "transform 0.3s ease",
-"&:hover": { transform: "scale(1.05)" },
-}),
+  media: (theme) => ({
+    width: { xs: "100%", sm: 180 },
+    height: { xs: 200, sm: 180 },
+    objectFit: "contain",
+    borderRadius: { xs: "16px 16px 0 0", sm: "16px 0 0 16px" },
+    bgcolor: theme.palette.mode === "dark" ? "#2c2c2c" : "#f9f9f9",
+    p: 2,
+    transition: "transform 0.35s ease",
+    "&:hover": { transform: "scale(1.08)" },
+  }),
 
-content: {
-flex: 1,
-display: "flex",
-flexDirection: "column",
-justifyContent: "space-between",
-p: 2, // padding interno para separar texto y botones
-},
+  content: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "space-between",
+    p: 2.5,
+    gap: 1,
+  },
 
-descripcion: {
-display: "-webkit-box",
-WebkitLineClamp: 2,
-WebkitBoxOrient: "vertical",
-overflow: "hidden",
-textOverflow: "ellipsis",
-mb: 1,
-},
+  titulo: {
+    fontWeight: 600,
+    fontSize: "1.1rem",
+    lineHeight: 1.4,
+    mb: 0.5,
+  },
 
-chipSubtotal: { fontWeight: "bold" },
-chipStock: { fontWeight: "bold" },
+  descripcion: {
+    display: "-webkit-box",
+    WebkitLineClamp: 2,
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+    color: "text.secondary",
+    fontSize: "0.9rem",
+    mb: 1.5,
+  },
 
-controlesWrapper: {
-display: "flex",
-flexDirection: { xs: "row", sm: "column" },
-justifyContent: "center",
-alignItems: "center",
-p: 2,
-gap: 1,
-},
+  chipSubtotal: {
+    fontWeight: "bold",
+    fontSize: "0.95rem",
+  },
 
-cantidadWrapper: {
-display: "flex",
-alignItems: "center",
-gap: 1,
-},
+  chipStock: {
+    fontWeight: "bold",
+    fontSize: "0.85rem",
+    opacity: 0.8,
+  },
 
-cantidadInput: {
-width: 60,
-"& input": {
-textAlign: "center",
-fontWeight: "bold",
-fontSize: "1rem",
-},
-},
+  controlesWrapper: {
+    display: "flex",
+    flexDirection: { xs: "row", sm: "column" },
+    justifyContent: "center",
+    alignItems: "center",
+    p: 2,
+    gap: 1.5,
+    borderLeft: { sm: "1px solid rgba(0,0,0,0.08)" },
+    borderTop: { xs: "1px solid rgba(0,0,0,0.08)", sm: "none" },
+  },
 
-botonEliminar: {
-color: "error.main",
-"&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
-},
+  cantidadWrapper: {
+    display: "flex",
+    alignItems: "center",
+    gap: 1,
+    bgcolor: "action.hover",
+    borderRadius: 2,
+    px: 1,
+    py: 0.5,
+  },
+
+  cantidadInput: {
+    width: 60,
+    "& input": {
+      textAlign: "center",
+      fontWeight: "bold",
+      fontSize: "1rem",
+      borderRadius: 2,
+    },
+  },
+
+  botonEliminar: {
+    color: "error.main",
+    borderRadius: 2,
+    px: 2,
+    "&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
+  },
 };
 
 export default carritoItemStyles;
-
