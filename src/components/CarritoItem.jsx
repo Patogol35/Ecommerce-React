@@ -86,25 +86,28 @@ export default function CarritoItem({
           </IconButton>
 
           <TextField
-            type="number"
+            type="text" // cambio clave para poder borrar todo de una vez
             size="small"
             value={inputCantidad}
-            inputProps={{ min: 1, max: stock }}
+            inputProps={{ inputMode: "numeric" }} // muestra teclado numérico en móviles
             onChange={(e) => {
-              let valor = e.target.value;
-              setInputCantidad(valor); // permite borrar temporalmente
+              const valor = e.target.value;
+
+              // permite borrar y escribir libre
+              setInputCantidad(valor);
 
               const nuevaCantidad = Number(valor);
+
+              if (valor === "") return; // temporalmente vacío
+
+              if (!Number.isNaN(nuevaCantidad) && nuevaCantidad >= 1 && nuevaCantidad <= stock) {
+                setCantidad(it.id, nuevaCantidad);
+              }
 
               if (nuevaCantidad > stock) {
                 toast.warning(`No puedes pedir más de ${stock} unidades`);
                 setCantidad(it.id, stock);
                 setInputCantidad(stock);
-                return;
-              }
-
-              if (!Number.isNaN(nuevaCantidad) && nuevaCantidad >= 1) {
-                setCantidad(it.id, nuevaCantidad); // actualiza subtotal en tiempo real
               }
             }}
             onBlur={() => {
@@ -118,7 +121,7 @@ export default function CarritoItem({
               }
 
               setCantidad(it.id, nuevaCantidad);
-              setInputCantidad(nuevaCantidad); // sincroniza input con valor real
+              setInputCantidad(nuevaCantidad);
             }}
             sx={carritoItemStyles.cantidadInput}
           />
@@ -141,4 +144,4 @@ export default function CarritoItem({
       </Box>
     </Card>
   );
-                  }
+}
