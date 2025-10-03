@@ -1,4 +1,3 @@
-
 import {
   Card,
   CardMedia,
@@ -14,18 +13,32 @@ import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import { toast } from "react-toastify";
+import { useRef } from "react";
 import { calcularSubtotal } from "../utils/carritoUtils";
 import carritoItemStyles from "./CarritoItem.styles";
 
 export default function CarritoItem({
   it,
-  theme,
   incrementar,
   decrementar,
   setCantidad,
   eliminarItem,
 }) {
   const stock = it.producto?.stock ?? 0;
+  const intervalRef = useRef(null);
+
+  // Mantener presionado botón
+  const handleHold = (action) => {
+    action(it); // acción inmediata
+    intervalRef.current = setInterval(() => {
+      action(it);
+    }, 120); // velocidad (ms) → cuanto más bajo, más rápido
+  };
+
+  const stopHold = () => {
+    clearInterval(intervalRef.current);
+    intervalRef.current = null;
+  };
 
   return (
     <Card sx={carritoItemStyles.card}>
@@ -68,17 +81,33 @@ export default function CarritoItem({
       {/* Controles cantidad + eliminar */}
       <Box sx={carritoItemStyles.controlesWrapper}>
         <Box sx={carritoItemStyles.cantidadWrapper}>
-          <IconButton onClick={() => decrementar(it)}>
+          {/* Botón decrementar con hold */}
+          <IconButton
+            onMouseDown={() => handleHold(decrementar)}
+            onMouseUp={stopHold}
+            onMouseLeave={stopHold}
+            onTouchStart={() => handleHold(decrementar)}
+            onTouchEnd={stopHold}
+          >
             <RemoveIcon />
           </IconButton>
 
+          {/* Campo de cantidad editable */}
           <TextField
             type="number"
             size="small"
             value={it.cantidad}
             inputProps={{ min: 1, max: stock }}
             onChange={(e) => {
-              const nuevaCantidad = Number(e.target.value);
+              const valor = e.target.value;
+
+              if (valor === "") {
+                // permitir borrar con teclado
+                setCantidad(it.id, "");
+                return;
+              }
+
+              const nuevaCantidad = Number(valor);
               if (nuevaCantidad >= 1 && nuevaCantidad <= stock) {
                 setCantidad(it.id, nuevaCantidad);
               } else if (nuevaCantidad > stock) {
@@ -86,17 +115,29 @@ export default function CarritoItem({
                 setCantidad(it.id, stock);
               }
             }}
+            onBlur={(e) => {
+              // si el input queda vacío, volver a 1
+              if (e.target.value === "") {
+                setCantidad(it.id, 1);
+              }
+            }}
             sx={carritoItemStyles.cantidadInput}
           />
 
+          {/* Botón incrementar con hold */}
           <IconButton
-            onClick={() => incrementar(it)}
+            onMouseDown={() => handleHold(incrementar)}
+            onMouseUp={stopHold}
+            onMouseLeave={stopHold}
+            onTouchStart={() => handleHold(incrementar)}
+            onTouchEnd={stopHold}
             disabled={it.cantidad >= stock}
           >
             <AddIcon />
           </IconButton>
         </Box>
 
+        {/* Botón eliminar */}
         <IconButton
           onClick={() => eliminarItem(it.id)}
           sx={carritoItemStyles.botonEliminar}
@@ -107,4 +148,3 @@ export default function CarritoItem({
     </Card>
   );
 }
-
