@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useCallback } from "react";
 import { useCarrito } from "../context/CarritoContext";
 import { useAuth } from "../context/AuthContext";
 import { crearPedido } from "../api/api";
@@ -24,34 +24,27 @@ import CarritoItem from "../components/CarritoItem";
 import { calcularSubtotal } from "../utils/carritoUtils";
 import styles from "./Carrito.styles";
 
-function CarritoFooter({ total, comprar, loadingCompra }) {
+function CarritoFooter({ totalFmt, comprar, loadingCompra }) {
   const theme = useTheme();
-
   return (
     <Box sx={styles.footerBox(theme)}>
       <Divider sx={styles.divider} />
-
-      <Typography
-        variant="h6"
-        gutterBottom
-        sx={{ mb: 1, display: { xs: "none", sm: "block" } }}
-      >
-        Total: <strong>${total.toFixed(2)}</strong>
+      <Typography variant="h6" sx={{ mb: 1, display: { xs: "none", sm: "block" } }}>
+        Total: <strong>${totalFmt}</strong>
       </Typography>
-
       <Button
         variant="contained"
         color="primary"
         size="large"
         startIcon={<ShoppingCartCheckoutIcon />}
-        sx={styles.button(total)}
+        sx={styles.button(totalFmt)}
         onClick={comprar}
-        disabled={total <= 0 || loadingCompra}
+        disabled={parseFloat(totalFmt) <= 0 || loadingCompra}
       >
         {loadingCompra ? (
           <CircularProgress size={24} color="inherit" />
         ) : (
-          <>Finalizar compra – ${total.toFixed(2)}</>
+          <>Finalizar compra – ${totalFmt}</>
         )}
       </Button>
     </Box>
@@ -59,39 +52,21 @@ function CarritoFooter({ total, comprar, loadingCompra }) {
 }
 
 export default function Carrito() {
-  const theme = useTheme();
-  const {
-    items,
-    cargarCarrito,
-    loading,
-    limpiarLocal,
-    setCantidad,
-    eliminarItem,
-  } = useCarrito();
-
+  const { items, cargarCarrito, loading, limpiarLocal, setCantidad, eliminarItem } = useCarrito();
   const { access } = useAuth();
   const navigate = useNavigate();
-
   const [loadingCompra, setLoadingCompra] = useState(false);
 
-  useEffect(() => {
-    cargarCarrito();
-  }, []);
+  useEffect(() => { cargarCarrito(); }, []);
 
-  const total = useMemo(
-    () => items.reduce((acc, it) => acc + calcularSubtotal(it), 0),
-    [items]
-  );
+  const total = useMemo(() => items.reduce((acc, it) => acc + calcularSubtotal(it), 0), [items]);
+  const totalFmt = useMemo(() => total.toFixed(2), [total]);
 
   const comprar = async () => {
     setLoadingCompra(true);
     try {
       const res = await crearPedido(access);
-      if (res?.error) {
-        toast.error(res.error);
-        setLoadingCompra(false);
-        return;
-      }
+      if (res?.error) return toast.error(res.error);
       toast.success("Pedido realizado ✅");
       limpiarLocal();
       navigate("/pedidos");
@@ -102,21 +77,23 @@ export default function Carrito() {
     }
   };
 
-  const incrementar = (it) => {
-    const stock = it.producto?.stock ?? 0;
-    if (it.cantidad < stock) {
-      setCantidad(it.id, it.cantidad + 1);
-    } else {
-      toast.warning(`Solo hay ${stock} unidades disponibles`);
-    }
-  };
+  const incrementar = useCallback(
+    (it) => {
+      const stock = it.producto?.stock ?? 0;
+      it.cantidad < stock
+        ? setCantidad(it.id, it.cantidad + 1)
+        : toast.warning(`Solo hay ${stock} unidades disponibles`);
+    },
+    [setCantidad]
+  );
 
-  const decrementar = (it) =>
-    it.cantidad > 1 && setCantidad(it.id, it.cantidad - 1);
+  const decrementar = useCallback(
+    (it) => it.cantidad > 1 && setCantidad(it.id, it.cantidad - 1),
+    [setCantidad]
+  );
 
   return (
     <Box sx={styles.root}>
-      {/* HEADER */}
       <Box sx={styles.header}>
         <ShoppingCartIcon sx={styles.headerIcon} />
         <Typography variant="h5">
@@ -124,27 +101,22 @@ export default function Carrito() {
         </Typography>
       </Box>
 
-      {/* LOADING */}
-      {loading && <Typography>Cargando carrito...</Typography>}
+      {loading && (
+        <Box sx={{ textAlign: "center", mt: 4 }}>
+          <CircularProgress />
+          <Typography sx={{ mt: 2 }}>Cargando carrito...</Typography>
+        </Box>
+      )}
 
-      {/* VACÍO */}
       {!loading && items.length === 0 && (
         <Box sx={{ textAlign: "center", mt: 6 }}>
           <RemoveShoppingCartIcon sx={{ fontSize: 60, color: "text.disabled" }} />
           <Typography variant="h6" color="text.secondary" sx={{ mt: 2 }}>
             Tu carrito está vacío
           </Typography>
-          <Button
-            variant="outlined"
-            sx={{ mt: 3 }}
-            onClick={() => navigate("/productos")}
-          >
-            Explorar productos
-          </Button>
         </Box>
       )}
 
-      {/* ITEMS */}
       {!loading &&
         items.map((it) => (
           <motion.div
@@ -160,20 +132,15 @@ export default function Carrito() {
               setCantidad={setCantidad}
               eliminarItem={eliminarItem}
             />
-            <Typography
-              variant="body2"
-              align="right"
-              sx={{ mb: 2, color: "text.secondary" }}
-            >
+            <Typography variant="body2" align="right" sx={{ mb: 2, color: "text.secondary" }}>
               Subtotal: ${calcularSubtotal(it).toFixed(2)}
             </Typography>
           </motion.div>
         ))}
 
-      {/* FOOTER */}
       {!loading && items.length > 0 && (
-        <CarritoFooter total={total} comprar={comprar} loadingCompra={loadingCompra} />
+        <CarritoFooter totalFmt={totalFmt} comprar={comprar} loadingCompra={loadingCompra} />
       )}
     </Box>
   );
-          }
+}
