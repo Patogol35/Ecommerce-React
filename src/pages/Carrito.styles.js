@@ -21,9 +21,14 @@ const styles = {
     left: 0,
     right: 0,
     bgcolor: { xs: theme.palette.background.paper, sm: "transparent" },
-    p: { xs: 2, sm: 0 },
-    boxShadow: { xs: "0 -4px 12px rgba(0,0,0,0.15)", sm: "none" },
+    p: { xs: 3, sm: 0 },
+    boxShadow: { xs: "0 -4px 16px rgba(0,0,0,0.15)", sm: "none" },
     borderTop: { xs: "1px solid #ddd", sm: "none" },
+    display: "flex",
+    flexDirection: { xs: "column", sm: "row" },
+    alignItems: { xs: "center", sm: "flex-end" },
+    justifyContent: { xs: "center", sm: "space-between" },
+    gap: { xs: 2, sm: 1 },
   }),
   divider: {
     mb: 2,
@@ -31,21 +36,33 @@ const styles = {
   },
   button: {
     width: { xs: "100%", sm: "auto" },
-    transition: "all 0.3s",
-    fontWeight: "bold",
-    borderRadius: 3,
-    py: 1.2,
-    "&:hover": { transform: "scale(1.05)", boxShadow: 6 },
+    py: 1.5,
+    px: 4,
+    fontWeight: 700,
+    fontSize: "1rem",
+    borderRadius: 8,
+    background: "linear-gradient(135deg, #1976d2, #42a5f5)", // degradado azul
+    color: "#fff",
+    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+    transition: "all 0.3s ease-in-out",
+    "&:hover": {
+      transform: "translateY(-3px) scale(1.05)",
+      boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
+      background: "linear-gradient(135deg, #1565c0, #1e88e5)",
+    },
   },
-
   total: {
-  display: "flex",
-  alignItems: "center",
-  gap: 0.5,
-  fontWeight: 700,
-  fontSize: "1.1rem",
-  color: "primary.main",
-},
+    display: "flex",
+    alignItems: "center",
+    gap: 1,
+    fontWeight: 800,
+    fontSize: "1.3rem",
+    color: "#1976d2",
+    padding: "0.5rem 1rem",
+    borderRadius: 8,
+    backgroundColor: "#e3f2fd", // azul muy claro
+    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+  },
 };
 
 export default styles;
