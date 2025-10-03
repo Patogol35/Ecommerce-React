@@ -3,7 +3,9 @@ const carritoItemStyles = {
     display: "flex",
     flexDirection: { xs: "column", sm: "row" },
     mb: 2,
+    mx: { xs: 2, sm: 0 }, // ✅ margen lateral en móvil
     borderRadius: 3,
+    overflow: "hidden",   // ✅ para que el borde redondeado cubra todo
     boxShadow: "0 3px 8px rgba(0,0,0,0.12)",
     transition: "all 0.3s",
     "&:hover": { boxShadow: "0 6px 16px rgba(0,0,0,0.2)" },
@@ -26,6 +28,7 @@ const carritoItemStyles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
+    p: 2, // ✅ padding interno
   },
 
   descripcion: {
