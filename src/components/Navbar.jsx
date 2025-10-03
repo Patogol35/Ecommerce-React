@@ -15,6 +15,7 @@ import {
   Stack,
   Button,
   Drawer,
+  Divider,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -137,32 +138,22 @@ export default function Navbar() {
       </motion.div>
 
       {/* Drawer Móvil */}
-<Drawer
-  anchor="right"
-  open={open}
-  onClose={() => setOpen(false)}
-  sx={{ display: { xs: "block", md: "none" } }}
-  PaperProps={{ sx: styles.drawerPaper }}
->
-  <Stack sx={styles.drawerStack} spacing={3}>
-    {/* User info móvil */}
-    {renderUserSection(false, true)}
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={() => setOpen(false)}
+        sx={{ display: { xs: "block", md: "none" } }}
+        PaperProps={{ sx: styles.drawerPaper }}
+      >
+        <Stack sx={styles.drawerStack} spacing={3}>
+          {/* User info móvil */}
+          {renderUserSection(false, true)}
 
-    <Divider sx={{ bgcolor: "rgba(255,255,255,0.3)", my: 2 }} /> 
+          <Divider sx={{ bgcolor: "rgba(255,255,255,0.3)", my: 2 }} />
 
-    {/* Menú móvil */}
-    {renderMenuItems()}
-    <IconButton onClick={toggleMode} sx={{ color: "#fff" }}>
-      {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
-    </IconButton>
-  </Stack>
-</Drawer>
-        {/* User info móvil */}
-        {renderUserSection(false, true)}
-
-        {/* Menú items */}
-        <Stack spacing={2} sx={styles.drawerStack}>
+          {/* Menú móvil */}
           {renderMenuItems(() => setOpen(false))}
+
           {isAuthenticated && (
             <Button
               onClick={handleLogout}
@@ -183,4 +174,4 @@ export default function Navbar() {
       </Drawer>
     </>
   );
-      }
+}
