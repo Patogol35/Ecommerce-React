@@ -1,6 +1,7 @@
 const styles = {
   root: {
     pb: { xs: 14, sm: 6 },
+    px: { xs: 2, sm: 4 }, // ✅ margen horizontal consistente
   },
   header: {
     display: "flex",
