@@ -49,6 +49,7 @@ const styles = {
   userSection: (isMobile) => ({
     my: isMobile ? 2 : 0,
     textAlign: "center",
+    mt: isMobile ? 4 : 0, // 👈 baja el bloque de usuario en móvil
   }),
 
   logoutBtn: {
@@ -62,7 +63,7 @@ const styles = {
 
   drawerStack: {
     flex: 1,
-    mt: 2,
+    mt: 5, // 👈 más espacio antes de las opciones
   },
 
   drawerUtilStack: {
@@ -79,7 +80,7 @@ const styles = {
   },
 
   menuIconWrapper: {
-    display: "flex", // 👈 lo que estaba inline
+    display: "flex",
   },
 };
 
