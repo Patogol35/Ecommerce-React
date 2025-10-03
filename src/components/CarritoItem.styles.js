@@ -4,14 +4,16 @@ const carritoItemStyles = {
     flexDirection: { xs: "column", sm: "row" },
     mb: 3,
     mx: { xs: 2, sm: 0 },
-    borderRadius: 8,
+    borderRadius: 6,
+    border: "1px solid",
+    borderColor: theme.palette.divider,
     overflow: "hidden",
     backgroundColor: theme.palette.background.paper,
-    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    boxShadow: "0 2px 8px rgba(0,0,0,0.08)",
     transition: "all 0.3s ease",
     "&:hover": {
-      boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
-      transform: "translateY(-3px) scale(1.02)",
+      boxShadow: "0 6px 16px rgba(0,0,0,0.16)",
+      transform: "translateY(-3px)",
     },
   }),
 
@@ -20,10 +22,10 @@ const carritoItemStyles = {
     height: { xs: 200, sm: 180 },
     objectFit: "contain",
     borderRadius: { xs: "12px 12px 0 0", sm: "12px 0 0 12px" },
-    bgcolor: theme.palette.mode === "dark" ? "#1e1e1e" : "#f5f5f5",
+    bgcolor: theme.palette.mode === "dark" ? "#1e1e1e" : "#fafafa",
     p: 2,
     transition: "transform 0.35s ease",
-    "&:hover": { transform: "scale(1.08)" },
+    "&:hover": { transform: "scale(1.05)" },
   }),
 
   content: {
@@ -32,14 +34,14 @@ const carritoItemStyles = {
     flexDirection: "column",
     justifyContent: "space-between",
     p: 2.5,
-    gap: 1.5,
+    gap: 1,
   },
 
   titulo: {
-    fontWeight: 700,
-    fontSize: "1.2rem",
+    fontWeight: 600,
+    fontSize: "1.1rem",
     lineHeight: 1.4,
-    mb: 1,
+    mb: 0.5,
   },
 
   descripcion: {
@@ -49,8 +51,8 @@ const carritoItemStyles = {
     overflow: "hidden",
     textOverflow: "ellipsis",
     color: "text.secondary",
-    fontSize: "0.95rem",
-    mb: 2,
+    fontSize: "0.9rem",
+    mb: 1.5,
   },
 
   chipSubtotal: {
@@ -58,13 +60,13 @@ const carritoItemStyles = {
     fontSize: "1rem",
     bgcolor: "linear-gradient(45deg, #4caf50, #81c784)",
     color: "#fff",
-    "& .MuiChip-icon": { color: "#fff", fontSize: "1.2rem" },
+    "& .MuiChip-icon": { color: "#fff" },
   },
 
   chipStock: {
     fontWeight: "bold",
     fontSize: "0.85rem",
-    opacity: 0.85,
+    opacity: 0.8,
   },
 
   controlesWrapper: {
@@ -73,7 +75,7 @@ const carritoItemStyles = {
     justifyContent: "center",
     alignItems: "center",
     p: 2,
-    gap: 2,
+    gap: 1.5,
     borderLeft: { sm: "1px solid rgba(0,0,0,0.08)" },
     borderTop: { xs: "1px solid rgba(0,0,0,0.08)", sm: "none" },
   },
@@ -95,7 +97,7 @@ const carritoItemStyles = {
     bgcolor: "background.paper",
     "&:hover": {
       bgcolor: "action.hover",
-      transform: "scale(1.1)",
+      transform: "scale(1.05)",
     },
     transition: "all 0.2s ease",
   },
@@ -113,10 +115,10 @@ const carritoItemStyles = {
 
   botonEliminar: {
     color: "error.main",
-    borderRadius: 4,
+    borderRadius: 2,
     px: 2,
     "&:hover": {
-      bgcolor: "rgba(244, 67, 54, 0.12)",
+      bgcolor: "rgba(244, 67, 54, 0.1)",
       transform: "scale(1.05)",
     },
     transition: "all 0.2s ease",
