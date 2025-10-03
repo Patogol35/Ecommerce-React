@@ -1,4 +1,3 @@
-// Navbar.styles.js
 const styles = {
   appBar: (scrolled) => ({
     backgroundColor: "#1976d2",
@@ -47,11 +46,6 @@ const styles = {
     flexDirection: "column",
   },
 
-  drawerHeader: {
-    display: "flex",
-    justifyContent: "flex-end",
-  },
-
   userSection: (isMobile) => ({
     my: isMobile ? 2 : 0,
     textAlign: "center",
@@ -84,12 +78,8 @@ const styles = {
     height: 48,
   },
 
-  closeDrawerBtn: {
-    color: "#fff",
-    background: "rgba(0,0,0,0.6)",
-    "&:hover": { background: "rgba(0,0,0,0.9)" },
-    width: 42,
-    height: 42,
+  menuIconWrapper: {
+    display: "flex", // 👈 lo que estaba inline
   },
 };
 
