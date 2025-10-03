@@ -36,32 +36,32 @@ const styles = {
   },
   button: {
     width: { xs: "100%", sm: "auto" },
-    py: 1.5,
-    px: 4,
+    py: 1.2,        // padding vertical más pequeño
+    px: 3.5,        // padding horizontal más pequeño
     fontWeight: 700,
-    fontSize: "1rem",
-    borderRadius: 8,
-    background: "linear-gradient(135deg, #1976d2, #42a5f5)", // degradado azul
+    fontSize: "0.95rem", // texto un poco más pequeño
+    borderRadius: 6,     // menos redondeado
+    background: "linear-gradient(135deg, #1976d2, #42a5f5)",
     color: "#fff",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.15)",
+    boxShadow: "0 3px 10px rgba(0,0,0,0.12)",
     transition: "all 0.3s ease-in-out",
     "&:hover": {
-      transform: "translateY(-3px) scale(1.05)",
-      boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
+      transform: "translateY(-2px) scale(1.03)",
+      boxShadow: "0 5px 15px rgba(0,0,0,0.2)",
       background: "linear-gradient(135deg, #1565c0, #1e88e5)",
     },
   },
   total: {
     display: "flex",
     alignItems: "center",
-    gap: 1,
+    gap: 0.8,            // menos espacio entre icono y texto
     fontWeight: 800,
-    fontSize: "1.3rem",
+    fontSize: "1.1rem",   // más pequeño
     color: "#1976d2",
-    padding: "0.5rem 1rem",
-    borderRadius: 8,
-    backgroundColor: "#e3f2fd", // azul muy claro
-    boxShadow: "0 2px 6px rgba(0,0,0,0.1)",
+    padding: "0.4rem 0.8rem", // padding más compacto
+    borderRadius: 6,
+    backgroundColor: "#e3f2fd",
+    boxShadow: "0 1.5px 5px rgba(0,0,0,0.08)",
   },
 };
 
