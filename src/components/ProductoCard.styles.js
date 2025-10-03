@@ -1,19 +1,27 @@
 // Tarjeta principal
-export const cardSx = {
+export const cardSx = (theme) => ({
   width: 320,
   height: 480,
   borderRadius: 3,
-  bgcolor: "background.paper", // ✅ adapta light/dark
-  boxShadow: "0 8px 24px rgba(0,0,0,0.06)",
+  bgcolor: "background.paper",
+  border: "1px solid",
+  borderColor: "divider", // ✅ línea sutil que separa del fondo
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "0 6px 18px rgba(0,0,0,0.6)"   // sombra más fuerte en dark
+      : "0 8px 24px rgba(0,0,0,0.06)",
   overflow: "hidden",
   display: "flex",
   flexDirection: "column",
   transition: "all 0.3s ease",
   "&:hover": {
     transform: "translateY(-6px)",
-    boxShadow: "0 12px 32px rgba(0,0,0,0.18)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 8px 24px rgba(0,0,0,0.9)"
+        : "0 12px 32px rgba(0,0,0,0.12)",
   },
-};
+});
 
 // Imagen contenedor
 export const imagenBoxSx = {
@@ -22,7 +30,7 @@ export const imagenBoxSx = {
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  bgcolor: "background.default", // ✅ ya no se pierde en dark
+  bgcolor: "background.default", // ✅ adaptable
   overflow: "hidden",
 };
 
@@ -64,7 +72,7 @@ export const tituloSx = {
   fontWeight: 600,
   fontSize: "1.1rem",
   lineHeight: 1.35,
-  color: "text.primary", // ✅ texto adaptable
+  color: "text.primary", // ✅ adaptable
   overflow: "hidden",
   textOverflow: "ellipsis",
   whiteSpace: "nowrap",
@@ -75,7 +83,7 @@ export const precioStackSx = {
   mb: 2,
   fontSize: "1.25rem",
   fontWeight: "bold",
-  color: "primary.main", // ✅ mantiene color del tema
+  color: "primary.main", // ✅ usa paleta
 };
 
 // Divider
@@ -110,12 +118,12 @@ export const botonDetallesSx = {
   fontWeight: 500,
   fontSize: "0.9rem",
   border: "1px solid",
-  borderColor: "divider", // ✅ se adapta al tema
-  color: "text.secondary", // ✅ gris adaptable
+  borderColor: "divider", // ✅ adaptable
+  color: "text.secondary", // ✅ se ajusta a light/dark
   transition: "all 0.3s ease",
   "&:hover": {
     transform: "scale(1.04)",
-    bgcolor: "action.hover", // ✅ usa color dinámico
+    bgcolor: "action.hover", // ✅ dinámico
     boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
   },
 };
