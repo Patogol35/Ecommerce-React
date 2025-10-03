@@ -53,12 +53,12 @@ export default function CarritoItem({
 
         {/* Precio + Stock */}
         <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-          <Chip
-            icon={<MonetizationOnIcon />}
-            label={`$${calcularSubtotal(it).toFixed(2)}`}
-            color="success"
-            sx={carritoItemStyles.chipSubtotal}
-          />
+        <Chip
+  icon={<MonetizationOnIcon />}
+  label={calcularSubtotal(it).toFixed(2)}
+  color="success"
+  sx={carritoItemStyles.chipSubtotal}
+/>
           <Chip
             label={`Stock: ${stock} unidades`}
             color={stock > 0 ? "info" : "default"}
