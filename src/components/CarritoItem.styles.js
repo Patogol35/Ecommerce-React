@@ -3,14 +3,15 @@ const carritoItemStyles = {
     display: "flex",
     flexDirection: { xs: "column", sm: "row" },
     mb: 2,
-    mx: { xs: 2, sm: 0 },            // margen lateral en móvil
+    mx: { xs: 2, sm: 0 },
     borderRadius: 3,
     border: "1px solid",
-    borderColor: theme.palette.divider, // ✅ borde completo
-    overflow: "hidden",               // ✅ asegura bordes redondeados
-    boxShadow: "0 3px 8px rgba(0,0,0,0.12)",
+    borderColor: theme.palette.divider,
+    overflow: "hidden",
+    boxShadow: "0 4px 10px rgba(0,0,0,0.12)",
     transition: "all 0.3s",
-    "&:hover": { boxShadow: "0 6px 16px rgba(0,0,0,0.2)" },
+    bgcolor: theme.palette.background.paper,
+    "&:hover": { boxShadow: "0 8px 20px rgba(0,0,0,0.2)" },
   }),
 
   media: (theme) => ({
@@ -29,7 +30,7 @@ const carritoItemStyles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    p: 2, // padding interno para separar texto y botones
+    p: 2,
   },
 
   descripcion: {
@@ -39,14 +40,19 @@ const carritoItemStyles = {
     overflow: "hidden",
     textOverflow: "ellipsis",
     mb: 1,
+    color: "text.secondary",
+    fontSize: "0.9rem",
   },
 
   chipSubtotal: {
     fontWeight: "bold",
+    fontSize: "1.1rem",
+    color: "primary.main",
   },
 
   chipStock: {
     fontWeight: "bold",
+    fontSize: "0.85rem",
   },
 
   controlesWrapper: {
@@ -75,7 +81,7 @@ const carritoItemStyles = {
 
   botonEliminar: {
     color: "error.main",
-    "&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
+    "&:hover": { bgcolor: "rgba(211,47,47,0.08)" },
   },
 };
 
