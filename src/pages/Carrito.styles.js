@@ -22,9 +22,12 @@ const styles = {
     right: 0,
     bgcolor: { xs: theme.palette.background.paper, sm: "transparent" },
     p: { xs: 2, sm: 0 },
-    boxShadow: { xs: "0 -4px 12px rgba(0,0,0,0.15)", sm: "none" },
-    borderTop: { xs: "1px solid", sm: "none" },   // ✅ adaptable
-    borderColor: { xs: "divider", sm: "none" },  // ✅ usa token del tema
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 -6px 16px rgba(0,0,0,0.6)" // sombra más fuerte en dark
+        : { xs: "0 -4px 12px rgba(0,0,0,0.15)", sm: "none" },
+    borderTop: { xs: "1px solid", sm: "none" },
+    borderColor: { xs: "divider", sm: "none" },
   }),
   divider: {
     mb: 2,
