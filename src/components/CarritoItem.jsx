@@ -26,10 +26,10 @@ export default function CarritoItem({
 }) {
   const stock = it.producto?.stock ?? 0;
 
-  // Estado local para el input, permite borrar y escribir libremente
+  // Estado local para el input
   const [inputCantidad, setInputCantidad] = useState(it.cantidad);
 
-  // Sincroniza si cambia la cantidad desde botones o actualización externa
+  // Sincroniza si cambia la cantidad desde afuera
   useEffect(() => {
     setInputCantidad(it.cantidad);
   }, [it.cantidad]);
@@ -91,7 +91,17 @@ export default function CarritoItem({
             value={inputCantidad}
             inputProps={{ min: 1, max: stock }}
             onChange={(e) => {
-              setInputCantidad(e.target.value); // permite borrar y escribir libre
+              const valor = e.target.value;
+              setInputCantidad(valor); // permite borrar y escribir libre
+
+              const nuevaCantidad = Number(valor);
+              if (
+                !Number.isNaN(nuevaCantidad) &&
+                nuevaCantidad >= 1 &&
+                nuevaCantidad <= stock
+              ) {
+                setCantidad(it.id, nuevaCantidad); // actualiza subtotal en tiempo real
+              }
             }}
             onBlur={() => {
               let nuevaCantidad = Number(inputCantidad);
@@ -103,8 +113,8 @@ export default function CarritoItem({
                 nuevaCantidad = stock;
               }
 
-              setCantidad(it.id, nuevaCantidad); // actualiza el carrito real
-              setInputCantidad(nuevaCantidad);   // sincroniza input con valor real
+              setCantidad(it.id, nuevaCantidad);
+              setInputCantidad(nuevaCantidad); // sincroniza input con valor real
             }}
             sx={carritoItemStyles.cantidadInput}
           />
@@ -127,4 +137,4 @@ export default function CarritoItem({
       </Box>
     </Card>
   );
-            }
+}
