@@ -4,14 +4,14 @@ const carritoItemStyles = {
     flexDirection: { xs: "column", sm: "row" },
     mb: 2,
     mx: { xs: 2, sm: 0 },
-    borderRadius: 3,
+    borderRadius: 4,
     border: "1px solid",
     borderColor: theme.palette.divider,
     overflow: "hidden",
-    boxShadow: "0 4px 10px rgba(0,0,0,0.12)",
+    boxShadow: "0 3px 8px rgba(0,0,0,0.12)",
     transition: "all 0.3s",
     bgcolor: theme.palette.background.paper,
-    "&:hover": { boxShadow: "0 8px 20px rgba(0,0,0,0.2)" },
+    "&:hover": { boxShadow: "0 6px 16px rgba(0,0,0,0.2)" },
   }),
 
   media: (theme) => ({
@@ -44,14 +44,16 @@ const carritoItemStyles = {
     fontSize: "0.9rem",
   },
 
-  // 👇 Aquí está el truco: el subtotal/price
+  // 💲 precio/subtotal más visible
   chipSubtotal: (theme) => ({
     fontWeight: "bold",
     fontSize: "1.1rem",
-    color: theme.palette.success.main, // verde pero como texto, no como botón
-    background: "transparent",         // sin fondo
-    boxShadow: "none",
-    p: 0,
+    color: theme.palette.success.main,
+    background: "rgba(76, 175, 80, 0.08)",
+    borderRadius: 6,
+    px: 1.5,
+    py: 0.5,
+    alignSelf: "flex-start",
     mt: 1,
   }),
 
@@ -85,7 +87,7 @@ const carritoItemStyles = {
 
   botonEliminar: {
     color: "error.main",
-    "&:hover": { bgcolor: "rgba(211,47,47,0.08)" },
+    "&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
   },
 };
 
