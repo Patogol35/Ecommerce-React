@@ -72,31 +72,31 @@ const carritoItemStyles = {
 
   controlesWrapper: {
     display: "flex",
-    flexDirection: { xs: "row", sm: "column" },
+    flexDirection: "row", // 🔥 siempre en fila
     justifyContent: "center",
     alignItems: "center",
-    p: 2,
-    gap: 1.5,
-    borderLeft: { sm: "1px solid rgba(0,0,0,0.08)" },
-    borderTop: { xs: "1px solid rgba(0,0,0,0.08)", sm: "none" },
+    p: 1.5,
+    gap: 1,
+    borderTop: "1px solid rgba(0,0,0,0.08)", // línea separadora arriba
   },
 
   cantidadWrapper: {
     display: "flex",
     alignItems: "center",
-    gap: 1,
+    gap: 0.5,
     bgcolor: "action.hover",
     borderRadius: 2,
     px: 1,
-    py: 0.5,
+    py: 0.3,
   },
 
   botonCantidad: {
-    minWidth: 32,
-    minHeight: 32,
+    minWidth: 28,
+    minHeight: 28,
     borderRadius: "50%",
     bgcolor: "background.paper",
     boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    fontSize: "0.85rem",
     "&:hover": {
       bgcolor: "action.hover",
       transform: "scale(1.1)",
@@ -105,11 +105,11 @@ const carritoItemStyles = {
   },
 
   cantidadInput: {
-    width: 50,
+    width: 45,
     "& input": {
       textAlign: "center",
       fontWeight: "bold",
-      fontSize: "1rem",
+      fontSize: "0.95rem",
       borderRadius: 2,
     },
   },
@@ -117,7 +117,9 @@ const carritoItemStyles = {
   botonEliminar: {
     color: "error.main",
     borderRadius: 2,
-    px: 2,
+    px: 1.5,
+    py: 0.8,
+    ml: 1, // 🔥 espacio entre cantidad y tacho
     "&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
   },
 };
