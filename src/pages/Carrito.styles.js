@@ -46,7 +46,7 @@ const styles = {
   boxShadow: "0 3px 10px rgba(0,0,0,0.12)",
   transition: "all 0.3s ease-in-out",
 
-  mr: { xs: 0, sm: 2 },   // 👈 aquí agregas esta línea
+  mr: { xs: 0, sm: 6 },  
 
   "&:hover": {
     transform: "translateY(-2px) scale(1.03)",
