@@ -9,46 +9,42 @@ const styles = {
     alignItems: "center",
     gap: 1,
     color: "primary.main",
-    mt: 3,
-    mb: 3,
-    fontWeight: 700,          // más marcado
-    fontSize: "1.35rem",      // un poco más grande
-    letterSpacing: 0.5,       // más limpio
+    mt: 4,
+    mb: 4,
+    fontWeight: 700,
+    fontSize: "1.6rem",        // ✅ mucho más grande
+    textTransform: "uppercase" // ✅ estilo más marcado
   },
 
   headerIcon: {
-    fontSize: 40,             // más grande para balancear el título
-    color: "primary.main",    // coherente con el header
+    fontSize: 44,              // ✅ más grande
+    color: "primary.main",
   },
 
   footerBox: (theme) => ({
     textAlign: "right",
     position: { xs: "fixed", sm: "static" },
-    bottom: { xs: 0, sm: "auto" },
-    left: 0,
-    right: 0,
-    bgcolor: { 
-      xs: theme.palette.mode === "dark"
-        ? "rgba(18,18,18,0.85)"   // oscuro translúcido
-        : "rgba(255,255,255,0.85)" // claro translúcido
-    },
-    backdropFilter: "blur(10px)", // ✅ efecto vidrio más notorio
-    p: { xs: 2, sm: 0 },
+    bottom: { xs: 12, sm: "auto" }, // ✅ se separa del borde
+    left: { xs: 12, sm: 0 },        // ✅ margenes internos
+    right: { xs: 12, sm: 0 },
+    borderRadius: { xs: 3, sm: 0 }, // ✅ redondeado solo en mobile
+    bgcolor: theme.palette.mode === "dark"
+      ? "rgba(30,30,30,0.9)"
+      : "rgba(255,255,255,0.95)",
+    backdropFilter: "blur(12px)",
+    p: { xs: 2.5, sm: 0 },
     boxShadow: {
       xs:
         theme.palette.mode === "dark"
-          ? "0 -6px 18px rgba(0,0,0,0.7)" // más marcado en dark
-          : "0 -4px 14px rgba(0,0,0,0.15)", // limpio en light
+          ? "0 -6px 20px rgba(0,0,0,0.7)"
+          : "0 -4px 16px rgba(0,0,0,0.15)",
       sm: "none",
     },
-    borderTop: {
-      xs: `1px solid ${theme.palette.divider}`,
-      sm: "none",
-    },
+    border: { xs: `1px solid ${theme.palette.divider}`, sm: "none" },
   }),
 
   divider: {
-    mb: 2,
+    mb: 3, // ✅ más aire
     display: { xs: "none", sm: "block" },
   },
 
@@ -57,12 +53,15 @@ const styles = {
     transition: "all 0.25s ease",
     fontWeight: "bold",
     borderRadius: 3,
-    py: 1.3,
-    px: { xs: 2.5, sm: 4 }, // más cómodos
-    fontSize: "1rem",       // más legible
+    py: 1.4,
+    px: { xs: 3, sm: 4 },
+    fontSize: "1rem",
+    background: "linear-gradient(90deg, #1976d2, #42a5f5)", // ✅ visible
+    color: "#fff",
     "&:hover": {
-      transform: "translateY(-2px) scale(1.04)", // movimiento más elegante
-      boxShadow: 6,
+      transform: "translateY(-3px) scale(1.05)",
+      boxShadow: "0 6px 20px rgba(0,0,0,0.25)",
+      background: "linear-gradient(90deg, #1565c0, #1e88e5)",
     },
   },
 };
