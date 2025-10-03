@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import {
   Card,
   CardMedia,
@@ -19,20 +18,13 @@ import carritoItemStyles from "./CarritoItem.styles";
 
 export default function CarritoItem({
   it,
+  theme,
   incrementar,
   decrementar,
   setCantidad,
   eliminarItem,
 }) {
   const stock = it.producto?.stock ?? 0;
-
-  // Estado local para el input
-  const [inputCantidad, setInputCantidad] = useState(it.cantidad);
-
-  // Sincroniza si cambia la cantidad desde afuera
-  useEffect(() => {
-    setInputCantidad(it.cantidad);
-  }, [it.cantidad]);
 
   return (
     <Card sx={carritoItemStyles.card}>
@@ -86,42 +78,36 @@ export default function CarritoItem({
           </IconButton>
 
           <TextField
-            type="text" // cambio clave para poder borrar todo de una vez
+            type="number"
             size="small"
-            value={inputCantidad}
-            inputProps={{ inputMode: "numeric" }} // muestra teclado numérico en móviles
+            value={it.cantidad}
+            inputProps={{ min: 1, max: stock }}
             onChange={(e) => {
-              const valor = e.target.value;
+              const value = e.target.value;
 
-              // permite borrar y escribir libre
-              setInputCantidad(valor);
-
-              const nuevaCantidad = Number(valor);
-
-              if (valor === "") return; // temporalmente vacío
-
-              if (!Number.isNaN(nuevaCantidad) && nuevaCantidad >= 1 && nuevaCantidad <= stock) {
-                setCantidad(it.id, nuevaCantidad);
+              // Caso: vacío (se borra el valor con backspace)
+              if (value === "") {
+                setCantidad(it.id, 1);
+                return;
               }
 
+              const nuevaCantidad = Number(value);
+
+              // Caso: no es número o menor a 1
+              if (Number.isNaN(nuevaCantidad) || nuevaCantidad < 1) {
+                setCantidad(it.id, 1);
+                return;
+              }
+
+              // Caso: mayor al stock disponible
               if (nuevaCantidad > stock) {
                 toast.warning(`No puedes pedir más de ${stock} unidades`);
                 setCantidad(it.id, stock);
-                setInputCantidad(stock);
-              }
-            }}
-            onBlur={() => {
-              let nuevaCantidad = Number(inputCantidad);
-
-              if (!nuevaCantidad || nuevaCantidad < 1) {
-                nuevaCantidad = 1;
-              } else if (nuevaCantidad > stock) {
-                toast.warning(`No puedes pedir más de ${stock} unidades`);
-                nuevaCantidad = stock;
+                return;
               }
 
+              // Caso válido
               setCantidad(it.id, nuevaCantidad);
-              setInputCantidad(nuevaCantidad);
             }}
             sx={carritoItemStyles.cantidadInput}
           />
