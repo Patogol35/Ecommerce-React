@@ -19,7 +19,6 @@ const styles = {
     fontSize: 40,
   },
 
-  // ❌ Ya no necesitamos footer fijo
   footerBox: (theme) => ({
     textAlign: "right",
     mt: 4,
