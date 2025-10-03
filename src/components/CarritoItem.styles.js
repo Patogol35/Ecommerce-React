@@ -4,9 +4,9 @@ const carritoItemStyles = {
     flexDirection: { xs: "column", sm: "row" },
     mb: 2,
     borderRadius: 3,
-    boxShadow: "0 3px 8px rgba(0,0,0,0.12)",
+    boxShadow: "0 3px 8px rgba(0,0,0,0.12)", // igual que tu diseño
     transition: "all 0.3s",
-    "&:hover": { boxShadow: "0 6px 16px rgba(0,0,0,0.2)" },
+    "&:hover": { boxShadow: "0 6px 16px rgba(0,0,0,0.2)" }, // igual
   },
 
   media: (theme) => ({
@@ -15,10 +15,10 @@ const carritoItemStyles = {
     objectFit: "contain",
     borderRadius: { xs: "12px 12px 0 0", sm: "12px 0 0 12px" },
     bgcolor: theme.palette.mode === "dark" ? "#333" : "#fafafa",
-    border: `1px solid ${theme.palette.divider}`, // ✅ dinámico
+    border: `1px solid ${theme.palette.divider}`, // ✅ dinámico (en light sigue igual)
     p: 1,
     transition: "transform 0.3s ease",
-    "&:hover": { transform: { sm: "scale(1.05)" } }, // ✅ solo en sm+
+    "&:hover": { transform: { sm: "scale(1.05)" } },
   }),
 
   content: {
@@ -37,7 +37,7 @@ const carritoItemStyles = {
     mb: 1,
   },
 
-  // 🔹 Dejamos como lo tenías, sin color forzado
+  // ✅ se mantienen como en tu diseño original
   chipSubtotal: {
     fontWeight: "bold",
   },
