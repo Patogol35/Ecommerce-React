@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import {
   Card,
   CardMedia,
@@ -25,8 +26,17 @@ export default function CarritoItem({
 }) {
   const stock = it.producto?.stock ?? 0;
 
+  // Estado local para el input, permite borrar y escribir libremente
+  const [inputCantidad, setInputCantidad] = useState(it.cantidad);
+
+  // Sincroniza si cambia la cantidad desde botones o actualización externa
+  useEffect(() => {
+    setInputCantidad(it.cantidad);
+  }, [it.cantidad]);
+
   return (
     <Card sx={carritoItemStyles.card}>
+      {/* Imagen producto */}
       <CardMedia
         component="img"
         image={it.producto?.imagen || undefined}
@@ -34,6 +44,7 @@ export default function CarritoItem({
         sx={(theme) => carritoItemStyles.media(theme)}
       />
 
+      {/* Info producto */}
       <CardContent sx={carritoItemStyles.content}>
         <Box>
           <Typography variant="h6" fontWeight="bold" gutterBottom>
@@ -48,6 +59,7 @@ export default function CarritoItem({
           </Typography>
         </Box>
 
+        {/* Precio + Stock */}
         <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
           <Chip
             icon={<MonetizationOnIcon />}
@@ -66,38 +78,33 @@ export default function CarritoItem({
       {/* Controles cantidad + eliminar */}
       <Box sx={carritoItemStyles.controlesWrapper}>
         <Box sx={carritoItemStyles.cantidadWrapper}>
-          <IconButton onClick={() => decrementar(it)}>
+          <IconButton
+            onClick={() => decrementar(it)}
+            sx={carritoItemStyles.botonCantidad}
+          >
             <RemoveIcon />
           </IconButton>
 
           <TextField
             type="number"
             size="small"
-            value={it.cantidad}
+            value={inputCantidad}
             inputProps={{ min: 1, max: stock }}
             onChange={(e) => {
-              const valor = e.target.value;
-
-              // Permitir vacío mientras se escribe
-              if (valor === "") {
-                setCantidad(it.id, "");
-                return;
-              }
-
-              const nuevaCantidad = Number(valor);
-
-              if (nuevaCantidad >= 1 && nuevaCantidad <= stock) {
-                setCantidad(it.id, nuevaCantidad);
-              } else if (nuevaCantidad > stock) {
-                toast.warning(`No puedes pedir más de ${stock} unidades`);
-                setCantidad(it.id, stock);
-              }
+              setInputCantidad(e.target.value); // permite borrar y escribir libre
             }}
             onBlur={() => {
-              // Si el campo queda vacío al salir, lo forzamos a 1
-              if (it.cantidad === "") {
-                setCantidad(it.id, 1);
+              let nuevaCantidad = Number(inputCantidad);
+
+              if (!nuevaCantidad || nuevaCantidad < 1) {
+                nuevaCantidad = 1;
+              } else if (nuevaCantidad > stock) {
+                toast.warning(`No puedes pedir más de ${stock} unidades`);
+                nuevaCantidad = stock;
               }
+
+              setCantidad(it.id, nuevaCantidad); // actualiza el carrito real
+              setInputCantidad(nuevaCantidad);   // sincroniza input con valor real
             }}
             sx={carritoItemStyles.cantidadInput}
           />
@@ -105,6 +112,7 @@ export default function CarritoItem({
           <IconButton
             onClick={() => incrementar(it)}
             disabled={it.cantidad >= stock}
+            sx={carritoItemStyles.botonCantidad}
           >
             <AddIcon />
           </IconButton>
@@ -119,4 +127,4 @@ export default function CarritoItem({
       </Box>
     </Card>
   );
-}
+            }
