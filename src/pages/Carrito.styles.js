@@ -23,7 +23,8 @@ const styles = {
     bgcolor: { xs: theme.palette.background.paper, sm: "transparent" },
     p: { xs: 2, sm: 0 },
     boxShadow: { xs: "0 -4px 12px rgba(0,0,0,0.15)", sm: "none" },
-    borderTop: { xs: "1px solid #ddd", sm: "none" },
+    borderTop: { xs: "1px solid", sm: "none" },   // ✅ adaptable
+    borderColor: { xs: "divider", sm: "none" },  // ✅ usa token del tema
   }),
   divider: {
     mb: 2,
