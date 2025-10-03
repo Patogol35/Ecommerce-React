@@ -4,9 +4,9 @@ const carritoItemStyles = {
     flexDirection: { xs: "column", sm: "row" },
     mb: 2,
     borderRadius: 3,
-    boxShadow: "0 3px 8px rgba(0,0,0,0.12)", // igual que tu diseño
+    boxShadow: "0 3px 8px rgba(0,0,0,0.12)",
     transition: "all 0.3s",
-    "&:hover": { boxShadow: "0 6px 16px rgba(0,0,0,0.2)" }, // igual
+    "&:hover": { boxShadow: "0 6px 16px rgba(0,0,0,0.2)" },
   },
 
   media: (theme) => ({
@@ -15,10 +15,10 @@ const carritoItemStyles = {
     objectFit: "contain",
     borderRadius: { xs: "12px 12px 0 0", sm: "12px 0 0 12px" },
     bgcolor: theme.palette.mode === "dark" ? "#333" : "#fafafa",
-    border: `1px solid ${theme.palette.divider}`, // ✅ dinámico (en light sigue igual)
+    border: "1px solid #eee",
     p: 1,
     transition: "transform 0.3s ease",
-    "&:hover": { transform: { sm: "scale(1.05)" } },
+    "&:hover": { transform: "scale(1.05)" },
   }),
 
   content: {
@@ -37,7 +37,6 @@ const carritoItemStyles = {
     mb: 1,
   },
 
-  // ✅ se mantienen como en tu diseño original
   chipSubtotal: {
     fontWeight: "bold",
   },
@@ -72,7 +71,7 @@ const carritoItemStyles = {
 
   botonEliminar: {
     color: "error.main",
-    "&:hover": { bgcolor: "error.light", opacity: 0.15 }, // ✅ adaptado
+    "&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
   },
 };
 
