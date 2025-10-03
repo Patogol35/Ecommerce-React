@@ -25,7 +25,7 @@ import {
   Brightness7 as LightModeIcon,
   AccountCircle as AccountCircleIcon,
 } from "@mui/icons-material";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 
 import styles from "./Navbar.styles";
 
@@ -63,7 +63,11 @@ export default function Navbar() {
           {user?.username}
         </Typography>
         {showLogout && (
-          <Button onClick={handleLogout} startIcon={<LogoutIcon />} sx={styles.logoutBtn}>
+          <Button
+            onClick={handleLogout}
+            startIcon={<LogoutIcon />}
+            sx={styles.logoutBtn}
+          >
             Cerrar sesión
           </Button>
         )}
@@ -73,11 +77,24 @@ export default function Navbar() {
   return (
     <>
       {/* Navbar Desktop */}
-      <motion.div initial={{ y: -80, opacity: 0 }} animate={{ y: 0, opacity: 1 }} transition={{ duration: 0.6 }}>
-        <AppBar position="fixed" elevation={scrolled ? 6 : 2} sx={styles.appBar(scrolled)}>
+      <motion.div
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
+      >
+        <AppBar
+          position="fixed"
+          elevation={scrolled ? 6 : 2}
+          sx={styles.appBar(scrolled)}
+        >
           <Toolbar sx={styles.toolbar}>
             {/* Logo */}
-            <Typography variant="h6" component={Link} to="/" sx={styles.logo}>
+            <Typography
+              variant="h6"
+              component={Link}
+              to="/"
+              sx={styles.logo}
+            >
               <ShoppingBagIcon sx={styles.logoIcon} />
               E-commerce Patricio
             </Typography>
@@ -91,31 +108,41 @@ export default function Navbar() {
               {renderUserSection(true, false)}
             </Box>
 
-          {/* Botón menú móvil con animación */}
-<IconButton
-  sx={styles.menuBtnMobile}
-  onClick={() => setOpen(!open)}
-  aria-label={open ? "Cerrar menú" : "Abrir menú"}
-  aria-expanded={open}
->
-  <AnimatePresence mode="wait" initial={false}>
-    <motion.div
-      key={open ? "close" : "menu"}
-      initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
-      animate={{ rotate: 0, opacity: 1, scale: 1 }}
-      exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
-      transition={{ duration: 0.25, ease: "easeInOut" }}
-      style={{ display: "flex" }}
-    >
-      {open ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
-    </motion.div>
-  </AnimatePresence>
-</IconButton>
+            {/* Botón menú móvil con animación */}
+            <IconButton
+              sx={styles.menuBtnMobile}
+              onClick={() => setOpen(!open)}
+              aria-label={open ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={open}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={open ? "close" : "menu"}
+                  initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                  style={styles.menuIconWrapper}
+                >
+                  {open ? (
+                    <CloseIcon fontSize="large" />
+                  ) : (
+                    <MenuIcon fontSize="large" />
+                  )}
+                </motion.div>
+              </AnimatePresence>
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      </motion.div>
 
       {/* Drawer Móvil */}
-      <Drawer anchor="right" open={open} onClose={() => setOpen(false)} PaperProps={{ sx: styles.drawerPaper }}>
-        
-
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={() => setOpen(false)}
+        PaperProps={{ sx: styles.drawerPaper }}
+      >
         {/* User info móvil */}
         {renderUserSection(false, true)}
 
@@ -123,7 +150,11 @@ export default function Navbar() {
         <Stack spacing={2} sx={styles.drawerStack}>
           {renderMenuItems(() => setOpen(false))}
           {isAuthenticated && (
-            <Button onClick={handleLogout} startIcon={<LogoutIcon />} sx={styles.logoutBtn}>
+            <Button
+              onClick={handleLogout}
+              startIcon={<LogoutIcon />}
+              sx={styles.logoutBtn}
+            >
               Cerrar sesión
             </Button>
           )}
@@ -133,13 +164,9 @@ export default function Navbar() {
             <IconButton onClick={toggleMode} sx={styles.toggleModeBtn}>
               {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
             </IconButton>
-
-            <IconButton onClick={() => setOpen(false)} sx={styles.closeDrawerBtn} aria-label="Cerrar menú">
-              <CloseIcon sx={{ fontSize: 26 }} />
-            </IconButton>
           </Stack>
         </Stack>
       </Drawer>
     </>
   );
-}
+      }
