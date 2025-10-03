@@ -7,7 +7,6 @@ import { toast } from "react-toastify";
 
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 import {
   Typography,
@@ -99,14 +98,11 @@ export default function Carrito() {
         ))}
 
       {!loading && items.length > 0 && (
-        <Box sx={styles.footerBox(theme)} mt={3}>
+        <Box sx={styles.footerBox(theme)}>
           <Divider sx={styles.divider} />
 
-          <Typography variant="h6" gutterBottom>
-            Total:{" "}
-            <strong>
-              ${total.toFixed(2)} <MonetizationOnIcon fontSize="small" />
-            </strong>
+          <Typography variant="h6" gutterBottom sx={{ mb: 1, display: { xs: "none", sm: "block" } }}>
+            Total: <strong>${total.toFixed(2)}</strong>
           </Typography>
 
           <Button
@@ -114,13 +110,13 @@ export default function Carrito() {
             color="primary"
             size="large"
             startIcon={<ShoppingCartCheckoutIcon />}
-            sx={styles.button}
+            sx={styles.button(total)} // 👈 total dinámico
             onClick={comprar}
           >
-            Finalizar compra
+            Finalizar compra – ${total.toFixed(2)}
           </Button>
         </Box>
       )}
     </Box>
   );
-}
+            }
