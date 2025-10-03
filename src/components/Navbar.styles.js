@@ -53,7 +53,7 @@ const styles = {
 
   drawerStack: {
     flex: 1,
-    mt: 4, // espacio entre usuario y opciones
+    mt: 8, // espacio entre usuario y opciones
   },
 
   userSection: (isMobile) => ({
