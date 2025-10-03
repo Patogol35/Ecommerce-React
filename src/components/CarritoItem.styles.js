@@ -15,10 +15,10 @@ const carritoItemStyles = {
     objectFit: "contain",
     borderRadius: { xs: "12px 12px 0 0", sm: "12px 0 0 12px" },
     bgcolor: theme.palette.mode === "dark" ? "#333" : "#fafafa",
-    border: "1px solid #eee",
+    border: `1px solid ${theme.palette.divider}`, // ✅ dinámico
     p: 1,
     transition: "transform 0.3s ease",
-    "&:hover": { transform: "scale(1.05)" },
+    "&:hover": { transform: { sm: "scale(1.05)" } }, // ✅ solo en sm+
   }),
 
   content: {
@@ -39,10 +39,12 @@ const carritoItemStyles = {
 
   chipSubtotal: {
     fontWeight: "bold",
+    color: "primary.main", // ✅ resalta subtotal
   },
 
   chipStock: {
     fontWeight: "bold",
+    color: "success.main", // ✅ mejor feedback visual
   },
 
   controlesWrapper: {
@@ -71,7 +73,7 @@ const carritoItemStyles = {
 
   botonEliminar: {
     color: "error.main",
-    "&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
+    "&:hover": { bgcolor: "error.light", opacity: 0.15 }, // ✅ adaptado
   },
 };
 
