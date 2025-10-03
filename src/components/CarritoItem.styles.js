@@ -44,15 +44,19 @@ const carritoItemStyles = {
     fontSize: "0.9rem",
   },
 
-  chipSubtotal: {
+  // 👇 Aquí está el truco: el subtotal/price
+  chipSubtotal: (theme) => ({
     fontWeight: "bold",
     fontSize: "1.1rem",
-    color: "primary.main",
-  },
+    color: theme.palette.success.main, // verde pero como texto, no como botón
+    background: "transparent",         // sin fondo
+    boxShadow: "none",
+    p: 0,
+    mt: 1,
+  }),
 
   chipStock: {
     fontWeight: "bold",
-    fontSize: "0.85rem",
   },
 
   controlesWrapper: {
