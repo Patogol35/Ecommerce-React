@@ -1,145 +1,127 @@
-import { useEffect, useMemo, useState, useCallback } from "react";
+import { useEffect, useMemo } from "react";
 import { useCarrito } from "../context/CarritoContext";
 import { useAuth } from "../context/AuthContext";
 import { crearPedido } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import RemoveShoppingCartIcon from "@mui/icons-material/RemoveShoppingCart";
 
+// MUI
 import {
   Typography,
   Box,
   Divider,
   Button,
-  CircularProgress,
   useTheme,
 } from "@mui/material";
-
-import { motion } from "framer-motion";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 import CarritoItem from "../components/CarritoItem";
 import { calcularSubtotal } from "../utils/carritoUtils";
-import styles from "./Carrito.styles";
 
-function CarritoFooter({ totalFmt, comprar, loadingCompra }) {
-  const theme = useTheme();
-  return (
-    <Box sx={styles.footerBox(theme)}>
-      <Divider sx={styles.divider} />
-      <Typography variant="h6" sx={{ mb: 1, display: { xs: "none", sm: "block" } }}>
-        Total: <strong>${totalFmt}</strong>
-      </Typography>
-      <Button
-        variant="contained"
-        color="primary"
-        size="large"
-        startIcon={<ShoppingCartCheckoutIcon />}
-        sx={styles.button(totalFmt)}
-        onClick={comprar}
-        disabled={parseFloat(totalFmt) <= 0 || loadingCompra}
-      >
-        {loadingCompra ? (
-          <CircularProgress size={24} color="inherit" />
-        ) : (
-          <>Finalizar compra – ${totalFmt}</>
-        )}
-      </Button>
-    </Box>
-  );
-}
+import styles from "./Carrito.styles"; // 👈 importamos estilos externos
 
 export default function Carrito() {
-  const { items, cargarCarrito, loading, limpiarLocal, setCantidad, eliminarItem } = useCarrito();
+  const theme = useTheme();
+  const {
+    items,
+    cargarCarrito,
+    loading,
+    limpiarLocal,
+    setCantidad,
+    eliminarItem,
+  } = useCarrito();
   const { access } = useAuth();
   const navigate = useNavigate();
-  const [loadingCompra, setLoadingCompra] = useState(false);
 
-  useEffect(() => { cargarCarrito(); }, []);
+  useEffect(() => {
+    cargarCarrito();
+  }, []);
 
-  const total = useMemo(() => items.reduce((acc, it) => acc + calcularSubtotal(it), 0), [items]);
-  const totalFmt = useMemo(() => total.toFixed(2), [total]);
+  const total = useMemo(
+    () => items.reduce((acc, it) => acc + calcularSubtotal(it), 0),
+    [items]
+  );
 
   const comprar = async () => {
-    setLoadingCompra(true);
     try {
       const res = await crearPedido(access);
-      if (res?.error) return toast.error(res.error);
+      if (res?.error) {
+        toast.error(res.error);
+        return;
+      }
       toast.success("Pedido realizado ✅");
       limpiarLocal();
       navigate("/pedidos");
     } catch (e) {
       toast.error(e.message || "Ocurrió un error en la compra");
-    } finally {
-      setLoadingCompra(false);
     }
   };
 
-  const incrementar = useCallback(
-    (it) => {
-      const stock = it.producto?.stock ?? 0;
-      it.cantidad < stock
-        ? setCantidad(it.id, it.cantidad + 1)
-        : toast.warning(`Solo hay ${stock} unidades disponibles`);
-    },
-    [setCantidad]
-  );
+  const incrementar = (it) => {
+    const stock = it.producto?.stock ?? 0;
+    if (it.cantidad < stock) {
+      setCantidad(it.id, it.cantidad + 1);
+    } else {
+      toast.warning(`Solo hay ${stock} unidades disponibles`);
+    }
+  };
 
-  const decrementar = useCallback(
-    (it) => it.cantidad > 1 && setCantidad(it.id, it.cantidad - 1),
-    [setCantidad]
-  );
+  const decrementar = (it) =>
+    it.cantidad > 1 && setCantidad(it.id, it.cantidad - 1);
 
   return (
     <Box sx={styles.root}>
-      <Box sx={styles.header}>
-        <ShoppingCartIcon sx={styles.headerIcon} />
-        <Typography variant="h5">
-          Mi Carrito {items.length > 0 && `(${items.length})`}
-        </Typography>
-      </Box>
+      <Typography
+        variant="h4"
+        gutterBottom
+        fontWeight="bold"
+        align="center"
+        sx={styles.header}
+      >
+        <ShoppingCartIcon color="primary" sx={styles.headerIcon} />
+        Mi Carrito
+      </Typography>
 
-      {loading && (
-        <Box sx={{ textAlign: "center", mt: 4 }}>
-          <CircularProgress />
-          <Typography sx={{ mt: 2 }}>Cargando carrito...</Typography>
-        </Box>
-      )}
-
+      {loading && <Typography>Cargando carrito...</Typography>}
       {!loading && items.length === 0 && (
-        <Box sx={{ textAlign: "center", mt: 6 }}>
-          <RemoveShoppingCartIcon sx={{ fontSize: 60, color: "text.disabled" }} />
-          <Typography variant="h6" color="text.secondary" sx={{ mt: 2 }}>
-            Tu carrito está vacío
-          </Typography>
-        </Box>
+        <Typography>Tu carrito está vacío.</Typography>
       )}
 
       {!loading &&
         items.map((it) => (
-          <motion.div
+          <CarritoItem
             key={it.id}
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.3 }}
-          >
-            <CarritoItem
-              it={it}
-              incrementar={incrementar}
-              decrementar={decrementar}
-              setCantidad={setCantidad}
-              eliminarItem={eliminarItem}
-            />
-            <Typography variant="body2" align="right" sx={{ mb: 2, color: "text.secondary" }}>
-              Subtotal: ${calcularSubtotal(it).toFixed(2)}
-            </Typography>
-          </motion.div>
+            it={it}
+            theme={theme}
+            incrementar={incrementar}
+            decrementar={decrementar}
+            setCantidad={setCantidad}
+            eliminarItem={eliminarItem}
+          />
         ))}
 
       {!loading && items.length > 0 && (
-        <CarritoFooter totalFmt={totalFmt} comprar={comprar} loadingCompra={loadingCompra} />
+        <Box sx={styles.footerBox(theme)} mt={3}>
+          <Divider sx={styles.divider} />
+          <Typography variant="h6" gutterBottom>
+            Total:{" "}
+            <strong>
+              ${total.toFixed(2)} <MonetizationOnIcon fontSize="small" />
+            </strong>
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            startIcon={<ShoppingCartCheckoutIcon />}
+            sx={styles.button}
+            onClick={comprar}
+          >
+            Finalizar compra
+          </Button>
+        </Box>
       )}
     </Box>
   );
