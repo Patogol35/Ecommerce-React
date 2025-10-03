@@ -1,7 +1,8 @@
-    const carritoItemStyles = {
+const carritoItemStyles = {
   card: (theme) => ({
     display: "flex",
     flexDirection: { xs: "column", sm: "row" },
+    alignItems: "flex-start",  // 🔥 alinea imagen y contenido
     mb: 3,
     mx: { xs: 2, sm: 0 },
     borderRadius: 4,
@@ -19,7 +20,8 @@
 
   media: (theme) => ({
     width: { xs: "100%", sm: 180 },
-    height: { xs: 200, sm: 180 },    // fijo para que la tarjeta se mantenga uniforme
+    height: "100%",             // 🔥 ocupa todo el alto del contenedor
+    maxHeight: { xs: 200, sm: 180 }, // opcional para mantener proporción
     objectFit: "contain",
     borderRadius: { xs: "16px 16px 0 0", sm: "16px 0 0 16px" },
     bgcolor: theme.palette.mode === "dark" ? "#2c2c2c" : "#f9f9f9",
@@ -39,13 +41,14 @@
 
   titulo: {
     fontWeight: 600,
-    fontSize: "0.95rem",       // tamaño compacto
-    lineHeight: 1.4,
+    fontSize: "0.95rem",
+    lineHeight: 1.3,
     mb: 0.5,
-    whiteSpace: "nowrap",      // evita salto de línea
-    overflow: "hidden",        // oculta exceso
-    textOverflow: "ellipsis",  // muestra "..."
-    maxWidth: "100%",          // ocupa solo el ancho disponible
+    display: "-webkit-box",
+    WebkitLineClamp: 2,       // máximo 2 líneas
+    WebkitBoxOrient: "vertical",
+    overflow: "hidden",
+    textOverflow: "ellipsis",
   },
 
   descripcion: {
@@ -77,7 +80,7 @@
     alignItems: "center",
     p: 1.5,
     gap: 1,
-    borderTop: "1px solid rgba(0,0,0,0.08)", // separador
+    borderTop: "1px solid rgba(0,0,0,0.08)",
   },
 
   cantidadWrapper: {
@@ -119,7 +122,7 @@
     borderRadius: 2,
     px: 1.5,
     py: 0.8,
-    ml: 1,                      // espacio entre cantidad y tacho
+    ml: 1,  // espacio entre cantidad y tacho
     "&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
   },
 };
