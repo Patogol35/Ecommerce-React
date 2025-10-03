@@ -1,7 +1,7 @@
 const styles = {
   root: {
     pb: { xs: 14, sm: 6 },
-    px: { xs: 2, sm: 4 },
+    px: { xs: 2, sm: 4 }, // ✅ margen horizontal consistente
   },
   header: {
     display: "flex",
@@ -30,21 +30,15 @@ const styles = {
     mb: 2,
     display: { xs: "none", sm: "block" },
   },
-  // 👇 Botón más atractivo
   button: {
     width: { xs: "100%", sm: "auto" },
     transition: "all 0.3s",
     fontWeight: "bold",
-    borderRadius: 8,
-    py: 1.4,
-    px: 3,
-    fontSize: "1rem",
-    background: "linear-gradient(135deg, #1976d2 0%, #42a5f5 100%)",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.2)",
+    borderRadius: 3,
+    py: 1.2,
     "&:hover": {
-      transform: "translateY(-2px) scale(1.03)",
-      background: "linear-gradient(135deg, #1565c0 0%, #1e88e5 100%)",
-      boxShadow: "0 6px 16px rgba(0,0,0,0.25)",
+      transform: "scale(1.05)",
+      boxShadow: 6,
     },
   },
 };
