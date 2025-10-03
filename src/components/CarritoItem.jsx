@@ -70,30 +70,46 @@ export default function CarritoItem({
       {/* Controles cantidad + eliminar */}
       <Box sx={carritoItemStyles.controlesWrapper}>
         <Box sx={carritoItemStyles.cantidadWrapper}>
+          {/* Botón restar */}
           <IconButton
             onClick={() => decrementar(it)}
+            disabled={it.cantidad <= 1}
             sx={carritoItemStyles.botonCantidad}
           >
             <RemoveIcon />
           </IconButton>
 
+          {/* Input cantidad */}
           <TextField
             type="number"
             size="small"
             value={it.cantidad}
             inputProps={{ min: 1, max: stock }}
             onChange={(e) => {
-              const nuevaCantidad = Number(e.target.value);
+              const value = e.target.value;
+
+              // Si está vacío → resetear a 1
+              if (value === "") {
+                setCantidad(it.id, 1);
+                return;
+              }
+
+              const nuevaCantidad = Number(value);
+
               if (nuevaCantidad >= 1 && nuevaCantidad <= stock) {
                 setCantidad(it.id, nuevaCantidad);
               } else if (nuevaCantidad > stock) {
                 toast.warning(`No puedes pedir más de ${stock} unidades`);
                 setCantidad(it.id, stock);
+              } else {
+                // Si es menor a 1
+                setCantidad(it.id, 1);
               }
             }}
             sx={carritoItemStyles.cantidadInput}
           />
 
+          {/* Botón sumar */}
           <IconButton
             onClick={() => incrementar(it)}
             disabled={it.cantidad >= stock}
@@ -103,6 +119,7 @@ export default function CarritoItem({
           </IconButton>
         </Box>
 
+        {/* Botón eliminar */}
         <IconButton
           onClick={() => eliminarItem(it.id)}
           sx={carritoItemStyles.botonEliminar}
