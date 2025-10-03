@@ -91,15 +91,19 @@ export default function CarritoItem({
             value={inputCantidad}
             inputProps={{ min: 1, max: stock }}
             onChange={(e) => {
-              const valor = e.target.value;
-              setInputCantidad(valor); // permite borrar y escribir libre
+              let valor = e.target.value;
+              setInputCantidad(valor); // permite borrar temporalmente
 
               const nuevaCantidad = Number(valor);
-              if (
-                !Number.isNaN(nuevaCantidad) &&
-                nuevaCantidad >= 1 &&
-                nuevaCantidad <= stock
-              ) {
+
+              if (nuevaCantidad > stock) {
+                toast.warning(`No puedes pedir más de ${stock} unidades`);
+                setCantidad(it.id, stock);
+                setInputCantidad(stock);
+                return;
+              }
+
+              if (!Number.isNaN(nuevaCantidad) && nuevaCantidad >= 1) {
                 setCantidad(it.id, nuevaCantidad); // actualiza subtotal en tiempo real
               }
             }}
@@ -137,4 +141,4 @@ export default function CarritoItem({
       </Box>
     </Card>
   );
-}
+                  }
