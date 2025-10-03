@@ -39,12 +39,13 @@ const carritoItemStyles = {
 
   titulo: {
     fontWeight: 600,
-    fontSize: "clamp(0.8rem, 2vw, 1.1rem)", // 🔥 se adapta automático
+    fontSize: "0.95rem",      // 🔽 reducido para nombres largos
     lineHeight: 1.4,
     mb: 0.5,
-    whiteSpace: "nowrap",      // no permite salto de línea
-    overflow: "hidden",        // oculta el exceso
-    textOverflow: "ellipsis",  // muestra "..." si no cabe
+    whiteSpace: "nowrap",     // ❌ no permite salto de línea
+    overflow: "hidden",       // ❌ oculta exceso
+    textOverflow: "ellipsis", // ❌ muestra "..."
+    maxWidth: "100%",         // ✅ ocupa solo el ancho disponible
   },
 
   descripcion: {
