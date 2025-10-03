@@ -3,14 +3,13 @@ const carritoItemStyles = {
     display: "flex",
     flexDirection: { xs: "column", sm: "row" },
     mb: 2,
-    mx: { xs: 2, sm: 0 },
-    borderRadius: 4,
+    mx: { xs: 2, sm: 0 }, // margen lateral en móvil
+    borderRadius: 3,
     border: "1px solid",
-    borderColor: theme.palette.divider,
-    overflow: "hidden",
+    borderColor: theme.palette.divider, // ✅ borde completo
+    overflow: "hidden", // ✅ asegura bordes redondeados
     boxShadow: "0 3px 8px rgba(0,0,0,0.12)",
     transition: "all 0.3s",
-    bgcolor: theme.palette.background.paper,
     "&:hover": { boxShadow: "0 6px 16px rgba(0,0,0,0.2)" },
   }),
 
@@ -30,7 +29,7 @@ const carritoItemStyles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    p: 2,
+    p: 2, // padding interno para separar texto y botones
   },
 
   descripcion: {
@@ -40,26 +39,10 @@ const carritoItemStyles = {
     overflow: "hidden",
     textOverflow: "ellipsis",
     mb: 1,
-    color: "text.secondary",
-    fontSize: "0.9rem",
   },
 
-  // 💲 precio/subtotal más visible
-  chipSubtotal: (theme) => ({
-    fontWeight: "bold",
-    fontSize: "1.1rem",
-    color: theme.palette.success.main,
-    background: "rgba(76, 175, 80, 0.08)",
-    borderRadius: 6,
-    px: 1.5,
-    py: 0.5,
-    alignSelf: "flex-start",
-    mt: 1,
-  }),
-
-  chipStock: {
-    fontWeight: "bold",
-  },
+  chipSubtotal: { fontWeight: "bold" },
+  chipStock: { fontWeight: "bold" },
 
   controlesWrapper: {
     display: "flex",
