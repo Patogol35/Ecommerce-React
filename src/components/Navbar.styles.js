@@ -1,8 +1,8 @@
 const styles = {
   appBar: (scrolled) => ({
-    backgroundColor: scrolled ? "#1976d2" : "transparent",
-    color: "#fff",
-    transition: "background-color 0.3s ease, box-shadow 0.3s ease",
+    backgroundColor: "#1976d2",
+    boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.3)" : "none",
+    zIndex: 1400,
   }),
 
   toolbar: {
@@ -14,23 +14,27 @@ const styles = {
   logo: {
     display: "flex",
     alignItems: "center",
-    textDecoration: "none",
+    gap: 1,
     fontWeight: "bold",
     color: "#fff",
+    textDecoration: "none",
   },
 
   logoIcon: {
-    mr: 1,
+    fontSize: 28,
+    background: "linear-gradient(135deg, #FF5722, #FFC107)",
+    WebkitBackgroundClip: "text",
+    WebkitTextFillColor: "transparent",
   },
 
   desktopMenu: {
-    display: { xs: "none", md: "flex" },
-    alignItems: "center",
+    display: { xs: "none", lg: "flex" },
     gap: 2,
+    alignItems: "center",
   },
 
   menuBtnMobile: {
-    display: { xs: "flex", md: "none" },
+    display: { xs: "block", lg: "none" },
     color: "#fff",
   },
 
@@ -39,13 +43,12 @@ const styles = {
   },
 
   drawerPaper: {
-    background: "linear-gradient(135deg, #1976d2 30%, #42a5f5 90%)",
-    color: "#fff",
-    width: 260,
+    width: 280,
+    background: "#1976d2", // 👈 tu color original
+    borderRadius: "16px 0 0 16px",
+    p: 2,
     display: "flex",
     flexDirection: "column",
-    height: "100%",
-    padding: "1rem",
   },
 
   drawerStack: {
@@ -59,19 +62,26 @@ const styles = {
     mt: isMobile ? 8 : 0, // 👈 usuario más abajo en móvil
   }),
 
-  avatar: {
-    width: 56,
-    height: 56,
-    mb: 1,
+  logoutBtn: {
+    fontWeight: 600,
+    color: "#fff",
+    background: "linear-gradient(135deg, #d32f2f, #f44336)",
+    borderRadius: "12px",
+    px: 2.5,
+    py: 1,
   },
 
-  logoutBtn: {
-    mt: 2,
+  drawerUtilStack: {
+    mt: 3,
+    pb: 2,
+  },
+
+  toggleModeBtn: {
     color: "#fff",
-    borderColor: "#fff",
-    "&:hover": {
-      backgroundColor: "rgba(255,255,255,0.2)",
-    },
+    background: "rgba(0,0,0,0.4)",
+    "&:hover": { background: "rgba(0,0,0,0.7)" },
+    width: 48,
+    height: 48,
   },
 };
 
