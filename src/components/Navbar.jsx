@@ -91,22 +91,30 @@ export default function Navbar() {
               {renderUserSection(true, false)}
             </Box>
 
-            {/* Botón menú móvil */}
-            <IconButton sx={styles.menuBtnMobile} onClick={() => setOpen(true)} aria-label="Abrir menú" aria-expanded={open}>
-              <MenuIcon fontSize="large" />
-            </IconButton>
-          </Toolbar>
-        </AppBar>
-      </motion.div>
+          {/* Botón menú móvil con animación */}
+<IconButton
+  sx={styles.menuBtnMobile}
+  onClick={() => setOpen(!open)}
+  aria-label={open ? "Cerrar menú" : "Abrir menú"}
+  aria-expanded={open}
+>
+  <AnimatePresence mode="wait" initial={false}>
+    <motion.div
+      key={open ? "close" : "menu"}
+      initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
+      animate={{ rotate: 0, opacity: 1, scale: 1 }}
+      exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
+      transition={{ duration: 0.25, ease: "easeInOut" }}
+      style={{ display: "flex" }}
+    >
+      {open ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
+    </motion.div>
+  </AnimatePresence>
+</IconButton>
 
       {/* Drawer Móvil */}
       <Drawer anchor="right" open={open} onClose={() => setOpen(false)} PaperProps={{ sx: styles.drawerPaper }}>
-        {/* Header drawer */}
-        <Box sx={styles.drawerHeader}>
-          <IconButton onClick={() => setOpen(false)} sx={{ color: "#fff" }} aria-label="Cerrar menú">
-            <CloseIcon />
-          </IconButton>
-        </Box>
+        
 
         {/* User info móvil */}
         {renderUserSection(false, true)}
