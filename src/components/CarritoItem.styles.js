@@ -37,14 +37,13 @@ const carritoItemStyles = {
     mb: 1,
   },
 
+  // 🔹 Dejamos como lo tenías, sin color forzado
   chipSubtotal: {
     fontWeight: "bold",
-    color: "primary.main", // ✅ resalta subtotal
   },
 
   chipStock: {
     fontWeight: "bold",
-    color: "success.main", // ✅ mejor feedback visual
   },
 
   controlesWrapper: {
