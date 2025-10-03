@@ -37,6 +37,15 @@ const styles = {
     py: 1.2,
     "&:hover": { transform: "scale(1.05)", boxShadow: 6 },
   },
+
+  total: {
+  display: "flex",
+  alignItems: "center",
+  gap: 0.5,
+  fontWeight: 700,
+  fontSize: "1.1rem",
+  color: "primary.main",
+},
 };
 
 export default styles;
