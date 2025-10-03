@@ -1,4 +1,4 @@
-  const carritoItemStyles = {
+const carritoItemStyles = {
   card: (theme) => ({
     display: "flex",
     flexDirection: { xs: "column", sm: "row" },
