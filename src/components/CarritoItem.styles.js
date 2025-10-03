@@ -1,35 +1,31 @@
-  const carritoItemStyles = {
+const carritoItemStyles = {
   card: (theme) => ({
     display: "flex",
     flexDirection: { xs: "column", sm: "row" },
     mb: 3,
     mx: { xs: 2, sm: 0 },
-    borderRadius: 6,
+    borderRadius: 4,
     border: "1px solid",
     borderColor: theme.palette.divider,
     overflow: "hidden",
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? "rgba(30,30,30,0.85)"
-        : "rgba(255,255,255,0.9)",
-    backdropFilter: "blur(6px)",
-    boxShadow: "0 6px 18px rgba(0,0,0,0.1)",
-    transition: "all 0.35s ease",
+    backgroundColor: theme.palette.background.paper,
+    boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
+    transition: "all 0.3s ease",
     "&:hover": {
-      boxShadow: "0 12px 28px rgba(0,0,0,0.18)",
-      transform: "translateY(-3px) scale(1.01)",
+      boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
+      transform: "translateY(-2px)",
     },
   }),
 
   media: (theme) => ({
-    width: { xs: "100%", sm: 200 },
-    height: { xs: 220, sm: 200 },
+    width: { xs: "100%", sm: 180 },
+    height: { xs: 200, sm: 180 },
     objectFit: "contain",
-    borderRadius: { xs: "18px 18px 0 0", sm: "18px 0 0 18px" },
-    bgcolor: theme.palette.mode === "dark" ? "#222" : "#fafafa",
+    borderRadius: { xs: "16px 16px 0 0", sm: "16px 0 0 16px" },
+    bgcolor: theme.palette.mode === "dark" ? "#2c2c2c" : "#f9f9f9",
     p: 2,
-    transition: "transform 0.4s ease",
-    "&:hover": { transform: "scale(1.1)" },
+    transition: "transform 0.35s ease",
+    "&:hover": { transform: "scale(1.08)" },
   }),
 
   content: {
@@ -37,16 +33,15 @@
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    p: 3,
-    gap: 1.2,
+    p: 2.5,
+    gap: 1,
   },
 
   titulo: {
-    fontWeight: 700,
-    fontSize: "1.15rem",
+    fontWeight: 600,
+    fontSize: "1.1rem",
     lineHeight: 1.4,
     mb: 0.5,
-    letterSpacing: "0.3px",
   },
 
   descripcion: {
@@ -56,21 +51,19 @@
     overflow: "hidden",
     textOverflow: "ellipsis",
     color: "text.secondary",
-    fontSize: "0.92rem",
-    mb: 1.8,
+    fontSize: "0.9rem",
+    mb: 1.5,
   },
 
   chipSubtotal: {
-    fontWeight: 700,
-    fontSize: "1rem",
-    color: "primary.main",
+    fontWeight: "bold",
+    fontSize: "0.95rem",
   },
 
   chipStock: {
-    fontWeight: 600,
+    fontWeight: "bold",
     fontSize: "0.85rem",
-    opacity: 0.85,
-    color: "success.main",
+    opacity: 0.8,
   },
 
   controlesWrapper: {
@@ -80,10 +73,8 @@
     alignItems: "center",
     p: 2,
     gap: 1.5,
-    borderLeft: { sm: "1px solid rgba(0,0,0,0.07)" },
-    borderTop: { xs: "1px solid rgba(0,0,0,0.07)", sm: "none" },
-    backgroundColor: (theme) =>
-      theme.palette.mode === "dark" ? "rgba(255,255,255,0.03)" : "#fcfcfc",
+    borderLeft: { sm: "1px solid rgba(0,0,0,0.08)" },
+    borderTop: { xs: "1px solid rgba(0,0,0,0.08)", sm: "none" },
   },
 
   cantidadWrapper: {
@@ -91,32 +82,39 @@
     alignItems: "center",
     gap: 1,
     bgcolor: "action.hover",
-    borderRadius: 3,
-    px: 1.2,
-    py: 0.6,
-    boxShadow: "inset 0 1px 2px rgba(0,0,0,0.08)",
+    borderRadius: 2,
+    px: 1,
+    py: 0.5,
+  },
+
+  botonCantidad: {
+    minWidth: 32,
+    minHeight: 32,
+    borderRadius: "50%",
+    bgcolor: "background.paper",
+    boxShadow: "0 2px 4px rgba(0,0,0,0.1)",
+    "&:hover": {
+      bgcolor: "action.hover",
+      transform: "scale(1.1)",
+    },
+    transition: "all 0.2s ease",
   },
 
   cantidadInput: {
-    width: 64,
+    width: 50,
     "& input": {
       textAlign: "center",
-      fontWeight: 700,
+      fontWeight: "bold",
       fontSize: "1rem",
-      borderRadius: 3,
+      borderRadius: 2,
     },
   },
 
   botonEliminar: {
     color: "error.main",
-    borderRadius: 3,
-    px: 2.5,
-    fontWeight: 600,
-    "&:hover": {
-      bgcolor: "rgba(211,47,47,0.12)",
-      transform: "scale(1.05)",
-    },
-    transition: "all 0.25s ease",
+    borderRadius: 2,
+    px: 2,
+    "&:hover": { bgcolor: "rgba(211,47,47,0.1)" },
   },
 };
 
