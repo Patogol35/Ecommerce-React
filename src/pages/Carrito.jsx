@@ -20,7 +20,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import CarritoItem from "../components/CarritoItem";
 import { calcularSubtotal } from "../utils/carritoUtils";
 
-import styles from "./Carrito.styles"; // 👈 importamos estilos externos
+import styles from "./Carrito.styles"; // estilos externos
 
 export default function Carrito() {
   const theme = useTheme();
@@ -103,25 +103,28 @@ export default function Carrito() {
         ))}
 
       {!loading && items.length > 0 && (
-        <Box sx={styles.footerBox(theme)} mt={3}>
-          <Divider sx={styles.divider} />
-          <Typography variant="h6" gutterBottom>
-            Total:{" "}
-            <strong>
-              ${total.toFixed(2)} <MonetizationOnIcon fontSize="small" />
-            </strong>
-          </Typography>
+        <>
+          <Box sx={styles.footerBox(theme)} mt={3}>
+            <Divider sx={styles.divider} />
+            <Typography variant="h6" gutterBottom textAlign="right">
+              Total:{" "}
+              <strong>
+                ${total.toFixed(2)} <MonetizationOnIcon fontSize="small" />
+              </strong>
+            </Typography>
+          </Box>
+
+          {/* 🚀 Botón flotante */}
           <Button
             variant="contained"
-            color="primary"
             size="large"
             startIcon={<ShoppingCartCheckoutIcon />}
-            sx={styles.button}
+            sx={styles.floatingButton(theme)}
             onClick={comprar}
           >
             Finalizar compra
           </Button>
-        </Box>
+        </>
       )}
     </Box>
   );
