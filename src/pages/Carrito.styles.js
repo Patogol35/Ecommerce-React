@@ -18,6 +18,14 @@ const styles = {
   footerBox: (theme) => ({
     textAlign: "right",
     mt: 3,
+    [theme.breakpoints.up("md")]: {
+      position: "sticky",
+      bottom: 0,
+      backgroundColor: theme.palette.background.paper,
+      p: 2,
+      borderRadius: 2,
+      boxShadow: "0 -2px 8px rgba(0,0,0,0.1)",
+    },
   }),
   divider: {
     mb: 2,
@@ -39,6 +47,12 @@ const styles = {
     "&:hover": {
       transform: { xs: "translateX(-50%) scale(1.05)", sm: "scale(1.05)" },
       boxShadow: "0 8px 20px rgba(0,0,0,0.35)",
+    },
+    "&:disabled": {
+      opacity: 0.6,
+      cursor: "not-allowed",
+      transform: "none",
+      boxShadow: "none",
     },
   }),
 };
