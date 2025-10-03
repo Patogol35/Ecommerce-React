@@ -2,24 +2,24 @@ const carritoItemStyles = {
   card: (theme) => ({
     display: "flex",
     flexDirection: { xs: "column", sm: "row" },
-    mb: 3,
+    mb: 2.5,
     mx: { xs: 2, sm: 0 },
-    borderRadius: 4,
+    borderRadius: 3,
     border: "1px solid",
     borderColor: theme.palette.divider,
     overflow: "hidden",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.12)",
+    boxShadow: "0 3px 8px rgba(0,0,0,0.12)",
     transition: "all 0.3s",
-    "&:hover": { boxShadow: "0 8px 20px rgba(0,0,0,0.22)" },
+    "&:hover": { boxShadow: "0 6px 16px rgba(0,0,0,0.2)" },
   }),
 
   media: (theme) => ({
-    width: { xs: "100%", sm: 220 },  // ✅ más ancho
-    height: { xs: 180, sm: 160 },   // ✅ menos alto que antes
+    width: { xs: "100%", sm: 160 }, // ✅ mantenemos ancho
+    height: { xs: 160, sm: 140 },  // ✅ menos alto (antes 200/160)
     objectFit: "contain",
-    borderRadius: { xs: "16px 16px 0 0", sm: "16px 0 0 16px" },
+    borderRadius: { xs: "12px 12px 0 0", sm: "12px 0 0 12px" },
     bgcolor: theme.palette.mode === "dark" ? "#333" : "#fafafa",
-    p: 2,
+    p: 1,
     transition: "transform 0.3s ease",
     "&:hover": { transform: "scale(1.05)" },
   }),
@@ -29,8 +29,7 @@ const carritoItemStyles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    p: 2.5, // más aire
-    fontSize: "1rem",
+    p: 2,
   },
 
   descripcion: {
@@ -39,34 +38,34 @@ const carritoItemStyles = {
     WebkitBoxOrient: "vertical",
     overflow: "hidden",
     textOverflow: "ellipsis",
-    mb: 1.5,
-    fontSize: "0.95rem",
+    mb: 1,
+    fontSize: "0.9rem", // texto un poco más compacto
   },
 
-  chipSubtotal: { fontWeight: "bold", fontSize: "0.95rem" },
-  chipStock: { fontWeight: "bold", fontSize: "0.95rem" },
+  chipSubtotal: { fontWeight: "bold", fontSize: "0.9rem" },
+  chipStock: { fontWeight: "bold", fontSize: "0.9rem" },
 
   controlesWrapper: {
     display: "flex",
     flexDirection: { xs: "row", sm: "column" },
     justifyContent: "center",
     alignItems: "center",
-    p: 2,
-    gap: 1.2,
+    p: 1.5,
+    gap: 1,
   },
 
   cantidadWrapper: {
     display: "flex",
     alignItems: "center",
-    gap: 1.2,
+    gap: 1,
   },
 
   cantidadInput: {
-    width: 70,
+    width: 60,
     "& input": {
       textAlign: "center",
       fontWeight: "bold",
-      fontSize: "1.05rem",
+      fontSize: "0.95rem",
     },
   },
 
