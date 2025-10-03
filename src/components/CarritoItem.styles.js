@@ -1,15 +1,17 @@
 const carritoItemStyles = {
-  card: {
+  card: (theme) => ({
     display: "flex",
     flexDirection: { xs: "column", sm: "row" },
     mb: 2,
-    mx: { xs: 2, sm: 0 }, // ✅ margen lateral en móvil
+    mx: { xs: 2, sm: 0 },            // margen lateral en móvil
     borderRadius: 3,
-    overflow: "hidden",   // ✅ para que el borde redondeado cubra todo
+    border: "1px solid",
+    borderColor: theme.palette.divider, // ✅ borde completo
+    overflow: "hidden",               // ✅ asegura bordes redondeados
     boxShadow: "0 3px 8px rgba(0,0,0,0.12)",
     transition: "all 0.3s",
     "&:hover": { boxShadow: "0 6px 16px rgba(0,0,0,0.2)" },
-  },
+  }),
 
   media: (theme) => ({
     width: { xs: "100%", sm: 160 },
@@ -17,7 +19,6 @@ const carritoItemStyles = {
     objectFit: "contain",
     borderRadius: { xs: "12px 12px 0 0", sm: "12px 0 0 12px" },
     bgcolor: theme.palette.mode === "dark" ? "#333" : "#fafafa",
-    border: "1px solid #eee",
     p: 1,
     transition: "transform 0.3s ease",
     "&:hover": { transform: "scale(1.05)" },
@@ -28,7 +29,7 @@ const carritoItemStyles = {
     display: "flex",
     flexDirection: "column",
     justifyContent: "space-between",
-    p: 2, // ✅ padding interno
+    p: 2, // padding interno para separar texto y botones
   },
 
   descripcion: {
