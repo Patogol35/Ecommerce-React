@@ -83,31 +83,13 @@ export default function CarritoItem({
             value={it.cantidad}
             inputProps={{ min: 1, max: stock }}
             onChange={(e) => {
-              const value = e.target.value;
-
-              // Caso: vacío (se borra el valor con backspace)
-              if (value === "") {
-                setCantidad(it.id, 1);
-                return;
-              }
-
-              const nuevaCantidad = Number(value);
-
-              // Caso: no es número o menor a 1
-              if (Number.isNaN(nuevaCantidad) || nuevaCantidad < 1) {
-                setCantidad(it.id, 1);
-                return;
-              }
-
-              // Caso: mayor al stock disponible
-              if (nuevaCantidad > stock) {
+              const nuevaCantidad = Number(e.target.value);
+              if (nuevaCantidad >= 1 && nuevaCantidad <= stock) {
+                setCantidad(it.id, nuevaCantidad);
+              } else if (nuevaCantidad > stock) {
                 toast.warning(`No puedes pedir más de ${stock} unidades`);
                 setCantidad(it.id, stock);
-                return;
               }
-
-              // Caso válido
-              setCantidad(it.id, nuevaCantidad);
             }}
             sx={carritoItemStyles.cantidadInput}
           />
