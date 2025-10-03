@@ -105,12 +105,10 @@ export default function Carrito() {
       {!loading && items.length > 0 && (
         <Box sx={styles.footerBox(theme)} mt={3}>
           <Divider sx={styles.divider} />
-          <Typography variant="h6" gutterBottom>
-            Total:{" "}
-            <strong>
-              ${total.toFixed(2)} <MonetizationOnIcon fontSize="small" />
-            </strong>
-          </Typography>
+          <Typography variant="h6" gutterBottom sx={{ display: "flex", alignItems: "center", gap: 0.5 }}>
+  Total: 
+  <MonetizationOnIcon fontSize="small" /> {total.toFixed(2)}
+</Typography>
           <Button
             variant="contained"
             color="primary"
