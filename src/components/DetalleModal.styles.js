@@ -1,11 +1,11 @@
-export const sliderSettings = {
+    export const sliderSettings = {
   dots: true,
   infinite: true,
   speed: 400,
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: true,
-  adaptiveHeight: true, // ajusta la altura según cada imagen
+  adaptiveHeight: true, // Ajusta la altura al contenido
 };
 
 const detalleModalStyles = {
@@ -36,18 +36,20 @@ const detalleModalStyles = {
     position: "absolute",
     top: 12,
     right: 12,
+    zIndex: 2000, // ✅ asegurar que esté por encima del slider
     bgcolor: "rgba(0,0,0,0.6)",
     color: "white",
     "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
   },
 
-  // Contenedor del slider adaptativo
+  // Contenedor del slider centrado, con ancho limitado
   sliderBox: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
+    maxWidth: "90%", // ✅ limita el ancho para que no tape la X
     maxHeight: { xs: 300, md: 500 },
+    width: "auto",
     overflow: "hidden",
     background: "linear-gradient(180deg, #1c1c1c 0%, #000 100%)",
     borderRadius: 3,
@@ -55,15 +57,15 @@ const detalleModalStyles = {
     mb: 2,
   },
 
-  // Imagen centrada, se adapta al contenedor sin deformarse
+  // Imagen centrada, proporciones correctas
   imagen: {
+    display: "block",
     maxWidth: "100%",
     maxHeight: "100%",
     width: "auto",
     height: "auto",
     objectFit: "contain",
     objectPosition: "center",
-    display: "block",
     borderRadius: 2,
     boxShadow: "0 6px 25px rgba(0,0,0,0.5)",
     transition: "transform 0.3s ease, filter 0.3s ease",
