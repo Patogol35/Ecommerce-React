@@ -69,9 +69,9 @@ const detalleModalStyles = {
   descripcion: {
     lineHeight: 1.6,
     color: "rgba(255,255,255,0.85)",
-    maxWidth: 700,     // 👈 límite de ancho
-    margin: "0 auto",  // 👈 centrado del bloque
-    textAlign: "justify", // 👈 estilo de texto (puedes cambiar a "left" o "center")
+    maxWidth: 500,     // 👈 ahora más angosto como columna
+    margin: "0 auto",  // 👈 centrado horizontal
+    textAlign: "justify", // o "left" si prefieres
   },
 
   botonAgregar: (stock) => ({
