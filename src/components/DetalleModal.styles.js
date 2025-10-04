@@ -37,31 +37,38 @@ const detalleModalStyles = {
     "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
   },
 
-  // 🔹 Asegura que el área de imagen tenga altura uniforme y centrada
+  // 🔹 Este contenedor fija la proporción del área de imagen
   sliderBox: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: { xs: 300, md: 400 },
-    maxWidth: "100%",
-    cursor: "zoom-in",
-    overflow: "hidden",
-    backgroundColor: "rgba(255,255,255,0.03)",
+    width: "100%",
+    maxWidth: 400,
+    mx: "auto",
     borderRadius: 3,
-    boxShadow: "0 4px 15px rgba(0,0,0,0.4)",
+    overflow: "hidden",
+    backgroundColor: "rgba(255,255,255,0.05)",
+    position: "relative",
+
+    // Aquí está la magia: mantenemos una proporción fija
+    aspectRatio: "3 / 4",
+    "& > img": {
+      position: "absolute",
+      top: 0,
+      left: 0,
+      width: "100%",
+      height: "100%",
+      objectFit: "contain",
+    },
   },
 
-  // 🔹 Mantiene todas las imágenes con proporciones uniformes
   imagen: {
     width: "100%",
     height: "100%",
-    maxHeight: { xs: 300, md: 400 },
     objectFit: "contain",
-    aspectRatio: "3 / 4",
     transition: "transform 0.3s ease",
-    borderRadius: 2,
     "&:hover": {
-      transform: "scale(1.02)",
+      transform: "scale(1.03)",
     },
   },
 
