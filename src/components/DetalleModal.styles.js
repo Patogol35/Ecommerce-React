@@ -1,3 +1,6 @@
+// =============================
+// Configuración del Slider
+// =============================
 export const sliderSettings = {
   dots: true,
   infinite: true,
@@ -7,6 +10,9 @@ export const sliderSettings = {
   arrows: true,
 };
 
+// =============================
+// Estilos del Modal de Detalle
+// =============================
 const detalleModalStyles = {
   dialog: {
     zIndex: 1600,
@@ -34,7 +40,9 @@ const detalleModalStyles = {
     right: 12,
     bgcolor: "rgba(0,0,0,0.6)",
     color: "white",
-    "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
+    borderRadius: "50%",
+    transition: "all 0.3s ease",
+    "&:hover": { bgcolor: "rgba(255,255,255,0.25)", transform: "scale(1.08)" },
   },
 
   sliderBox: {
@@ -71,14 +79,48 @@ const detalleModalStyles = {
     color: "rgba(255,255,255,0.85)",
   },
 
+  // =============================
+  // Botón principal (Agregar)
+  // =============================
   botonAgregar: (stock) => ({
-    borderRadius: 3,
-    py: 1.5,
-    background: "linear-gradient(135deg, #1976d2, #42a5f5)",
+    borderRadius: 2,
+    textTransform: "none",
+    py: 1.3,
+    fontWeight: 600,
+    fontSize: "0.95rem",
+    background:
+      stock > 0 ? "linear-gradient(90deg, #1976d2, #42a5f5)" : "grey.500",
+    color: "white",
+    transition: "all 0.3s ease",
     "&:hover": {
-      transform: stock > 0 ? "translateY(-2px)" : "none",
+      transform: stock > 0 ? "scale(1.05)" : "none",
+      background:
+        stock > 0
+          ? "linear-gradient(90deg, #1565c0, #1e88e5)"
+          : "grey.500",
+      boxShadow: stock > 0 ? "0 6px 18px rgba(0,0,0,0.18)" : "none",
     },
   }),
+
+  // =============================
+  // Botón secundario (Detalles)
+  // =============================
+  botonDetalles: {
+    borderRadius: 2,
+    textTransform: "none",
+    py: 1,
+    fontWeight: 500,
+    fontSize: "0.9rem",
+    border: "1px solid",
+    borderColor: "rgba(255,255,255,0.3)",
+    color: "rgba(255,255,255,0.85)",
+    transition: "all 0.3s ease",
+    "&:hover": {
+      transform: "scale(1.04)",
+      bgcolor: "rgba(255,255,255,0.1)",
+      boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
+    },
+  },
 };
 
 export default detalleModalStyles;
