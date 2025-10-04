@@ -23,6 +23,11 @@ export default function DetalleModal({
 }) {
   if (!producto) return null;
 
+  // Asegura que haya al menos una imagen en array
+  const imagenes = producto.imagenes?.length
+    ? producto.imagenes
+    : [producto.imagen];
+
   return (
     <Dialog
       open={open}
@@ -32,16 +37,17 @@ export default function DetalleModal({
       sx={detalleModalStyles.dialog}
       PaperProps={{ sx: detalleModalStyles.dialogPaper }}
     >
+      {/* Botón cerrar */}
       <IconButton onClick={onClose} sx={detalleModalStyles.botonCerrar}>
         <CloseIcon />
       </IconButton>
 
       <Grid container spacing={4}>
-        {/* Slider de imágenes */}
+        {/* 🖼️ Slider de imágenes */}
         <Grid item xs={12} md={6}>
-          {(producto.imagenes || [producto.imagen]).length > 1 ? (
+          {imagenes.length > 1 ? (
             <Slider {...sliderSettings}>
-              {(producto.imagenes || [producto.imagen]).map((img, i) => (
+              {imagenes.map((img, i) => (
                 <Box
                   key={i}
                   sx={detalleModalStyles.sliderBox}
@@ -60,11 +66,11 @@ export default function DetalleModal({
           ) : (
             <Box
               sx={detalleModalStyles.sliderBox}
-              onClick={() => setLightbox(producto.imagen)}
+              onClick={() => setLightbox(imagenes[0])}
             >
               <Box
                 component="img"
-                src={producto.imagen}
+                src={imagenes[0]}
                 alt={producto.nombre}
                 loading="lazy"
                 sx={detalleModalStyles.imagen}
@@ -73,13 +79,15 @@ export default function DetalleModal({
           )}
         </Grid>
 
-        {/* Información */}
-        <Grid item xs={12} md={6}>
+        {/* ℹ️ Información del producto */}
+        <Grid item xs={12} md={6} sx={detalleModalStyles.infoBox}>
           <Stack spacing={3}>
+            {/* Nombre */}
             <Typography variant="h5" fontWeight="bold">
               {producto.nombre}
             </Typography>
 
+            {/* Precio + stock */}
             <Box>
               <Typography
                 variant="h6"
@@ -100,10 +108,12 @@ export default function DetalleModal({
 
             <Divider sx={detalleModalStyles.divider} />
 
+            {/* Descripción */}
             <Typography sx={detalleModalStyles.descripcion}>
               {producto.descripcion}
             </Typography>
 
+            {/* Botón agregar al carrito */}
             <Button
               variant="contained"
               startIcon={<AddShoppingCartIcon />}
