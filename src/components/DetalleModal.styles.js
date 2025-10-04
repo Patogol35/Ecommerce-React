@@ -1,4 +1,4 @@
-export const sliderSettings = {
+  export const sliderSettings = {
   dots: true,
   infinite: true,
   speed: 400,
@@ -27,11 +27,11 @@ const detalleModalStyles = {
     overflowY: "auto",
     position: "relative",
 
-    display: "flex",           // Usamos flexbox
-    flexDirection: "column",   // Elementos verticales
-    alignItems: "center",      // Centrado horizontal
-    justifyContent: "center",  // Centrado vertical
-    textAlign: "center",       // Texto centrado
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",    // Centrado horizontal
+    justifyContent: "center",// Centrado vertical
+    textAlign: "center",     // Texto centrado
   },
 
   botonCerrar: {
@@ -46,15 +46,16 @@ const detalleModalStyles = {
   sliderBox: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",
-    height: { xs: 300, md: 400 },
+    alignItems: "center",    // Centrado vertical y horizontal de la imagen
+    width: "100%",
+    height: { xs: "auto", md: 400 }, // Ajusta altura para móviles y escritorio
     cursor: "zoom-in",
-    width: "100%", // Ocupa todo el ancho disponible
+    mb: 2,
   },
 
   imagen: {
     maxWidth: "100%",
-    maxHeight: "100%",
+    maxHeight: "80vh",       // Evita recortes verticales
     objectFit: "contain",
     borderRadius: 2,
     border: "2px solid rgba(255,255,255,0.2)",
@@ -67,19 +68,19 @@ const detalleModalStyles = {
     color: "white",
     borderColor: "white",
     fontWeight: "bold",
-    marginTop: 2,
+    mt: 2,
   },
 
   divider: {
     bgcolor: "rgba(255,255,255,0.3)",
-    width: "80%", // Que no ocupe todo el ancho
+    width: "80%",
     my: 2,
   },
 
   descripcion: {
     lineHeight: 1.6,
     color: "rgba(255,255,255,0.85)",
-    marginTop: 2,
+    mt: 2,
   },
 
   botonAgregar: (stock) => ({
@@ -92,7 +93,7 @@ const detalleModalStyles = {
     background: "linear-gradient(135deg, #1976d2, #42a5f5)",
     alignSelf: "center",
     boxShadow: "0 3px 10px rgba(0,0,0,0.3)",
-    marginTop: 3,
+    mt: 3,
     transition: "all 0.3s ease",
     "&:hover": {
       transform: stock > 0 ? "translateY(-2px)" : "none",
