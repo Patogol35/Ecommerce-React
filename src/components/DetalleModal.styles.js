@@ -43,15 +43,12 @@ const detalleModalStyles = {
     alignItems: "center",
     height: { xs: 300, md: 400 },
     cursor: "zoom-in",
-    overflow: "hidden", // asegura que la imagen no sobresalga
   },
 
   imagen: {
     maxWidth: "100%",
-    maxHeight: 400,      // altura uniforme para todas
-    objectFit: "contain", // mantiene proporción sin recortar
-    display: "block",
-    margin: "0 auto",     // centra la imagen
+    maxHeight: "100%",
+    objectFit: "contain",
     borderRadius: 2,
     border: "2px solid rgba(255,255,255,0.2)",
     boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
@@ -76,18 +73,10 @@ const detalleModalStyles = {
 
   botonAgregar: (stock) => ({
     borderRadius: 3,
-    py: 1.2,
-    px: 2.5,
-    width: "fit-content",
-    color: "white",
-    fontWeight: "bold",
+    py: 1.5,
     background: "linear-gradient(135deg, #1976d2, #42a5f5)",
-    alignSelf: "center",
-    boxShadow: "0 3px 10px rgba(0,0,0,0.3)",
-    transition: "all 0.3s ease",
     "&:hover": {
       transform: stock > 0 ? "translateY(-2px)" : "none",
-      boxShadow: stock > 0 ? "0 6px 15px rgba(0,0,0,0.4)" : "none",
     },
   }),
 };
