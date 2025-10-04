@@ -23,10 +23,6 @@ export default function DetalleModal({
 }) {
   if (!producto) return null;
 
-  const imagenes = producto.imagenes?.length
-    ? producto.imagenes
-    : [producto.imagen];
-
   return (
     <Dialog
       open={open}
@@ -36,17 +32,16 @@ export default function DetalleModal({
       sx={detalleModalStyles.dialog}
       PaperProps={{ sx: detalleModalStyles.dialogPaper }}
     >
-      {/* Botón de cierre */}
       <IconButton onClick={onClose} sx={detalleModalStyles.botonCerrar}>
         <CloseIcon />
       </IconButton>
 
       <Grid container spacing={4}>
-        {/* Slider de imágenes */}
+        {/* Slider de imÃ¡genes */}
         <Grid item xs={12} md={6}>
-          {(imagenes || [producto.imagen]).length > 1 ? (
+          {(producto.imagenes || [producto.imagen]).length > 1 ? (
             <Slider {...sliderSettings}>
-              {imagenes.map((img, i) => (
+              {(producto.imagenes || [producto.imagen]).map((img, i) => (
                 <Box
                   key={i}
                   sx={detalleModalStyles.sliderBox}
@@ -78,7 +73,7 @@ export default function DetalleModal({
           )}
         </Grid>
 
-        {/* Información */}
+        {/* InformaciÃ³n */}
         <Grid item xs={12} md={6}>
           <Stack spacing={3}>
             <Typography variant="h5" fontWeight="bold">
