@@ -37,15 +37,21 @@ const detalleModalStyles = {
     "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
   },
 
+  // 🔹 Caja del slider centrada vertical y horizontalmente
   sliderBox: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     height: { xs: 300, md: 400 },
     cursor: "zoom-in",
+    backgroundColor: "rgba(255,255,255,0.03)",
+    borderRadius: 2,
   },
 
+  // 🔹 Imagen centrada perfectamente dentro del slider
   imagen: {
+    display: "block",
+    margin: "0 auto",
     maxWidth: "100%",
     maxHeight: "100%",
     objectFit: "contain",
