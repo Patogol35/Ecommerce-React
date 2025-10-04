@@ -1,106 +1,94 @@
+export const sliderSettings = {
+  dots: true,
+  infinite: true,
+  speed: 400,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  arrows: true,
+};
+
 const detalleModalStyles = {
+  dialog: {
+    zIndex: 1600,
+    "& .MuiBackdrop-root": {
+      backgroundColor: "rgba(0,0,0,0.85)",
+      backdropFilter: "blur(5px)",
+    },
+  },
+
   dialogPaper: {
-    bgcolor: "#121212",
+    borderRadius: { xs: 0, md: 3 },
+    p: 3,
+    bgcolor: "#1e1e1e",
     color: "white",
-    borderRadius: 3,
-    overflow: "hidden",
+    width: "100%",
+    maxWidth: { xs: "100%", md: 900 },
+    maxHeight: "90vh",
+    overflowY: "auto",
     position: "relative",
   },
 
   botonCerrar: {
     position: "absolute",
-    top: 10,
-    right: 10,
-    bgcolor: "rgba(255,255,255,0.15)",
+    top: 12,
+    right: 12,
+    bgcolor: "rgba(0,0,0,0.6)",
     color: "white",
-    "&:hover": { bgcolor: "rgba(255,255,255,0.25)" },
-    zIndex: 10,
+    "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
   },
 
-  galeriaContainer: {
-    bgcolor: "#1e1e1e",
+  sliderBox: {
     display: "flex",
-    flexDirection: { xs: "column", md: "row" },
-    alignItems: "center",
-    justifyContent: "center",
-    p: 2,
-    gap: 2,
-  },
-
-  miniaturasStack: {
     justifyContent: "center",
     alignItems: "center",
-    overflow: "auto",
-    maxHeight: { md: 400 },
-  },
-
-  miniatura: {
-    width: 60,
-    height: 60,
-    borderRadius: 2,
-    objectFit: "cover",
-    cursor: "pointer",
-    opacity: 0.8,
-    border: "2px solid rgba(255,255,255,0.2)",
-    "&:hover": { opacity: 1, transform: "scale(1.05)" },
-    transition: "0.3s",
-  },
-
-  imagenPrincipal: {
-    width: "100%",
-    maxWidth: 380,
-    height: 380,
-    borderRadius: 3,
-    objectFit: "contain",
-    boxShadow: "0 4px 20px rgba(0,0,0,0.4)",
+    height: { xs: 300, md: 400 },
     cursor: "zoom-in",
-    border: "2px solid rgba(255,255,255,0.15)",
+    overflow: "hidden", // asegura que la imagen no sobresalga
   },
 
-  card: {
-    bgcolor: "#1b1b1b",
-    height: "100%",
-    borderRadius: 0,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
+  imagen: {
+    maxWidth: "100%",
+    maxHeight: 400,      // altura uniforme para todas
+    objectFit: "contain", // mantiene proporción sin recortar
+    display: "block",
+    margin: "0 auto",     // centra la imagen
+    borderRadius: 2,
+    border: "2px solid rgba(255,255,255,0.2)",
+    boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
+    transition: "transform 0.3s ease",
+    "&:hover": { transform: "scale(1.02)" },
   },
 
   stockChip: {
+    color: "white",
+    borderColor: "white",
     fontWeight: "bold",
-    alignSelf: "flex-start",
   },
 
   divider: {
-    borderColor: "rgba(255,255,255,0.2)",
+    bgcolor: "rgba(255,255,255,0.3)",
   },
 
   descripcion: {
-    color: "rgba(255,255,255,0.85)",
     lineHeight: 1.6,
-  },
-
-  botonBox: {
-    p: 3,
-    pt: 0,
+    color: "rgba(255,255,255,0.85)",
   },
 
   botonAgregar: (stock) => ({
-    bgcolor:
-      stock > 0
-        ? "linear-gradient(135deg, #1976d2, #42a5f5)"
-        : "gray",
-    color: "white",
     borderRadius: 3,
-    py: 1.5,
+    py: 1.2,
+    px: 2.5,
+    width: "fit-content",
+    color: "white",
     fontWeight: "bold",
-    boxShadow: "0 4px 12px rgba(0,0,0,0.4)",
+    background: "linear-gradient(135deg, #1976d2, #42a5f5)",
+    alignSelf: "center",
+    boxShadow: "0 3px 10px rgba(0,0,0,0.3)",
+    transition: "all 0.3s ease",
     "&:hover": {
       transform: stock > 0 ? "translateY(-2px)" : "none",
-      boxShadow:
-        stock > 0 ? "0 6px 18px rgba(0,0,0,0.5)" : "none",
+      boxShadow: stock > 0 ? "0 6px 15px rgba(0,0,0,0.4)" : "none",
     },
-    transition: "all 0.3s ease",
   }),
 };
 
