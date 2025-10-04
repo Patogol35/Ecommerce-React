@@ -1,4 +1,4 @@
-import {
+                import {
   Box,
   Typography,
   Grid,
@@ -32,48 +32,51 @@ export default function DetalleModal({
       sx={detalleModalStyles.dialog}
       PaperProps={{ sx: detalleModalStyles.dialogPaper }}
     >
+      {/* Botón de cierre */}
       <IconButton onClick={onClose} sx={detalleModalStyles.botonCerrar}>
-        <CloseIcon />
+        <CloseIcon fontSize="small" />
       </IconButton>
 
       <Grid container spacing={4}>
-        {/* Slider de imÃ¡genes */}
+        {/* Slider de imágenes */}
         <Grid item xs={12} md={6}>
-          {(producto.imagenes || [producto.imagen]).length > 1 ? (
-            <Slider {...sliderSettings}>
-              {(producto.imagenes || [producto.imagen]).map((img, i) => (
-                <Box
-                  key={i}
-                  sx={detalleModalStyles.sliderBox}
-                  onClick={() => setLightbox(img)}
-                >
+          <Box sx={detalleModalStyles.sliderWrapper}>
+            {(producto.imagenes || [producto.imagen]).length > 1 ? (
+              <Slider {...sliderSettings}>
+                {(producto.imagenes || [producto.imagen]).map((img, i) => (
                   <Box
-                    component="img"
-                    src={img}
-                    alt={producto.nombre}
-                    loading="lazy"
-                    sx={detalleModalStyles.imagen}
-                  />
-                </Box>
-              ))}
-            </Slider>
-          ) : (
-            <Box
-              sx={detalleModalStyles.sliderBox}
-              onClick={() => setLightbox(producto.imagen)}
-            >
+                    key={i}
+                    sx={detalleModalStyles.sliderBox}
+                    onClick={() => setLightbox(img)}
+                  >
+                    <Box
+                      component="img"
+                      src={img}
+                      alt={producto.nombre}
+                      loading="lazy"
+                      sx={detalleModalStyles.imagen}
+                    />
+                  </Box>
+                ))}
+              </Slider>
+            ) : (
               <Box
-                component="img"
-                src={producto.imagen}
-                alt={producto.nombre}
-                loading="lazy"
-                sx={detalleModalStyles.imagen}
-              />
-            </Box>
-          )}
+                sx={detalleModalStyles.sliderBox}
+                onClick={() => setLightbox(producto.imagen)}
+              >
+                <Box
+                  component="img"
+                  src={producto.imagen}
+                  alt={producto.nombre}
+                  loading="lazy"
+                  sx={detalleModalStyles.imagen}
+                />
+              </Box>
+            )}
+          </Box>
         </Grid>
 
-        {/* InformaciÃ³n */}
+        {/* Información */}
         <Grid item xs={12} md={6}>
           <Stack spacing={3}>
             <Typography variant="h5" fontWeight="bold">
