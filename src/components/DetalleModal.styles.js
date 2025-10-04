@@ -37,17 +37,7 @@ const detalleModalStyles = {
     "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
   },
 
-  // Contenedor principal del contenido: imagen + texto
-  contenidoGrid: {
-    display: "flex",
-    flexDirection: { xs: "column", md: "row" },
-    gap: 3,
-    alignItems: "flex-start",
-  },
-
-  // Caja del slider/imagen
   sliderBox: {
-    flex: 1,
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
@@ -66,50 +56,6 @@ const detalleModalStyles = {
     "&:hover": { transform: "scale(1.02)" },
   },
 
-  // Caja de información textual
-  infoBox: {
-    flex: 1,
-    display: "flex",
-    flexDirection: "column",
-    justifyContent: "space-between",
-    gap: 2,
-    width: { xs: "100%", md: "60%" }, // limita el ancho en desktop
-    maxWidth: 600,
-  },
-
-  texto: {
-    display: "flex",
-    flexDirection: "column",
-    gap: 2,
-    textAlign: "left",
-  },
-
-  titulo: {
-    fontSize: { xs: "1.4rem", md: "1.8rem" },
-    fontWeight: "bold",
-    color: "white",
-    letterSpacing: "0.5px",
-  },
-
-  precio: {
-    fontSize: { xs: "1.2rem", md: "1.5rem" },
-    color: "#42a5f5",
-    fontWeight: "bold",
-  },
-
-  etiquetas: {
-    display: "flex",
-    flexWrap: "wrap",
-    gap: 1,
-    alignItems: "center",
-  },
-
-  descripcion: {
-    lineHeight: 1.7,
-    color: "rgba(255,255,255,0.85)",
-    textAlign: "justify",
-  },
-
   stockChip: {
     color: "white",
     borderColor: "white",
@@ -120,6 +66,14 @@ const detalleModalStyles = {
     bgcolor: "rgba(255,255,255,0.3)",
   },
 
+  descripcion: {
+    lineHeight: 1.6,
+    color: "rgba(255,255,255,0.85)",
+    maxWidth: 700,     // 👈 límite de ancho
+    margin: "0 auto",  // 👈 centrado del bloque
+    textAlign: "justify", // 👈 estilo de texto (puedes cambiar a "left" o "center")
+  },
+
   botonAgregar: (stock) => ({
     borderRadius: 3,
     py: 1.2,
@@ -128,7 +82,7 @@ const detalleModalStyles = {
     color: "white",
     fontWeight: "bold",
     background: "linear-gradient(135deg, #1976d2, #42a5f5)",
-    alignSelf: "flex-start",
+    alignSelf: "center",
     boxShadow: "0 3px 10px rgba(0,0,0,0.3)",
     transition: "all 0.3s ease",
     "&:hover": {
