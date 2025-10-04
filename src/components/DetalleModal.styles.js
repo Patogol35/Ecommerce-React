@@ -5,7 +5,7 @@ export const sliderSettings = {
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: true,
-  adaptiveHeight: true, // ✅ permite que el alto se ajuste a cada imagen
+  adaptiveHeight: true, // ajusta la altura según cada imagen
 };
 
 const detalleModalStyles = {
@@ -27,6 +27,9 @@ const detalleModalStyles = {
     maxHeight: "90vh",
     overflowY: "auto",
     position: "relative",
+    display: "flex",
+    flexDirection: "column",
+    alignItems: "center",
   },
 
   botonCerrar: {
@@ -38,35 +41,34 @@ const detalleModalStyles = {
     "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
   },
 
-  // 🔹 Caja del slider completamente centrada y con proporción fija
+  // Contenedor del slider adaptativo
   sliderBox: {
-    position: "relative",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     width: "100%",
-    aspectRatio: "1 / 1", // ✅ mantiene proporción cuadrada en cualquier pantalla
-    background: "linear-gradient(180deg, #1c1c1c 0%, #000 100%)",
+    maxHeight: { xs: 300, md: 500 },
     overflow: "hidden",
+    background: "linear-gradient(180deg, #1c1c1c 0%, #000 100%)",
     borderRadius: 3,
+    position: "relative",
+    mb: 2,
   },
 
-  // 🔹 Imagen perfectamente centrada, sin deformarse nunca
+  // Imagen centrada, se adapta al contenedor sin deformarse
   imagen: {
-    position: "absolute",
-    top: "50%",
-    left: "50%",
-    transform: "translate(-50%, -50%)",
-    width: "100%",
-    height: "100%",
+    maxWidth: "100%",
+    maxHeight: "100%",
+    width: "auto",
+    height: "auto",
     objectFit: "contain",
     objectPosition: "center",
+    display: "block",
+    borderRadius: 2,
+    boxShadow: "0 6px 25px rgba(0,0,0,0.5)",
     transition: "transform 0.3s ease, filter 0.3s ease",
-    borderRadius: 3,
-    userSelect: "none",
-    pointerEvents: "none", // evita clics raros en slick
     "&:hover": {
-      transform: "translate(-50%, -50%) scale(1.03)",
+      transform: "scale(1.03)",
       filter: "brightness(1.08)",
     },
   },
@@ -79,11 +81,14 @@ const detalleModalStyles = {
 
   divider: {
     bgcolor: "rgba(255,255,255,0.3)",
+    width: "100%",
+    my: 2,
   },
 
   descripcion: {
     lineHeight: 1.6,
     color: "rgba(255,255,255,0.85)",
+    textAlign: "center",
   },
 
   botonAgregar: (stock) => ({
