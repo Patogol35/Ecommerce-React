@@ -37,29 +37,36 @@ const detalleModalStyles = {
     "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
   },
 
-  // 🔹 Caja del slider centrada vertical y horizontalmente
+  // 🔹 Caja de imagen mejor centrada y con fondo neutro
   sliderBox: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: { xs: 300, md: 400 },
-    cursor: "zoom-in",
-    backgroundColor: "rgba(255,255,255,0.03)",
-    borderRadius: 2,
+    height: { xs: 320, md: 440 },
+    overflow: "hidden",
+    background: "radial-gradient(circle at center, #2a2a2a 0%, #121212 100%)",
+    borderRadius: 3,
+    border: "1px solid rgba(255,255,255,0.08)",
+    position: "relative",
   },
 
-  // 🔹 Imagen centrada perfectamente dentro del slider
+  // 🔹 Imagen centrada y ajustada sin deformar
   imagen: {
-    display: "block",
-    margin: "0 auto",
+    width: "auto",
+    height: "100%",
     maxWidth: "100%",
     maxHeight: "100%",
     objectFit: "contain",
+    objectPosition: "center",
+    display: "block",
+    margin: "0 auto",
     borderRadius: 2,
-    border: "2px solid rgba(255,255,255,0.2)",
-    boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
-    transition: "transform 0.3s ease",
-    "&:hover": { transform: "scale(1.02)" },
+    transition: "transform 0.35s ease, filter 0.35s ease",
+    boxShadow: "0 8px 30px rgba(0,0,0,0.6)",
+    "&:hover": {
+      transform: "scale(1.03)",
+      filter: "brightness(1.05)",
+    },
   },
 
   stockChip: {
