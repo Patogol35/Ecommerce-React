@@ -46,18 +46,17 @@ const detalleModalStyles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    width: "100%",
-    height: { xs: "auto", md: "70vh" }, // Ajuste flexible para móviles y escritorio
-    maxHeight: { xs: "60vh", md: "70vh" }, // Evita recortes
+    width: { xs: "90%", md: 500 },  // Contenedor cuadrado
+    height: { xs: "90%", md: 500 }, // Contenedor cuadrado
     mb: 2,
   },
 
   imagen: {
     maxWidth: "100%",
-    maxHeight: { xs: "60vh", md: "70vh" }, // Proporcional según pantalla
+    maxHeight: "100%",
     width: "auto",
     height: "auto",
-    objectFit: "contain",
+    objectFit: "contain",          // Mantiene proporción
     borderRadius: 2,
     border: "2px solid rgba(255,255,255,0.2)",
     boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
