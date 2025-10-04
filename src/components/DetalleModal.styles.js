@@ -22,7 +22,7 @@ const detalleModalStyles = {
     bgcolor: "#1e1e1e",
     color: "white",
     width: "100%",
-    maxWidth: { xs: "95%", md: 900 },
+    maxWidth: { xs: "95%", md: 700 },
     maxHeight: "90vh",
     overflowY: "auto",
     position: "relative",
@@ -46,17 +46,15 @@ const detalleModalStyles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    width: { xs: "90%", md: 500 },  // Contenedor cuadrado
-    height: { xs: "90%", md: 500 }, // Contenedor cuadrado
+    width: { xs: "80%", sm: "60%", md: 400 },  // Ajuste responsive
+    aspectRatio: "1 / 1",                       // Cuadrado para uniformidad
     mb: 2,
   },
 
   imagen: {
-    maxWidth: "100%",
-    maxHeight: "100%",
-    width: "auto",
-    height: "auto",
-    objectFit: "contain",          // Mantiene proporción
+    width: "100%",
+    height: "100%",
+    objectFit: "contain",                       // Mantiene proporción
     borderRadius: 2,
     border: "2px solid rgba(255,255,255,0.2)",
     boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
