@@ -85,9 +85,9 @@ const detalleModalStyles = {
   botonAgregar: (stock) => ({
     borderRadius: 2,
     textTransform: "none",
-    py: 1.3,
+    py: { xs: 1.3, md: 1 }, // ✅ más pequeño en horizontal (md+)
     fontWeight: 600,
-    fontSize: "0.95rem",
+    fontSize: { xs: "0.95rem", md: "0.85rem" }, // ✅ reduce font en horizontal
     background:
       stock > 0 ? "linear-gradient(90deg, #1976d2, #42a5f5)" : "grey.500",
     color: "white",
@@ -108,9 +108,9 @@ const detalleModalStyles = {
   botonDetalles: {
     borderRadius: 2,
     textTransform: "none",
-    py: 1,
+    py: { xs: 1, md: 0.8 }, // ✅ reduce padding
     fontWeight: 500,
-    fontSize: "0.9rem",
+    fontSize: { xs: "0.9rem", md: "0.8rem" }, // ✅ más compacto
     border: "1px solid",
     borderColor: "rgba(255,255,255,0.3)",
     color: "rgba(255,255,255,0.85)",
