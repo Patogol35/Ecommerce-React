@@ -1,4 +1,4 @@
-  export const sliderSettings = {
+export const sliderSettings = {
   dots: true,
   infinite: true,
   speed: 400,
@@ -18,20 +18,19 @@ const detalleModalStyles = {
 
   dialogPaper: {
     borderRadius: { xs: 0, md: 3 },
-    p: 3,
+    p: { xs: 2, md: 3 },
     bgcolor: "#1e1e1e",
     color: "white",
     width: "100%",
-    maxWidth: { xs: "100%", md: 900 },
+    maxWidth: { xs: "95%", md: 900 },
     maxHeight: "90vh",
     overflowY: "auto",
     position: "relative",
 
     display: "flex",
     flexDirection: "column",
-    alignItems: "center",    // Centrado horizontal
-    justifyContent: "center",// Centrado vertical
-    textAlign: "center",     // Texto centrado
+    alignItems: "center",
+    textAlign: "center",
   },
 
   botonCerrar: {
@@ -46,16 +45,18 @@ const detalleModalStyles = {
   sliderBox: {
     display: "flex",
     justifyContent: "center",
-    alignItems: "center",    // Centrado vertical y horizontal de la imagen
+    alignItems: "center",
     width: "100%",
-    height: { xs: "auto", md: 400 }, // Ajusta altura para móviles y escritorio
-    cursor: "zoom-in",
+    height: { xs: "auto", md: "70vh" }, // Ajuste flexible para móviles y escritorio
+    maxHeight: { xs: "60vh", md: "70vh" }, // Evita recortes
     mb: 2,
   },
 
   imagen: {
     maxWidth: "100%",
-    maxHeight: "80vh",       // Evita recortes verticales
+    maxHeight: { xs: "60vh", md: "70vh" }, // Proporcional según pantalla
+    width: "auto",
+    height: "auto",
     objectFit: "contain",
     borderRadius: 2,
     border: "2px solid rgba(255,255,255,0.2)",
