@@ -1,18 +1,3 @@
-// =============================
-// Configuración del Slider
-// =============================
-export const sliderSettings = {
-  dots: true,
-  infinite: true,
-  speed: 400,
-  slidesToShow: 1,
-  slidesToScroll: 1,
-  arrows: true,
-};
-
-// =============================
-// Estilos del Modal de Detalle
-// =============================
 const detalleModalStyles = {
   dialog: {
     zIndex: 1600,
@@ -42,9 +27,9 @@ const detalleModalStyles = {
     color: "white",
     borderRadius: "50%",
     transition: "all 0.3s ease",
-    "&:hover": { bgcolor: "rgba(255,255,255,0.25)", transform: "scale(1.08)" },
-    "@media (orientation: landscape)": {
-      transform: "scale(0.85)", // ✅ más pequeño en horizontal
+    "&:hover": {
+      bgcolor: "rgba(255,255,255,0.25)",
+      transform: "scale(1.08)",
     },
   },
 
@@ -82,15 +67,18 @@ const detalleModalStyles = {
     color: "rgba(255,255,255,0.85)",
   },
 
-  // =============================
-  // Botón principal (Agregar)
-  // =============================
+  // ======================
+  // Botón principal (Agregar al carrito)
+  // ======================
   botonAgregar: (stock) => ({
     borderRadius: 2,
     textTransform: "none",
-    py: 1.3,
+    py: 1.2,
+    px: 4,
     fontWeight: 600,
     fontSize: "0.95rem",
+    width: { xs: "100%", sm: 220 },
+    alignSelf: "center",
     background:
       stock > 0 ? "linear-gradient(90deg, #1976d2, #42a5f5)" : "grey.500",
     color: "white",
@@ -103,21 +91,21 @@ const detalleModalStyles = {
           : "grey.500",
       boxShadow: stock > 0 ? "0 6px 18px rgba(0,0,0,0.18)" : "none",
     },
-    "@media (orientation: landscape)": {
-      py: 0.9,          // ✅ menos alto
-      fontSize: "0.8rem", // ✅ más compacto
-    },
   }),
 
-  // =============================
-  // Botón secundario (Detalles)
-  // =============================
+  // ======================
+  // Botón secundario (Detalles u otros)
+  // ======================
   botonDetalles: {
     borderRadius: 2,
     textTransform: "none",
     py: 1,
+    px: 4,
     fontWeight: 500,
     fontSize: "0.9rem",
+    width: { xs: "100%", sm: 220 },
+    alignSelf: "center",
+    mt: 1.5, // pequeña separación entre botones
     border: "1px solid",
     borderColor: "rgba(255,255,255,0.3)",
     color: "rgba(255,255,255,0.85)",
@@ -126,10 +114,6 @@ const detalleModalStyles = {
       transform: "scale(1.04)",
       bgcolor: "rgba(255,255,255,0.1)",
       boxShadow: "0 4px 14px rgba(0,0,0,0.25)",
-    },
-    "@media (orientation: landscape)": {
-      py: 0.7,          // ✅ más delgado
-      fontSize: "0.8rem",
     },
   },
 };
