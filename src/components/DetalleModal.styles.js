@@ -54,15 +54,18 @@ const detalleModalStyles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: { xs: 300, md: 420 },
+    height: { xs: 300, md: 420 }, // altura uniforme
     backgroundColor: "#111",
+    overflow: "hidden", // corta exceso si se recorta la imagen
+    borderRadius: 3,
     cursor: "zoom-in",
   },
 
   imagen: {
     width: "100%",
     height: "100%",
-    objectFit: "contain",
+    objectFit: "cover", // ahora se recorta para mantener tamaño uniforme
+    objectPosition: "center",
     borderRadius: 3,
     transition: "transform 0.3s ease",
     "&:hover": { transform: "scale(1.03)" },
