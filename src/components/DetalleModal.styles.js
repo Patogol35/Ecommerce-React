@@ -46,15 +46,14 @@ const detalleModalStyles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    width: { xs: "80%", sm: "60%", md: 400 },  // Ajuste responsive
-    aspectRatio: "1 / 1",                       // Cuadrado para uniformidad
+    width: "100%",
     mb: 2,
   },
 
   imagen: {
-    width: "100%",
-    height: "100%",
-    objectFit: "contain",                       // Mantiene proporción
+    width: { xs: 250, sm: 300, md: 350 }, // ancho fijo responsive
+    height: "auto",                       // mantiene proporción
+    objectFit: "contain",
     borderRadius: 2,
     border: "2px solid rgba(255,255,255,0.2)",
     boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
