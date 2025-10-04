@@ -67,18 +67,16 @@ const detalleModalStyles = {
     color: "rgba(255,255,255,0.85)",
   },
 
-  // ======================
   // Botón principal (Agregar al carrito)
-  // ======================
   botonAgregar: (stock) => ({
     borderRadius: 2,
     textTransform: "none",
-    py: 1.2,
-    px: 4,
+    py: 1.3,
+    px: { xs: 3, sm: 4 }, // 👈 reduce el ancho horizontal
+    maxWidth: { xs: "100%", sm: 220 }, // 👈 limita el ancho en pantallas grandes
+    mx: "auto", // centra el botón
     fontWeight: 600,
     fontSize: "0.95rem",
-    width: { xs: "100%", sm: 220 },
-    alignSelf: "center",
     background:
       stock > 0 ? "linear-gradient(90deg, #1976d2, #42a5f5)" : "grey.500",
     color: "white",
@@ -93,19 +91,16 @@ const detalleModalStyles = {
     },
   }),
 
-  // ======================
   // Botón secundario (Detalles u otros)
-  // ======================
   botonDetalles: {
     borderRadius: 2,
     textTransform: "none",
     py: 1,
-    px: 4,
+    px: { xs: 3, sm: 4 }, // 👈 mismo padding horizontal
+    maxWidth: { xs: "100%", sm: 220 }, // 👈 mismo ancho que el principal
+    mx: "auto", // centra el botón
     fontWeight: 500,
     fontSize: "0.9rem",
-    width: { xs: "100%", sm: 220 },
-    alignSelf: "center",
-    mt: 1.5, // pequeña separación entre botones
     border: "1px solid",
     borderColor: "rgba(255,255,255,0.3)",
     color: "rgba(255,255,255,0.85)",
