@@ -5,6 +5,7 @@ export const sliderSettings = {
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: true,
+  adaptiveHeight: true, // ✅ permite que el alto se ajuste a cada imagen
 };
 
 const detalleModalStyles = {
@@ -37,35 +38,36 @@ const detalleModalStyles = {
     "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
   },
 
-  // 🔹 Caja de imagen mejor centrada y con fondo neutro
+  // 🔹 Caja del slider completamente centrada y con proporción fija
   sliderBox: {
+    position: "relative",
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: { xs: 320, md: 440 },
+    width: "100%",
+    aspectRatio: "1 / 1", // ✅ mantiene proporción cuadrada en cualquier pantalla
+    background: "linear-gradient(180deg, #1c1c1c 0%, #000 100%)",
     overflow: "hidden",
-    background: "radial-gradient(circle at center, #2a2a2a 0%, #121212 100%)",
     borderRadius: 3,
-    border: "1px solid rgba(255,255,255,0.08)",
-    position: "relative",
   },
 
-  // 🔹 Imagen centrada y ajustada sin deformar
+  // 🔹 Imagen perfectamente centrada, sin deformarse nunca
   imagen: {
-    width: "auto",
+    position: "absolute",
+    top: "50%",
+    left: "50%",
+    transform: "translate(-50%, -50%)",
+    width: "100%",
     height: "100%",
-    maxWidth: "100%",
-    maxHeight: "100%",
     objectFit: "contain",
     objectPosition: "center",
-    display: "block",
-    margin: "0 auto",
-    borderRadius: 2,
-    transition: "transform 0.35s ease, filter 0.35s ease",
-    boxShadow: "0 8px 30px rgba(0,0,0,0.6)",
+    transition: "transform 0.3s ease, filter 0.3s ease",
+    borderRadius: 3,
+    userSelect: "none",
+    pointerEvents: "none", // evita clics raros en slick
     "&:hover": {
-      transform: "scale(1.03)",
-      filter: "brightness(1.05)",
+      transform: "translate(-50%, -50%) scale(1.03)",
+      filter: "brightness(1.08)",
     },
   },
 
