@@ -8,17 +8,19 @@ export const sliderSettings = {
 };
 
 const detalleModalStyles = {
+  // Fondo del modal con blur
   dialog: {
     zIndex: 1600,
     "& .MuiBackdrop-root": {
       backgroundColor: "rgba(0,0,0,0.85)",
-      backdropFilter: "blur(5px)",
+      backdropFilter: "blur(6px)",
     },
   },
 
+  // Contenedor principal del modal
   dialogPaper: {
     borderRadius: { xs: 0, md: 3 },
-    p: { xs: 2, md: 4 },
+    p: 3,
     bgcolor: "#1e1e1e",
     color: "white",
     width: "100%",
@@ -28,6 +30,7 @@ const detalleModalStyles = {
     position: "relative",
   },
 
+  // Botón cerrar (X)
   botonCerrar: {
     position: "absolute",
     top: 12,
@@ -37,56 +40,69 @@ const detalleModalStyles = {
     "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
   },
 
-  // 🔹 Área del slider/imágenes
+  // Contenedor del slider / imagen
   sliderBox: {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    height: { xs: 280, md: 400 }, // asegura altura fija
+    height: { xs: 300, md: 420 },
     width: "100%",
     borderRadius: 3,
     overflow: "hidden",
     backgroundColor: "rgba(255,255,255,0.05)",
-    boxShadow: "0 4px 15px rgba(0,0,0,0.4)",
+    cursor: "zoom-in",
   },
 
-  // 🔹 Imagen visible y siempre proporcionada
+  // Imagen del producto
   imagen: {
     maxWidth: "100%",
     maxHeight: "100%",
     objectFit: "contain",
     borderRadius: 2,
+    border: "2px solid rgba(255,255,255,0.15)",
+    boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
     transition: "transform 0.3s ease",
-    boxShadow: "0 2px 8px rgba(0,0,0,0.3)",
-    "&:hover": {
-      transform: "scale(1.03)",
-    },
+    "&:hover": { transform: "scale(1.03)" },
   },
 
+  // Contenedor de información del producto (lado derecho)
+  infoBox: {
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    height: { xs: "auto", md: 420 },
+  },
+
+  // Chip de stock
   stockChip: {
     color: "white",
     borderColor: "white",
     fontWeight: "bold",
   },
 
+  // Divider
   divider: {
     bgcolor: "rgba(255,255,255,0.3)",
   },
 
+  // Descripción
   descripcion: {
     lineHeight: 1.6,
     color: "rgba(255,255,255,0.85)",
   },
 
+  // Botón agregar al carrito
   botonAgregar: (stock) => ({
     borderRadius: 3,
-    py: 1.3,
+    py: 1.2,
     px: 2.5,
     width: "fit-content",
-    alignSelf: "flex-start",
     color: "white",
     fontWeight: "bold",
-    background: "linear-gradient(135deg, #1976d2, #42a5f5)",
+    background: stock > 0
+      ? "linear-gradient(135deg, #1976d2, #42a5f5)"
+      : "linear-gradient(135deg, #555, #333)",
+    alignSelf: "center",
     boxShadow: "0 3px 10px rgba(0,0,0,0.3)",
     transition: "all 0.3s ease",
     "&:hover": {
