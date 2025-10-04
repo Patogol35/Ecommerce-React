@@ -1,73 +1,110 @@
-import {
-  Dialog,
-  DialogContent,
-  Typography,
-  Divider,
-  IconButton,
-  Chip,
-  Button,
-  Box,
-} from "@mui/material";
-import CloseIcon from "@mui/icons-material/Close";
-import Slider from "react-slick";
-import detalleModalStyles, { sliderSettings } from "../styles/detalleModalStyles";
-
-const DetalleModal = ({ open, onClose, producto }) => {
-  if (!producto) return null;
-
-  const { nombre, descripcion, imagenes, stock, precio } = producto;
-
-  return (
-    <Dialog
-      open={open}
-      onClose={onClose}
-      sx={detalleModalStyles.dialog}
-      PaperProps={{ sx: detalleModalStyles.dialogPaper }}
-    >
-      {/* Botón Cerrar */}
-      <IconButton onClick={onClose} sx={detalleModalStyles.botonCerrar}>
-        <CloseIcon />
-      </IconButton>
-
-      {/* Imagen Izquierda */}
-      <Box sx={detalleModalStyles.sliderBox}>
-        <Slider {...sliderSettings}>
-          {imagenes?.map((img, index) => (
-            <Box key={index}>
-              <img src={img} alt={nombre} style={detalleModalStyles.imagen} />
-            </Box>
-          ))}
-        </Slider>
-      </Box>
-
-      {/* Contenido Derecho */}
-      <Box sx={detalleModalStyles.contenidoBox}>
-        <Typography variant="h5" fontWeight="bold">
-          {nombre}
-        </Typography>
-
-        <Chip
-          label={stock > 0 ? "Disponible" : "Sin stock"}
-          variant="outlined"
-          sx={detalleModalStyles.stockChip}
-        />
-
-        <Divider sx={detalleModalStyles.divider} />
-
-        <Typography sx={detalleModalStyles.descripcion}>
-          {descripcion}
-        </Typography>
-
-        <Typography variant="h6" fontWeight="bold" mt={2}>
-          ${precio}
-        </Typography>
-
-        <Button sx={detalleModalStyles.botonAgregar(stock)}>
-          {stock > 0 ? "Agregar al carrito" : "Agotado"}
-        </Button>
-      </Box>
-    </Dialog>
-  );
+export const sliderSettings = {
+  dots: true,
+  infinite: true,
+  speed: 400,
+  slidesToShow: 1,
+  slidesToScroll: 1,
+  arrows: true,
 };
 
-export default DetalleModal;
+const detalleModalStyles = {
+  dialog: {
+    zIndex: 1600,
+    "& .MuiBackdrop-root": {
+      backgroundColor: "rgba(0,0,0,0.85)",
+      backdropFilter: "blur(5px)",
+    },
+  },
+
+  dialogPaper: {
+    borderRadius: { xs: 0, md: 3 },
+    p: 3,
+    bgcolor: "#1e1e1e",
+    color: "white",
+    width: "100%",
+    maxWidth: { xs: "100%", md: 900 },
+    maxHeight: "90vh",
+    overflowY: "auto",
+    position: "relative",
+    display: "flex",
+    flexDirection: { xs: "column", md: "row" }, // Imagen y contenido lado a lado en desktop
+    gap: 3,
+  },
+
+  botonCerrar: {
+    position: "absolute",
+    top: 12,
+    right: 12,
+    bgcolor: "rgba(0,0,0,0.6)",
+    color: "white",
+    "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
+  },
+
+  // Imagen a la izquierda
+  sliderBox: {
+    flex: 1,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center",
+    height: { xs: 300, md: "auto" },
+    cursor: "zoom-in",
+  },
+
+  imagen: {
+    maxWidth: "100%",
+    maxHeight: "100%",
+    objectFit: "contain",
+    borderRadius: 2,
+    border: "2px solid rgba(255,255,255,0.2)",
+    boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
+    transition: "transform 0.3s ease",
+    "&:hover": { transform: "scale(1.02)" },
+  },
+
+  // Contenido a la derecha
+  contenidoBox: {
+    flex: 1,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    gap: 2,
+  },
+
+  stockChip: {
+    color: "white",
+    borderColor: "white",
+    fontWeight: "bold",
+    alignSelf: "flex-start",
+  },
+
+  divider: {
+    bgcolor: "rgba(255,255,255,0.3)",
+  },
+
+  descripcion: {
+    lineHeight: 1.6,
+    color: "rgba(255,255,255,0.85)",
+  },
+
+  botonAgregar: (stock) => ({
+    borderRadius: 3,
+    py: 1.2,
+    px: 2.5,
+    width: "fit-content",
+    color: "white",
+    fontWeight: "bold",
+    background: stock > 0
+      ? "linear-gradient(135deg, #1976d2, #42a5f5)"
+      : "linear-gradient(135deg, #555, #777)",
+    alignSelf: "center",
+    boxShadow: "0 3px 10px rgba(0,0,0,0.3)",
+    transition: "all 0.3s ease",
+    cursor: stock > 0 ? "pointer" : "not-allowed",
+    "&:hover": {
+      transform: stock > 0 ? "translateY(-2px)" : "none",
+      boxShadow: stock > 0 ? "0 6px 15px rgba(0,0,0,0.4)" : "none",
+    },
+  }),
+};
+
+export default detalleModalStyles;
