@@ -16,16 +16,18 @@ backdropFilter: "blur(5px)",
 },
 },
 
+
 dialogPaper: {
-borderRadius: { xs: 0, md: 3 },
-p: 3,
-bgcolor: "#1e1e1e",
-color: "white",
-width: "100%",
-maxWidth: { xs: "100%", md: 900 },
-maxHeight: "90vh",
-overflowY: "auto",
-position: "relative",
+  borderRadius: { xs: 0, md: 3 },
+  p: { xs: 2, md: 4 },
+  bgcolor: "#1e1e1e",
+  color: "white",
+  width: "100%",
+  maxWidth: { xs: "95%", md: 700 },
+  maxHeight: "90vh",
+  overflowY: "auto",
+  position: "relative",
+  textAlign: "center",
 },
 
 botonCerrar: {
