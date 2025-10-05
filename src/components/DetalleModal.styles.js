@@ -10,9 +10,16 @@ export const sliderSettings = {
 const detalleModalStyles = {
   dialog: {
     zIndex: 1600,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
     "& .MuiBackdrop-root": {
       backgroundColor: "rgba(0,0,0,0.85)",
       backdropFilter: "blur(5px)",
+    },
+    // 🌟 Espacio arriba y abajo en modo horizontal
+    "@media (orientation: landscape)": {
+      p: "20px 0",
     },
   },
 
@@ -27,11 +34,6 @@ const detalleModalStyles = {
     overflowY: "auto",
     position: "relative",
     textAlign: "center",
-    // 🌟 Añadimos espacio arriba y abajo en modo horizontal
-    "@media (orientation: landscape)": {
-      marginTop: "20px",
-      marginBottom: "20px",
-    },
   },
 
   botonCerrar: {
