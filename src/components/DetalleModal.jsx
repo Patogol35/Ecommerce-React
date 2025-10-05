@@ -1,33 +1,23 @@
 import {
   Box,
   Typography,
-  Grid,
   Stack,
-  Divider,
-  Chip,
-  Button,
   IconButton,
+  Chip,
   Dialog,
 } from "@mui/material";
 import Slider from "react-slick";
-import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import CloseIcon from "@mui/icons-material/Close";
 import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 
-export default function DetalleModal({
-  producto,
-  open,
-  onClose,
-  onAdd,
-  setLightbox,
-}) {
+export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="lg"
+      maxWidth="md"
       fullWidth
       sx={detalleModalStyles.dialog}
       PaperProps={{ sx: detalleModalStyles.dialogPaper }}
@@ -36,10 +26,10 @@ export default function DetalleModal({
         <CloseIcon />
       </IconButton>
 
-      <Grid container spacing={4}>
-        {/* Slider de imÃ¡genes */}
-        <Grid item xs={12} md={6}>
-          {(producto.imagenes || [producto.imagen]).length > 1 ? (
+      <Stack spacing={3} alignItems="center">
+        {/* Imagen o slider */}
+        {(producto.imagenes || [producto.imagen]).length > 1 ? (
+          <Box sx={{ width: "100%", maxWidth: 600 }}>
             <Slider {...sliderSettings}>
               {(producto.imagenes || [producto.imagen]).map((img, i) => (
                 <Box
@@ -57,65 +47,40 @@ export default function DetalleModal({
                 </Box>
               ))}
             </Slider>
-          ) : (
+          </Box>
+        ) : (
+          <Box
+            sx={detalleModalStyles.sliderBox}
+            onClick={() => setLightbox(producto.imagen)}
+          >
             <Box
-              sx={detalleModalStyles.sliderBox}
-              onClick={() => setLightbox(producto.imagen)}
-            >
-              <Box
-                component="img"
-                src={producto.imagen}
-                alt={producto.nombre}
-                loading="lazy"
-                sx={detalleModalStyles.imagen}
-              />
-            </Box>
-          )}
-        </Grid>
+              component="img"
+              src={producto.imagen}
+              alt={producto.nombre}
+              loading="lazy"
+              sx={detalleModalStyles.imagen}
+            />
+          </Box>
+        )}
 
-        {/* InformaciÃ³n */}
-        <Grid item xs={12} md={6}>
-          <Stack spacing={3}>
-            <Typography variant="h5" fontWeight="bold">
-              {producto.nombre}
-            </Typography>
+        {/* Descripción + chip */}
+        <Box sx={{ textAlign: "center", maxWidth: 700 }}>
+          <Typography variant="h5" fontWeight="bold" gutterBottom>
+            {producto.nombre}
+          </Typography>
 
-            <Box>
-              <Typography
-                variant="h6"
-                fontWeight="bold"
-                color="primary"
-                sx={{ mb: 1 }}
-              >
-                ${producto.precio}
-              </Typography>
+          <Chip
+            label={producto.stock > 0 ? "En stock" : "Agotado"}
+            color={producto.stock > 0 ? "success" : "error"}
+            variant="outlined"
+            sx={{ ...detalleModalStyles.stockChip, mb: 2 }}
+          />
 
-              <Chip
-                label={producto.stock > 0 ? "En stock" : "Agotado"}
-                color={producto.stock > 0 ? "success" : "error"}
-                variant="outlined"
-                sx={detalleModalStyles.stockChip}
-              />
-            </Box>
-
-            <Divider sx={detalleModalStyles.divider} />
-
-            <Typography sx={detalleModalStyles.descripcion}>
-              {producto.descripcion}
-            </Typography>
-
-            <Button
-              variant="contained"
-              startIcon={<AddShoppingCartIcon />}
-              onClick={() => onAdd(producto)}
-              disabled={producto.stock === 0}
-              sx={detalleModalStyles.botonAgregar(producto.stock)}
-            >
-              {producto.stock > 0 ? "Agregar al carrito" : "Agotado"}
-            </Button>
-          </Stack>
-        </Grid>
-      </Grid>
+          <Typography sx={detalleModalStyles.descripcion}>
+            {producto.descripcion}
+          </Typography>
+        </Box>
+      </Stack>
     </Dialog>
   );
 }
