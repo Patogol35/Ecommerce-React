@@ -10,16 +10,9 @@ export const sliderSettings = {
 const detalleModalStyles = {
   dialog: {
     zIndex: 1600,
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
     "& .MuiBackdrop-root": {
       backgroundColor: "rgba(0,0,0,0.85)",
       backdropFilter: "blur(5px)",
-    },
-    // 🌟 Espacio arriba y abajo en modo horizontal
-    "@media (orientation: landscape)": {
-      p: "20px 0",
     },
   },
 
@@ -34,6 +27,12 @@ const detalleModalStyles = {
     overflowY: "auto",
     position: "relative",
     textAlign: "center",
+    // 🌟 En modo horizontal, el modal se hace más pequeño
+    "@media (orientation: landscape)": {
+      maxHeight: "70vh", // 🔹 Reduce altura
+      marginTop: "5vh",  // 🔹 Espacio arriba
+      marginBottom: "5vh", // 🔹 Espacio abajo
+    },
   },
 
   botonCerrar: {
