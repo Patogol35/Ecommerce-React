@@ -9,10 +9,10 @@ export default function ListaProductos({ productos }) {
           <Grid
             item
             key={producto.id}
-            xs={12}    // móvil: 1 columna
-            sm={6}     // tablet: 2 columnas
-            md={4}     // desktop pequeño: 3 columnas
-            lg={3}     // desktop grande: 4 columnas
+            xs={12}    
+            sm={6}     
+            md={4}     
+            lg={3}     
           >
             <ProductoCard producto={producto} />
           </Grid>
