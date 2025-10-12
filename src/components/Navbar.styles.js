@@ -44,7 +44,7 @@ const styles = {
 
   drawerPaper: {
     width: 280,
-    background: "#1976d2", // 👈 tu color original
+    background: "#1976d2", 
     borderRadius: "16px 0 0 16px",
     p: 2,
     display: "flex",
