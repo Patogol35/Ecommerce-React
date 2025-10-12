@@ -13,12 +13,11 @@ import { ThemeModeProvider } from "./context/ThemeContext"; //
 
 function App() {
   return (
-    <ThemeModeProvider> {/* <- envuelves todo aquí */}
+    <ThemeModeProvider> 
       <BrowserRouter>
         <AuthProvider>
           <CarritoProvider>
             <Routes>
-              {/* Todas las rutas con Navbar entran en Layout */}
               <Route element={<Layout />}>
                 <Route path="/" element={<Home />} />
                 <Route
@@ -39,8 +38,6 @@ function App() {
                 />
                 <Route path="/producto/:id" element={<ProductoDetalle />} />
               </Route>
-
-              {/* Estas no muestran Navbar */}
               <Route path="/login" element={<Login />} />
               <Route path="/register" element={<Register />} />
             </Routes>
