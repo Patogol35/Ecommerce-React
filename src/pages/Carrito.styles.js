@@ -57,11 +57,11 @@ const styles = {
   total: {
     display: "flex",
     alignItems: "center",
-    gap: 0.8,            // menos espacio entre icono y texto
+    gap: 0.8,            
     fontWeight: 800,
-    fontSize: "1.1rem",   // más pequeño
+    fontSize: "1.1rem",   
     color: "#1976d2",
-    padding: "0.4rem 0.8rem", // padding más compacto
+    padding: "0.4rem 0.8rem", 
     borderRadius: 6,
     backgroundColor: "#e3f2fd",
     boxShadow: "0 1.5px 5px rgba(0,0,0,0.08)",
