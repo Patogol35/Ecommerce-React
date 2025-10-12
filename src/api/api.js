@@ -1,11 +1,6 @@
-// =====================
 // BASE URL
-// =====================
 const BASE_URL = import.meta.env.VITE_API_URL;
-
-// =====================
 // REFRESH TOKEN
-// =====================
 export const refreshToken = async (refresh) => {
   const res = await fetch(`${BASE_URL}/token/refresh/`, {
     method: "POST",
@@ -16,10 +11,7 @@ export const refreshToken = async (refresh) => {
   if (!res.ok) throw new Error("No se pudo refrescar el token");
   return res.json();
 };
-
-// =====================
 // FETCH CON AUTO REFRESH
-// =====================
 async function authFetch(url, options = {}, token) {
   let headers = {
     ...(options.headers || {}),
@@ -68,10 +60,7 @@ async function authFetch(url, options = {}, token) {
 
   return data;
 }
-
-// =====================
 // ENDPOINTS
-// =====================
 
 // AUTH
 export const login = async (credentials) => {
@@ -146,6 +135,7 @@ export const getUserProfile = async (token) => {
   const API_ROOT = BASE_URL.replace("/api", "");
   return authFetch(`${API_ROOT}/user/profile/`, { method: "GET" }, token);
 };
+
 
 
 
