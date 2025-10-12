@@ -59,7 +59,7 @@ const styles = {
   userSection: (isMobile) => ({
     my: isMobile ? 2 : 0,
     textAlign: "center",
-    mt: isMobile ? 12 : 0, // 👈 usuario más abajo en móvil
+    mt: isMobile ? 12 : 0, 
   }),
 
   logoutBtn: {
