@@ -7,8 +7,8 @@ import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 
 const theme = createTheme({
   palette: {
-    primary: { main: "#4f46e5" }, // Azul violeta
-    secondary: { main: "#f43f5e" }, // Rojo rosado
+    primary: { main: "#4f46e5" }, 
+    secondary: { main: "#f43f5e" }, 
     background: { default: "#f9fafb" },
   },
   typography: {
