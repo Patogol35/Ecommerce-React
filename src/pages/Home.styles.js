@@ -1,4 +1,3 @@
-// ================== STYLES ==================
 const styles = {
   loadingBox: {
     mt: 8,
