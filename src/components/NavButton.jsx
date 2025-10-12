@@ -8,8 +8,6 @@ function NavButton({ item, onClick }) {
   const location = useLocation();
   const isActive = location.pathname === item.path;
   const Icon = item.icon;
-
-  // Rutas que deben estar siempre con color en desktop
   const alwaysColoredPaths = ["/login", "/register"];
 
   return (
