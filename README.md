@@ -107,7 +107,7 @@ VITE_API_URL=https://TU_API_URL/aquí
 
 De esta manera, cualquiera puede reemplazar https://TU_API_URL/aquí con la URL de su propio backend en producción.
 
-
+7. Después de la configuración del paso 6 se debe desplegar el front en Vercel
 
 ---
 
