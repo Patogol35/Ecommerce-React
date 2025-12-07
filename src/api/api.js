@@ -1,7 +1,11 @@
+// ================================
 // BASE URL
-const BASE_URL = import.meta.env.VITE_API_URL;
+// ================================
+const BASE_URL = import.meta.env.VITE_API_URL + "/api";
 
+// ================================
 // REFRESH TOKEN
+// ================================
 export const refreshToken = async (refresh) => {
   const res = await fetch(`${BASE_URL}/token/refresh/`, {
     method: "POST",
@@ -13,7 +17,9 @@ export const refreshToken = async (refresh) => {
   return res.json();
 };
 
-// FETCH CON AUTO REFRESH
+// ================================
+// FETCH AUTOMÁTICO CON REFRESH
+// ================================
 async function authFetch(url, options = {}, token) {
   let headers = {
     ...(options.headers || {}),
@@ -23,7 +29,6 @@ async function authFetch(url, options = {}, token) {
 
   let res = await fetch(url, { ...options, headers });
 
-  // Si expira el access → intentar refrescar
   if (res.status === 401 && localStorage.getItem("refresh")) {
     try {
       const newTokens = await refreshToken(localStorage.getItem("refresh"));
@@ -65,7 +70,9 @@ async function authFetch(url, options = {}, token) {
   return data;
 }
 
-// ========== AUTH ==========
+// =====================================
+//  AUTH
+// =====================================
 export const login = async (credentials) => {
   return authFetch(`${BASE_URL}/token/`, {
     method: "POST",
@@ -80,7 +87,9 @@ export const register = async (data) => {
   });
 };
 
-// ========== PRODUCTOS ==========
+// =====================================
+//  PRODUCTOS
+// =====================================
 export const getProductos = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
   const url = query
@@ -90,12 +99,16 @@ export const getProductos = async (params = {}) => {
   return authFetch(url, { method: "GET" });
 };
 
-// ========== CATEGORÍAS ==========
+// =====================================
+//  CATEGORÍAS
+// =====================================
 export const getCategorias = async () => {
   return authFetch(`${BASE_URL}/categorias/`, { method: "GET" });
 };
 
-// ========== CARRITO ==========
+// =====================================
+//  CARRITO
+// =====================================
 export const getCarrito = async (token) => {
   return authFetch(`${BASE_URL}/carrito/`, { method: "GET" }, token);
 };
@@ -127,7 +140,9 @@ export const setCantidadItem = async (itemId, cantidad, token) => {
   );
 };
 
-// ========== PEDIDOS ==========
+// =====================================
+//  PEDIDOS
+// =====================================
 export const crearPedido = async (token) => {
   return authFetch(`${BASE_URL}/pedido/crear/`, { method: "POST" }, token);
 };
@@ -140,7 +155,9 @@ export const getPedidos = async (token, page = 1) => {
   );
 };
 
-// ========== PERFIL DEL USUARIO ==========
+// =====================================
+//  PERFIL DE USUARIO
+// =====================================
 export const getUserProfile = async (token) => {
   return authFetch(`${BASE_URL}/user/profile/`, { method: "GET" }, token);
 };
