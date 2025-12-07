@@ -1,81 +1,64 @@
-import { createContext, useContext, useState, useEffect } from "react";
-import { refreshToken as apiRefreshToken } from "../api/api";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import { getUserProfile } from "../api/api";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
-  const [accessToken, setAccessToken] = useState(
-    localStorage.getItem("access") || null
-  );
-  const [refreshToken, setRefreshToken] = useState(
-    localStorage.getItem("refresh") || null
-  );
+  const [access, setAccess] = useState(null);
+  const [refresh, setRefresh] = useState(null);
+  const [user, setUser] = useState(null);   // ðŸ‘ˆ nuevo
   const [loading, setLoading] = useState(true);
 
-  // ------- LOGIN -------
-  const login = (access, refresh) => {
-    setAccessToken(access);
-    setRefreshToken(refresh);
-
-    localStorage.setItem("access", access);
-    localStorage.setItem("refresh", refresh);
-  };
-
-  // ------- LOGOUT -------
-  const logout = () => {
-    setAccessToken(null);
-    setRefreshToken(null);
-
-    localStorage.removeItem("access");
-    localStorage.removeItem("refresh");
-  };
-
-  // ------- REFRESH TOKEN AUTOMÁTICO -------
-  const attemptTokenRefresh = async () => {
-    if (!refreshToken) {
-      logout();
-      return;
-    }
-
-    try {
-      const data = await apiRefreshToken(refreshToken);
-
-      if (data?.access) {
-        setAccessToken(data.access);
-        localStorage.setItem("access", data.access);
-      } else {
-        logout();
-      }
-    } catch (err) {
-      logout();
-    }
-  };
-
-  // Intentar refrescar token al iniciar la app
+  // Recuperar tokens al cargar y obtener perfil
   useEffect(() => {
-    const init = async () => {
-      if (refreshToken && !accessToken) {
-        await attemptTokenRefresh();
+    const savedAccess = localStorage.getItem("access");
+    const savedRefresh = localStorage.getItem("refresh");
+    if (savedAccess) setAccess(savedAccess);
+    if (savedRefresh) setRefresh(savedRefresh);
+  }, []);
+
+  // Cada vez que tengamos access, pedimos el perfil
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (access) {
+        try {
+          const data = await getUserProfile(access);
+          setUser(data); // guarda username, email, id
+        } catch (err) {
+          console.error("Error obteniendo perfil:", err);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
       }
       setLoading(false);
     };
-    init();
-  }, []);
+    fetchProfile();
+  }, [access]);
 
-  return (
-    <AuthContext.Provider
-      value={{
-        accessToken,
-        refreshToken,
-        login,
-        logout,
-        loading,
-        attemptTokenRefresh,
-      }}
-    >
-      {children}
-    </AuthContext.Provider>
+  const isAuthenticated = !!access;
+
+  const login = (accessToken, refreshToken) => {
+    localStorage.setItem("access", accessToken);
+    localStorage.setItem("refresh", refreshToken);
+    setAccess(accessToken);
+    setRefresh(refreshToken);
+  };
+
+  const logout = () => {
+    localStorage.removeItem("access");
+    localStorage.removeItem("refresh");
+    setAccess(null);
+    setRefresh(null);
+    setUser(null);
+  };
+
+  const value = useMemo(
+    () => ({ access, refresh, isAuthenticated, user, login, logout, loading }),
+    [access, refresh, isAuthenticated, user, loading]
   );
+
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => useContext(AuthContext);
