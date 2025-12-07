@@ -79,15 +79,6 @@ export const register = async (data) => {
   });
 };
 
-// PERFIL DEL USUARIO
-export const getUserProfile = async (token) => {
-  return authFetch(
-    `${BASE_URL}/api/user/profile/`,
-    { method: "GET" },
-    token
-  );
-};
-
 // PRODUCTOS
 export const getProductos = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
@@ -145,4 +136,9 @@ export const getPedidos = async (token, page = 1) => {
     { method: "GET" },
     token
   );
+};
+
+// PERFIL DE USUARIO
+export const getUserProfile = async (token) => {
+  return authFetch(`${BASE_URL}/api/user/profile/`, { method: "GET" }, token);
 };
