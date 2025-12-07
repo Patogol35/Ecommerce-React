@@ -1,13 +1,6 @@
-// ============================
-// BASE URLS
-// ============================
-const BASE_URL = import.meta.env.VITE_API_URL;       // https://backend.com/api
-const ROOT_URL = BASE_URL.replace("/api", "");       // https://backend.com
-
-
-// ============================
+// BASE URL
+const BASE_URL = import.meta.env.VITE_API_URL;
 // REFRESH TOKEN
-// ============================
 export const refreshToken = async (refresh) => {
   const res = await fetch(`${BASE_URL}/token/refresh/`, {
     method: "POST",
@@ -18,11 +11,7 @@ export const refreshToken = async (refresh) => {
   if (!res.ok) throw new Error("No se pudo refrescar el token");
   return res.json();
 };
-
-
-// ============================
-// FETCH CON AUTO-REFRESH
-// ============================
+// FETCH CON AUTO REFRESH
 async function authFetch(url, options = {}, token) {
   let headers = {
     ...(options.headers || {}),
@@ -32,35 +21,32 @@ async function authFetch(url, options = {}, token) {
 
   let res = await fetch(url, { ...options, headers });
 
-  // Si expira el access → intentar refrescar
+  // Si expira el access â†’ intentar refrescar
   if (res.status === 401 && localStorage.getItem("refresh")) {
     try {
       const newTokens = await refreshToken(localStorage.getItem("refresh"));
-
       if (newTokens?.access) {
         localStorage.setItem("access", newTokens.access);
         token = newTokens.access;
 
+        // reintento con nuevo token
         headers = {
           ...(options.headers || {}),
           ...(options.body && { "Content-Type": "application/json" }),
           Authorization: `Bearer ${token}`,
         };
-
         res = await fetch(url, { ...options, headers });
       }
     } catch (err) {
-      console.error("Refresh token inválido:", err);
+      console.error("Refresh token invÃ¡lido:", err);
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
-      throw new Error("⚠️ Tu sesión expiró, vuelve a iniciar sesión.");
+      throw new Error("âš ï¸ Tu sesiÃ³n expirÃ³, vuelve a iniciar sesiÃ³n.");
     }
   }
 
-  // Leer respuesta
   const text = await res.text();
   let data = null;
-
   try {
     data = text ? JSON.parse(text) : null;
   } catch {
@@ -74,13 +60,9 @@ async function authFetch(url, options = {}, token) {
 
   return data;
 }
-
-
-// ============================
 // ENDPOINTS
-// ============================
 
-// ---------- AUTH ----------
+// AUTH
 export const login = async (credentials) => {
   return authFetch(`${BASE_URL}/token/`, {
     method: "POST",
@@ -95,25 +77,19 @@ export const register = async (data) => {
   });
 };
 
-
-// ---------- PRODUCTOS ----------
+// PRODUCTOS (con filtros opcionales)
 export const getProductos = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
-  const url = query
-    ? `${BASE_URL}/productos/?${query}`
-    : `${BASE_URL}/productos/`;
-
+  const url = query ? `${BASE_URL}/productos/?${query}` : `${BASE_URL}/productos/`;
   return authFetch(url, { method: "GET" });
 };
 
-
-// ---------- CATEGORÍAS ----------
+// CATEGORÃAS
 export const getCategorias = async () => {
   return authFetch(`${BASE_URL}/categorias/`, { method: "GET" });
 };
 
-
-// ---------- CARRITO ----------
+// CARRITO
 export const getCarrito = async (token) => {
   return authFetch(`${BASE_URL}/carrito/`, { method: "GET" }, token);
 };
@@ -140,16 +116,12 @@ export const eliminarDelCarrito = async (itemId, token) => {
 export const setCantidadItem = async (itemId, cantidad, token) => {
   return authFetch(
     `${BASE_URL}/carrito/actualizar/${itemId}/`,
-    {
-      method: "PUT",
-      body: JSON.stringify({ cantidad }),
-    },
+    { method: "PUT", body: JSON.stringify({ cantidad }) },
     token
   );
 };
 
-
-// ---------- PEDIDOS ----------
+// PEDIDOS
 export const crearPedido = async (token) => {
   return authFetch(`${BASE_URL}/pedido/crear/`, { method: "POST" }, token);
 };
@@ -158,8 +130,14 @@ export const getPedidos = async (token, page = 1) => {
   return authFetch(`${BASE_URL}/pedidos/?page=${page}`, { method: "GET" }, token);
 };
 
-
-// ---------- PERFIL ----------
+// PERFIL DE USUARIO
 export const getUserProfile = async (token) => {
-  return authFetch(`${ROOT_URL}/user/profile/`, { method: "GET" }, token);
+  const API_ROOT = BASE_URL.replace("/api", "");
+  return authFetch(`${API_ROOT}/user/profile/`, { method: "GET" }, token);
 };
+
+
+
+
+
+
