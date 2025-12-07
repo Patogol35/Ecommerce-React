@@ -34,15 +34,12 @@ export default function Login() {
     setLoading(true);
     try {
       const data = await apiLogin(form);
-
       if (data?.access && data?.refresh) {
-        // ⬅️ cambiar esta línea (ya modificada)
-        login(data.access, data.refresh, data.user);
-
-        toast.success(`Bienvenido/a, ${data.user.username} 👋`);
+        login(data.access, data.refresh);
+        toast.success(`Bienvenido/a, ${form.username} ðŸ‘‹`);
         navigate("/");
       } else {
-        toast.error("Credenciales inválidas");
+        toast.error("Credenciales invÃ¡lidas");
       }
     } catch (e) {
       toast.error(e.message);
@@ -92,7 +89,7 @@ export default function Login() {
           />
 
           <TextField
-            label="Contraseña"
+            label="ContraseÃ±a"
             type={showPassword ? "text" : "password"}
             fullWidth
             margin="normal"
@@ -128,7 +125,7 @@ export default function Login() {
               startIcon={loading && <CircularProgress size={20} color="inherit" />}
               sx={loginStyles.botonLogin(theme)}
             >
-              {loading ? "Entrando..." : "Iniciar sesión"}
+              {loading ? "Entrando..." : "Iniciar sesiÃ³n"}
             </Button>
 
             <Button
