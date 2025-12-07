@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { login as apiLogin } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
@@ -23,26 +23,40 @@ import loginStyles from "./Login.styles";
 
 export default function Login() {
   const theme = useTheme();
+  const navigate = useNavigate();
+  const { login } = useAuth();
+
   const [form, setForm] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
-  const { login } = useAuth();
-  const navigate = useNavigate();
+
+  // Manejo genérico de inputs
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }, []);
+
+  // Toggle de contraseña
+  const togglePasswordVisibility = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
+
     try {
       const data = await apiLogin(form);
+
       if (data?.access && data?.refresh) {
         login(data.access, data.refresh);
-        toast.success(`Bienvenido/a, ${form.username} ðŸ‘‹`);
+        toast.success(`Bienvenido/a, ${form.username} 👋`);
         navigate("/");
       } else {
-        toast.error("Credenciales invÃ¡lidas");
+        toast.error("Credenciales inválidas");
       }
-    } catch (e) {
-      toast.error(e.message);
+    } catch (err) {
+      toast.error(err?.message || "Error desconocido");
     } finally {
       setLoading(false);
     }
@@ -72,11 +86,12 @@ export default function Login() {
 
         <form onSubmit={handleSubmit}>
           <TextField
+            name="username"
             label="Usuario"
             fullWidth
             margin="normal"
             value={form.username}
-            onChange={(e) => setForm({ ...form, username: e.target.value })}
+            onChange={handleChange}
             required
             variant="outlined"
             InputProps={{
@@ -89,12 +104,13 @@ export default function Login() {
           />
 
           <TextField
-            label="ContraseÃ±a"
+            name="password"
+            label="Contraseña"
             type={showPassword ? "text" : "password"}
             fullWidth
             margin="normal"
             value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
+            onChange={handleChange}
             required
             variant="outlined"
             InputProps={{
@@ -105,10 +121,7 @@ export default function Login() {
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton
-                    onClick={() => setShowPassword(!showPassword)}
-                    edge="end"
-                  >
+                  <IconButton onClick={togglePasswordVisibility} edge="end">
                     {showPassword ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
@@ -125,7 +138,7 @@ export default function Login() {
               startIcon={loading && <CircularProgress size={20} color="inherit" />}
               sx={loginStyles.botonLogin(theme)}
             >
-              {loading ? "Entrando..." : "Iniciar sesiÃ³n"}
+              {loading ? "Entrando..." : "Iniciar sesión"}
             </Button>
 
             <Button
