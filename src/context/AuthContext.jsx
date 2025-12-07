@@ -1,53 +1,43 @@
 import { createContext, useContext, useEffect, useMemo, useState } from "react";
-import { getUserProfile } from "../api/api";
 
 const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [access, setAccess] = useState(null);
   const [refresh, setRefresh] = useState(null);
-  const [user, setUser] = useState(null);   // 👈 nuevo
+  const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Recuperar tokens al cargar y obtener perfil
+  // Recuperar tokens y usuario al cargar la app
   useEffect(() => {
     const savedAccess = localStorage.getItem("access");
     const savedRefresh = localStorage.getItem("refresh");
+    const savedUser = localStorage.getItem("user");
+
     if (savedAccess) setAccess(savedAccess);
     if (savedRefresh) setRefresh(savedRefresh);
-  }, []);
+    if (savedUser) setUser(JSON.parse(savedUser));
 
-  // Cada vez que tengamos access, pedimos el perfil
-  useEffect(() => {
-    const fetchProfile = async () => {
-      if (access) {
-        try {
-          const data = await getUserProfile(access);
-          setUser(data); // guarda username, email, id
-        } catch (err) {
-          console.error("Error obteniendo perfil:", err);
-          setUser(null);
-        }
-      } else {
-        setUser(null);
-      }
-      setLoading(false);
-    };
-    fetchProfile();
-  }, [access]);
+    setLoading(false);
+  }, []);
 
   const isAuthenticated = !!access;
 
-  const login = (accessToken, refreshToken) => {
+  // ⬅️ Aquí ahora recibimos userData (del backend)
+  const login = (accessToken, refreshToken, userData) => {
     localStorage.setItem("access", accessToken);
     localStorage.setItem("refresh", refreshToken);
+    localStorage.setItem("user", JSON.stringify(userData));
+
     setAccess(accessToken);
     setRefresh(refreshToken);
+    setUser(userData);
   };
 
   const logout = () => {
     localStorage.removeItem("access");
     localStorage.removeItem("refresh");
+    localStorage.removeItem("user");
     setAccess(null);
     setRefresh(null);
     setUser(null);
