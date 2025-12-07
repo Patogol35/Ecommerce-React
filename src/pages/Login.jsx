@@ -34,9 +34,12 @@ export default function Login() {
     setLoading(true);
     try {
       const data = await apiLogin(form);
+
       if (data?.access && data?.refresh) {
-        login(data.access, data.refresh);
-        toast.success(`Bienvenido/a, ${form.username} 👋`);
+        // ⬅️ cambiar esta línea (ya modificada)
+        login(data.access, data.refresh, data.user);
+
+        toast.success(`Bienvenido/a, ${data.user.username} 👋`);
         navigate("/");
       } else {
         toast.error("Credenciales inválidas");
