@@ -79,6 +79,15 @@ export const register = async (data) => {
   });
 };
 
+// PERFIL DEL USUARIO
+export const getUserProfile = async (token) => {
+  return authFetch(
+    `${BASE_URL}/api/user/profile/`,
+    { method: "GET" },
+    token
+  );
+};
+
 // PRODUCTOS
 export const getProductos = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
