@@ -1,9 +1,15 @@
-// BASE URL
-const BASE_URL = import.meta.env.VITE_API_URL;
+// =============================
+//  BASE URL
+// =============================
+const BASE_URL = import.meta.env.VITE_API_URL.replace(/\/$/, ""); 
+// (Evita doble // en las rutas)
 
-// REFRESH TOKEN
+
+// =============================
+//  REFRESH TOKEN
+// =============================
 export const refreshToken = async (refresh) => {
-  const res = await fetch(`${BASE_URL}/token/refresh/`, {
+  const res = await fetch(`${BASE_URL}/api/token/refresh/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ refresh }),
@@ -13,8 +19,13 @@ export const refreshToken = async (refresh) => {
   return res.json();
 };
 
-// FETCH CON AUTO REFRESH
-async function authFetch(url, options = {}, token) {
+
+// =============================
+//  AUTH FETCH — V3 (FINAL)
+// =============================
+async function authFetch(url, options = {}) {
+  let token = localStorage.getItem("access");
+
   let headers = {
     ...(options.headers || {}),
     ...(options.body && { "Content-Type": "application/json" }),
@@ -23,10 +34,11 @@ async function authFetch(url, options = {}, token) {
 
   let res = await fetch(url, { ...options, headers });
 
-  // Si expira el access → reintenta con refresh
+  // Si expira el access → intenta refrescar
   if (res.status === 401 && localStorage.getItem("refresh")) {
     try {
       const newTokens = await refreshToken(localStorage.getItem("refresh"));
+
       if (newTokens?.access) {
         localStorage.setItem("access", newTokens.access);
         token = newTokens.access;
@@ -40,10 +52,11 @@ async function authFetch(url, options = {}, token) {
         res = await fetch(url, { ...options, headers });
       }
     } catch (err) {
-      console.error("Refresh token inválido:", err);
+      console.warn("Refresh token inválido → limpiando sesión");
       localStorage.removeItem("access");
       localStorage.removeItem("refresh");
-      throw new Error("⚠️ Tu sesión expiró, vuelve a iniciar sesión.");
+
+      throw new Error("⚠️ Tu sesión expiró. Vuelve a iniciar sesión.");
     }
   }
 
@@ -64,77 +77,67 @@ async function authFetch(url, options = {}, token) {
   return data;
 }
 
-// ENDPOINTS
+
+// =============================
+//  HELPERS GET / POST / PUT / DELETE
+// =============================
+export const api = {
+  get: (endpoint) => authFetch(`${BASE_URL}${endpoint}`, { method: "GET" }),
+  
+  post: (endpoint, body = {}) =>
+    authFetch(`${BASE_URL}${endpoint}`, {
+      method: "POST",
+      body: JSON.stringify(body),
+    }),
+  
+  put: (endpoint, body = {}) =>
+    authFetch(`${BASE_URL}${endpoint}`, {
+      method: "PUT",
+      body: JSON.stringify(body),
+    }),
+
+  delete: (endpoint) =>
+    authFetch(`${BASE_URL}${endpoint}`, { method: "DELETE" }),
+};
+
+
+// =============================
+//  ENDPOINTS
+// =============================
 
 // AUTH
-export const login = async (credentials) => {
-  return authFetch(`${BASE_URL}/token/`, {
-    method: "POST",
-    body: JSON.stringify(credentials),
-  });
-};
+export const login = (credentials) =>
+  api.post("/api/token/", credentials);
 
-export const register = async (data) => {
-  return authFetch(`${BASE_URL}/register/`, {
-    method: "POST",
-    body: JSON.stringify(data),
-  });
-};
+export const register = (data) =>
+  api.post("/api/register/", data);
 
 // PRODUCTOS
-export const getProductos = async (params = {}) => {
+export const getProductos = (params = {}) => {
   const query = new URLSearchParams(params).toString();
-  const url = query ? `${BASE_URL}/productos/?${query}` : `${BASE_URL}/productos/`;
-  return authFetch(url, { method: "GET" });
+  return api.get(`/api/productos/${query ? `?${query}` : ""}`);
 };
 
 // CATEGORÍAS
-export const getCategorias = async () => {
-  return authFetch(`${BASE_URL}/categorias/`, { method: "GET" });
-};
+export const getCategorias = () => api.get("/api/categorias/");
 
 // CARRITO
-export const getCarrito = async (token) => {
-  return authFetch(`${BASE_URL}/carrito/`, { method: "GET" }, token);
-};
+export const getCarrito = () => api.get("/api/carrito/");
 
-export const agregarAlCarrito = async (producto_id, cantidad = 1, token) => {
-  return authFetch(
-    `${BASE_URL}/carrito/agregar/`,
-    {
-      method: "POST",
-      body: JSON.stringify({ producto_id, cantidad }),
-    },
-    token
-  );
-};
+export const agregarAlCarrito = (producto_id, cantidad = 1) =>
+  api.post("/api/carrito/agregar/", { producto_id, cantidad });
 
-export const eliminarDelCarrito = async (itemId, token) => {
-  return authFetch(
-    `${BASE_URL}/carrito/eliminar/${itemId}/`,
-    { method: "DELETE" },
-    token
-  );
-};
+export const eliminarDelCarrito = (itemId) =>
+  api.delete(`/api/carrito/eliminar/${itemId}/`);
 
-export const setCantidadItem = async (itemId, cantidad, token) => {
-  return authFetch(
-    `${BASE_URL}/carrito/actualizar/${itemId}/`,
-    { method: "PUT", body: JSON.stringify({ cantidad }) },
-    token
-  );
-};
+export const setCantidadItem = (itemId, cantidad) =>
+  api.put(`/api/carrito/actualizar/${itemId}/`, { cantidad });
 
 // PEDIDOS
-export const crearPedido = async (token) => {
-  return authFetch(`${BASE_URL}/pedido/crear/`, { method: "POST" }, token);
-};
+export const crearPedido = () => api.post("/api/pedido/crear/");
 
-export const getPedidos = async (token, page = 1) => {
-  return authFetch(`${BASE_URL}/pedidos/?page=${page}`, { method: "GET" }, token);
-};
+export const getPedidos = (page = 1) =>
+  api.get(`/api/pedidos/?page=${page}`);
 
-// PERFIL DE USUARIO (CORREGIDO)
-export const getUserProfile = async (token) => {
-  return authFetch(`${BASE_URL}/user/profile/`, { method: "GET" }, token);
-};
+// PERFIL
+export const getUserProfile = () => api.get("/api/user/profile/");
