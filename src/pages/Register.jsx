@@ -81,12 +81,11 @@ export default function Register() {
 
     } catch (error) {
       // ← Aquí se captura email duplicado correctamente
-
-      if (error.response?.data?.email?.[0]) {
-  toast.error(error.response.data.email[0]);
-} else {
-  toast.error("Ocurrió un error en el registro");
-      
+      if (error.response?.data?.email) {
+        toast.error("El correo ya está registrado");
+      } else {
+        toast.error("Ocurrió un error en el registro");
+      }
 
     } finally {
       setLoading(false);
