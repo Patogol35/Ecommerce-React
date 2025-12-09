@@ -46,19 +46,29 @@ export default function Login() {
     setLoading(true);
 
     try {
-      const data = await apiLogin(form);
+  const data = await apiLogin(form);
 
-      if (data?.access && data?.refresh) {
-        login(data.access, data.refresh);
-        toast.success(`Bienvenido/a, ${form.username} 👋`);
-        navigate("/");
-      } else {
-        toast.error("Credenciales inválidas");
-      }
-    } catch (err) {
-      toast.error(err?.message || "Error desconocido");
-    } finally {
-      setLoading(false);
+  if (data?.access && data?.refresh) {
+    login(data.access, data.refresh);
+    toast.success(`Bienvenido/a, ${form.username} 👋`);
+    navigate("/");
+  } else {
+    toast.error("Credenciales inválidas");
+  }
+} catch (error) {
+  const resp = error?.response?.data;
+
+  if (resp?.detail) {
+    toast.error(resp.detail);
+  } else if (resp?.message) {
+    toast.error(resp.message);
+  } else if (error?.response?.status === 401) {
+    toast.error("Usuario o contraseña incorrectos");
+  } else {
+    toast.error("Ocurrió un error al iniciar sesión");
+  }
+} finally {
+  setLoading(false);
     }
   };
 
