@@ -64,7 +64,7 @@ if (!/\S+@\S+\.\S+/.test(form.email))
 
     setLoading(true);
   try {
-  setLoading(true);
+  
 
   const data = await apiRegister({
     username: form.username,
