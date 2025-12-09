@@ -36,17 +36,14 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showPasswords, setShowPasswords] = useState(false);
 
-  // Generic input handler
   const handleChange = useCallback((field) => (e) => {
     setForm((prev) => ({ ...prev, [field]: e.target.value }));
   }, []);
 
-  // Validate email format
   const isEmailValid = useCallback((email) => {
     return /\S+@\S+\.\S+/.test(email);
   }, []);
 
-  // Form validation
   const validateForm = useCallback(() => {
     if (!form.username.trim()) {
       toast.error("El usuario es obligatorio");
@@ -71,7 +68,6 @@ export default function Register() {
     return true;
   }, [form, isEmailValid]);
 
-  // Password strength calculation
   const passwordStrength = useCallback((pwd = "") => {
     let score = 0;
     if (pwd.length >= 6) score++;
@@ -86,9 +82,12 @@ export default function Register() {
     return { label: "Muy fuerte", color: "darkgreen", value: 100 };
   }, []);
 
-  const strength = useMemo(() => passwordStrength(form.password), [form.password, passwordStrength]);
+  const strength = useMemo(
+    () => passwordStrength(form.password),
+    [form.password, passwordStrength]
+  );
 
-  // Submit handler
+  // SUBMIT
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
@@ -97,7 +96,7 @@ export default function Register() {
       setLoading(true);
 
       try {
-        await apiRegister({
+        const response = await apiRegister({
           username: form.username.trim(),
           email: form.email.toLowerCase().trim(),
           password: form.password,
@@ -107,17 +106,12 @@ export default function Register() {
         navigate("/login");
 
       } catch (error) {
-        const resp = error?.response?.data;
+        console.log("ERROR REGISTRO →", error);
 
-        if (resp) {
-          for (const campo in resp) {
-            const mensaje = Array.isArray(resp[campo])
-              ? resp[campo][0]
-              : resp[campo];
-
-            toast.error(mensaje);
-            return;
-          }
+        // fetch envía los errores como error.message
+        if (error.message) {
+          toast.error(error.message);
+          return;
         }
 
         toast.error("Ocurrió un error en el registro");
@@ -132,16 +126,26 @@ export default function Register() {
     <Container maxWidth="xs" sx={registerStyles.container(theme)}>
       <Paper elevation={8} sx={registerStyles.paper(theme)}>
         
-        <Typography variant="h4" align="center" fontWeight="bold" gutterBottom sx={registerStyles.titulo(theme)}>
+        <Typography
+          variant="h4"
+          align="center"
+          fontWeight="bold"
+          gutterBottom
+          sx={registerStyles.titulo(theme)}
+        >
           Crear cuenta
         </Typography>
 
-        <Typography variant="body1" align="center" color="text.secondary" sx={registerStyles.subtitulo}>
+        <Typography
+          variant="body1"
+          align="center"
+          color="text.secondary"
+          sx={registerStyles.subtitulo}
+        >
           Completa tus datos para registrarte
         </Typography>
 
         <form onSubmit={handleSubmit} noValidate>
-
           <TextField
             label="Usuario"
             fullWidth
