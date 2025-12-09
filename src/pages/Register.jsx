@@ -63,21 +63,30 @@ if (!/\S+@\S+\.\S+/.test(form.email))
       return toast.error("Las contraseñas no coinciden");
 
     setLoading(true);
-    try {
-      const data = await apiRegister({
-        username: form.username,
-        email: form.email,
-        password: form.password,
-      });
-    if (data?.id) {
+  try {
+  setLoading(true);
+
+  const data = await apiRegister({
+    username: form.username,
+    email: form.email,
+    password: form.password,
+  });
+
   toast.success("Usuario registrado correctamente");
   navigate("/login");
-    } else toast.error("❌ No se pudo registrar");
-    } catch (e) {
-      toast.error(e.message);
-    } finally {
-      setLoading(false);
-    }
+
+} catch (error) {
+
+  // 👉 Si el backend detecta email repetido
+  if (error.response?.data?.email) {
+    toast.error("El correo ya está registrado");
+  } else {
+    toast.error("Ocurrió un error en el registro");
+  }
+
+} finally {
+  setLoading(false);
+  }
   };
 
   const strength = passwordStrength(form.password);
