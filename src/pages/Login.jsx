@@ -30,13 +30,11 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // Manejo genérico de inputs
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }, []);
 
-  // Toggle de contraseña
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword((prev) => !prev);
   }, []);
@@ -46,29 +44,41 @@ export default function Login() {
     setLoading(true);
 
     try {
-  const data = await apiLogin(form);
+      const data = await apiLogin(form);
 
-  if (data?.access && data?.refresh) {
-    login(data.access, data.refresh);
-    toast.success(`Bienvenido/a, ${form.username} 👋`);
-    navigate("/");
-  } else {
-    toast.error("Credenciales inválidas");
-  }
-} catch (error) {
-  const resp = error?.response?.data;
+      if (data?.access && data?.refresh) {
+        login(data.access, data.refresh);
+        toast.success(`Bienvenido/a, ${form.username} 👋`);
+        navigate("/");
+      } else {
+        toast.error("Credenciales inválidas");
+      }
 
-  if (resp?.detail) {
-    toast.error(resp.detail);
-  } else if (resp?.message) {
-    toast.error(resp.message);
-  } else if (error?.response?.status === 401) {
-    toast.error("Usuario o contraseña incorrectos");
-  } else {
-    toast.error("Ocurrió un error al iniciar sesión");
-  }
-} finally {
-  setLoading(false);
+    } catch (error) {
+      const resp = error?.response?.data;
+
+      if (resp?.detail) {
+        // Traducir mensaje de SimpleJWT
+        if (
+          resp.detail.includes("No active account") ||
+          resp.detail.toLowerCase().includes("credentials")
+        ) {
+          toast.error("Usuario o contraseña incorrectos");
+        } else {
+          toast.error(resp.detail);
+        }
+
+      } else if (resp?.message) {
+        toast.error(resp.message);
+
+      } else if (error?.response?.status === 401) {
+        toast.error("Usuario o contraseña incorrectos");
+
+      } else {
+        toast.error("Ocurrió un error al iniciar sesión");
+      }
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -103,7 +113,6 @@ export default function Login() {
             value={form.username}
             onChange={handleChange}
             required
-            variant="outlined"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -122,7 +131,6 @@ export default function Login() {
             value={form.password}
             onChange={handleChange}
             required
-            variant="outlined"
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
