@@ -51,8 +51,12 @@ export default function Register() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!form.username.trim()) return toast.error("El usuario es obligatorio");
-    if (form.email && !/\S+@\S+\.\S+/.test(form.email))
-      return toast.error("El correo no es válido");
+
+    if (!form.email.trim())
+  return toast.error("El correo es obligatorio");
+
+if (!/\S+@\S+\.\S+/.test(form.email))
+  return toast.error("El correo no es válido");
     if (form.password.length < 6)
       return toast.error("La contraseña debe tener al menos 6 caracteres");
     if (form.password !== form.confirm)
@@ -119,7 +123,8 @@ export default function Register() {
 
           {/* Email */}
           <TextField
-            label="Correo (opcional)"
+            label="Correo"
+            required
             type="email"
             fullWidth
             margin="normal"
