@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { register as apiRegister } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import { apiRegister } from "../api/api"; // Ajusta la ruta según tu proyecto
 import {
   Container,
   Paper,
@@ -10,220 +10,103 @@ import {
   Button,
   Box,
   LinearProgress,
-  InputAdornment,
-  FormControlLabel,
-  Checkbox,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import PersonOutline from "@mui/icons-material/PersonOutline";
-import EmailOutlined from "@mui/icons-material/EmailOutlined";
-import LockOutlined from "@mui/icons-material/LockOutlined";
-import registerStyles from "./Register.styles";
 
 export default function Register() {
-  const theme = useTheme();
+  const navigate = useNavigate();
+  const [loading, setLoading] = useState(false);
+
   const [form, setForm] = useState({
     username: "",
     email: "",
     password: "",
-    confirm: "",
   });
-  const [loading, setLoading] = useState(false);
-  const [showPasswords, setShowPasswords] = useState(false);
-  const navigate = useNavigate();
 
-  const passwordStrength = (pwd) => {
-    let score = 0;
-    if (pwd.length >= 6) score++;
-    if (pwd.length >= 10) score++;
-    if (/[A-Z]/.test(pwd)) score++;
-    if (/[0-9]/.test(pwd)) score++;
-    if (/[^A-Za-z0-9]/.test(pwd)) score++;
-
-    if (score <= 2) return { label: "Débil", color: "red", value: 40 };
-    if (score === 3) return { label: "Media", color: "orange", value: 60 };
-    if (score === 4) return { label: "Fuerte", color: "green", value: 80 };
-    return { label: "Muy fuerte", color: "darkgreen", value: 100 };
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!form.username.trim()) return toast.error("El usuario es obligatorio");
 
-    if (!form.email.trim())
-  return toast.error("El correo es obligatorio");
+    setLoading(true);
+    try {
+      const data = await apiRegister({
+        username: form.username,
+        email: form.email.toLowerCase().trim(), // normaliza email
+        password: form.password,
+      });
 
-if (!/\S+@\S+\.\S+/.test(form.email))
-  return toast.error("El correo no es válido");
-    if (form.password.length < 6)
-      return toast.error("La contraseña debe tener al menos 6 caracteres");
-    if (form.password !== form.confirm)
-      return toast.error("Las contraseñas no coinciden");
-setLoading(true);
-try {
+      toast.success("Usuario registrado correctamente");
+      navigate("/login");
 
-  const data = await apiRegister({
-    username: form.username,
-    email: form.email,
-    password: form.password,
-  });
-
-  toast.success("Usuario registrado correctamente");
-  navigate("/login");
-
-} catch (error) {
-
-  if (error.response?.data?.email) {
-    toast.error("El correo ya está registrado");
-  } else {
-    toast.error("Ocurrió un error en el registro");
-  }
-
-} finally {
-  setLoading(false);
-}
+    } catch (error) {
+      // Backend devuelve: {"email": ["user with this email already exists."]}
+      if (error.response?.data?.email) {
+        toast.error("El correo ya está registrado");
+      } else {
+        toast.error("Ocurrió un error en el registro");
+      }
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const strength = passwordStrength(form.password);
-
   return (
-    <Container maxWidth="xs" sx={registerStyles.container(theme)}>
-      <Paper elevation={8} sx={registerStyles.paper(theme)}>
-        <Typography
-          variant="h4"
-          align="center"
-          fontWeight="bold"
-          gutterBottom
-          sx={registerStyles.titulo(theme)}
-        >
-          Crear cuenta
-        </Typography>
-        <Typography
-          variant="body1"
-          align="center"
-          color="text.secondary"
-          sx={registerStyles.subtitulo}
-        >
-          Completa tus datos para registrarte
+    <Container maxWidth="sm">
+      <Paper elevation={4} sx={{ padding: 4, marginTop: 6 }}>
+        <Typography variant="h5" textAlign="center" marginBottom={2}>
+          Crear Cuenta
         </Typography>
 
-        <form onSubmit={handleSubmit}>
-          {/* Usuario */}
+        {loading && <LinearProgress sx={{ mb: 2 }} />}
+
+        <Box component="form" onSubmit={handleSubmit}>
           <TextField
+            fullWidth
             label="Usuario"
-            fullWidth
-            margin="normal"
+            name="username"
             value={form.username}
-            onChange={(e) => setForm({ ...form, username: e.target.value })}
+            onChange={handleChange}
+            margin="normal"
             required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonOutline color="action" />
-                </InputAdornment>
-              ),
-            }}
           />
 
-          {/* Email */}
           <TextField
-            label="Correo"
-            required
+            fullWidth
+            label="Correo electrónico"
+            name="email"
             type="email"
-            fullWidth
-            margin="normal"
             value={form.email}
-            onChange={(e) => setForm({ ...form, email: e.target.value })}
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailOutlined color="action" />
-                </InputAdornment>
-              ),
-            }}
+            onChange={handleChange}
+            margin="normal"
+            required
           />
 
-          {/* Contraseña */}
           <TextField
+            fullWidth
             label="Contraseña"
-            type={showPasswords ? "text" : "password"}
-            fullWidth
-            margin="normal"
+            name="password"
+            type="password"
             value={form.password}
-            onChange={(e) => setForm({ ...form, password: e.target.value })}
-            required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LockOutlined color="action" />
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          {/* Barra de fuerza */}
-          {form.password && (
-            <Box sx={registerStyles.strengthBox}>
-              <LinearProgress
-                variant="determinate"
-                value={strength.value}
-                sx={registerStyles.strengthBar(theme, strength.color)}
-              />
-              <Typography
-                variant="caption"
-                sx={registerStyles.strengthLabel(strength.color)}
-              >
-                {strength.label}
-              </Typography>
-            </Box>
-          )}
-
-          {/* Confirmar contraseña */}
-          <TextField
-            label="Confirmar contraseña"
-            type={showPasswords ? "text" : "password"}
-            fullWidth
+            onChange={handleChange}
             margin="normal"
-            value={form.confirm}
-            onChange={(e) => setForm({ ...form, confirm: e.target.value })}
             required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LockOutlined color="action" />
-                </InputAdornment>
-              ),
-            }}
           />
 
-          {/* Mostrar/Ocultar */}
-          <FormControlLabel
-            control={
-              <Checkbox
-                checked={showPasswords}
-                onChange={() => setShowPasswords(!showPasswords)}
-                icon={<VisibilityOff />}
-                checkedIcon={<Visibility />}
-              />
-            }
-            label="Mostrar contraseñas"
-            sx={registerStyles.checkbox}
-          />
-
-          <Box mt={3}>
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              disabled={loading}
-              sx={registerStyles.boton(theme)}
-            >
-              {loading ? "Creando cuenta..." : "Registrarse"}
-            </Button>
-          </Box>
-        </form>
+          <Button
+            fullWidth
+            variant="contained"
+            type="submit"
+            sx={{ mt: 2 }}
+            disabled={loading}
+          >
+            Registrarse
+          </Button>
+        </Box>
       </Paper>
     </Container>
   );
