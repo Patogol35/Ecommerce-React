@@ -61,10 +61,8 @@ if (!/\S+@\S+\.\S+/.test(form.email))
       return toast.error("La contraseña debe tener al menos 6 caracteres");
     if (form.password !== form.confirm)
       return toast.error("Las contraseñas no coinciden");
-
-    setLoading(true);
-  try {
-  
+setLoading(true);
+try {
 
   const data = await apiRegister({
     username: form.username,
@@ -77,7 +75,6 @@ if (!/\S+@\S+\.\S+/.test(form.email))
 
 } catch (error) {
 
-  // 👉 Si el backend detecta email repetido
   if (error.response?.data?.email) {
     toast.error("El correo ya está registrado");
   } else {
@@ -86,7 +83,7 @@ if (!/\S+@\S+\.\S+/.test(form.email))
 
 } finally {
   setLoading(false);
-  }
+}
   };
 
   const strength = passwordStrength(form.password);
