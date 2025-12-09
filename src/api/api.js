@@ -143,3 +143,4 @@ export const getUserProfile = async (token) => {
   return authFetch(`${BASE_URL}/user/profile/`, { method: "GET" }, token);
 };
 
+
