@@ -57,9 +57,13 @@ async function authFetch(url, options = {}, token) {
   }
 
   if (!res.ok) {
-    const msg = data?.detail || data?.error || `Error ${res.status}`;
-    throw new Error(msg);
-  }
+  const error = new Error("Request failed");
+  error.response = {
+    status: res.status,
+    data: data, // ← aquí mantienes todo el JSON original del backend
+  };
+  throw error;
+}
 
   return data;
 }
@@ -138,3 +142,4 @@ export const getPedidos = async (token, page = 1) => {
 export const getUserProfile = async (token) => {
   return authFetch(`${BASE_URL}/user/profile/`, { method: "GET" }, token);
 };
+
