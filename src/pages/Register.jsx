@@ -66,10 +66,9 @@ export default function Register() {
         password: form.password,
       });
     if (data?.id) {
-  toast.success("📩 Registro exitoso. Revisa tu correo para activar tu cuenta.");
-  // NO navega al login todavía
-  return;
-} else toast.error("❌ No se pudo registrar");
+  toast.success("Usuario registrado correctamente");
+  navigate("/login");
+    } else toast.error("❌ No se pudo registrar");
     } catch (e) {
       toast.error(e.message);
     } finally {
