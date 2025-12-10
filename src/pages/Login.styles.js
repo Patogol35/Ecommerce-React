@@ -1,6 +1,6 @@
 const loginStyles = {
   container: (theme) => ({
-    minHeight: "75vh", // 🔥 REDUCE EL FONDO AZUL ARRIBA/ABAJO
+    minHeight: "75vh", 
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
