@@ -30,13 +30,13 @@ export const authMenu = [
 export const guestMenu = [
   {
     label: "Iniciar sesión",
-    path: "/login",
+    action: "login",
     icon: LoginIcon,
     color: "linear-gradient(135deg, #0288d1, #26c6da)",
   },
   {
     label: "Registrarse",
-    path: "/register",
+    action: "register",
     icon: PersonAddIcon,
     color: "linear-gradient(135deg, #6a1b9a, #ab47bc)",
   },
