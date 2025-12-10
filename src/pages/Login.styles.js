@@ -13,16 +13,14 @@ const loginStyles = {
 
   paper: (theme) => ({
     padding: theme.spacing(3),
-    borderRadius: 12,          // 👈🔥 YA NO ES OVALADO (ANTES 50% indirecto)
+    borderRadius: 12,
     width: "100%",
-    maxWidth: 380,             // 👈 más compacto, no gigante
+    maxWidth: 380,
     display: "flex",
     flexDirection: "column",
     gap: theme.spacing(2),
     backgroundColor: "#ffffff",
     boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
-
-    // 👇 Esto evita que se deforme por padding o grid
     overflow: "hidden",
   }),
 
