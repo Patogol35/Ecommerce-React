@@ -4,63 +4,66 @@ const loginStyles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: theme.spacing(1),
+    p: 0.5, // 🔥 MENOS ESPACIO EXTERNO
     background:
       theme.palette.mode === "dark"
-        ? "linear-gradient(160deg, #0a0a0a 0%, #141414 100%)"
-        : "linear-gradient(160deg, #2196f3 0%, #1565c0 100%)",
+        ? "linear-gradient(135deg, #121212 0%, #1e1e1e 100%)"
+        : "linear-gradient(135deg, #42a5f5 0%, #1976d2 100%)",
   }),
 
   paper: (theme) => ({
-    padding: theme.spacing(3),
-    borderRadius: 12,
+    p: 2.5, // 🔥 MENOS ALTURA DEL CONTENEDOR
+    borderRadius: 3,
     width: "100%",
-    maxWidth: 380,
+    maxWidth: 420, // 🔥 evita que se deforme (NO cambia tu diseño)
     display: "flex",
     flexDirection: "column",
-    gap: theme.spacing(2),
-    backgroundColor: "#ffffff",
-    boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
-    overflow: "hidden",
+    gap: 3,
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 12px 24px rgba(0,0,0,0.5)"
+        : "0 12px 24px rgba(0,0,0,0.15)",
+    backgroundColor: theme.palette.mode === "dark" ? "#1e1e1e" : "#ffffff",
+    color: theme.palette.mode === "dark" ? "#fff" : "#000",
   }),
 
-  titulo: {
-    textAlign: "center",
-    fontWeight: 700,
-    fontSize: "1.5rem",
-    marginBottom: 4,
-  },
+  titulo: (theme) => ({
+    color: theme.palette.mode === "dark" ? "#42a5f5" : "#1976d2",
+  }),
 
   subtitulo: {
-    textAlign: "center",
-    opacity: 0.8,
-    marginTop: -10,
-    marginBottom: 6,
+    mb: 2,
   },
 
-  botonLogin: {
-    padding: "12px",
-    fontWeight: 600,
-    borderRadius: 8,
-    background: "linear-gradient(135deg, #1976d2, #42a5f5)",
-    transition: "0.25s",
+  botonLogin: (theme) => ({
+    py: 1.5,
+    fontWeight: "bold",
+    background:
+      theme.palette.mode === "dark"
+        ? "linear-gradient(135deg, #42a5f5, #1976d2)"
+        : "linear-gradient(135deg, #1976d2, #42a5f5)",
     "&:hover": {
-      transform: "translateY(-2px)",
+      transform: "scale(1.03)",
       boxShadow: "0 6px 12px rgba(0,0,0,0.15)",
     },
-  },
+    transition: "all 0.3s",
+  }),
 
-  botonRegister: {
-    padding: "12px",
-    fontWeight: 600,
-    borderRadius: 8,
-    borderColor: "#1976d2",
-    color: "#1976d2",
+  botonRegister: (theme) => ({
+    py: 1.5,
+    fontWeight: "bold",
+    borderColor: theme.palette.mode === "dark" ? "#42a5f5" : "#1976d2",
+    color: theme.palette.mode === "dark" ? "#42a5f5" : "#1976d2",
     "&:hover": {
-      backgroundColor: "rgba(25,118,210,0.1)",
-      transform: "translateY(-2px)",
+      backgroundColor:
+        theme.palette.mode === "dark"
+          ? "rgba(66,165,245,0.08)"
+          : "rgba(25,118,210,0.08)",
+      transform: "scale(1.03)",
+      borderColor: theme.palette.mode === "dark" ? "#42a5f5" : "#1976d2",
     },
-  },
+    transition: "all 0.3s",
+  }),
 };
 
 export default loginStyles;
