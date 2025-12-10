@@ -5,97 +5,118 @@ const loginStyles = {
     justifyContent: "center",
     alignItems: "center",
     padding: theme.spacing(2),
-    
+
     background:
       theme.palette.mode === "dark"
-        ? "linear-gradient(145deg, #0f0f0f 0%, #1a1a1a 100%)"
-        : "linear-gradient(145deg, #64b5f6 0%, #1976d2 100%)",
+        ? "linear-gradient(160deg, #0c0c0c 0%, #1a1a1a 100%)"
+        : "linear-gradient(160deg, #e3f2fd 0%, #bbdefb 100%)",
 
     [theme.breakpoints.down("sm")]: {
-      padding: theme.spacing(1),
+      padding: theme.spacing(1.5),
     },
   }),
 
   paper: (theme) => ({
-    padding: theme.spacing(4),
-    borderRadius: 20,
     width: "100%",
-    maxWidth: 420, 
+    maxWidth: 380,
+    padding: theme.spacing(4),
+    borderRadius: 24,
     display: "flex",
     flexDirection: "column",
     gap: theme.spacing(3),
 
     backgroundColor:
-      theme.palette.mode === "dark" ? "#1e1e1e" : "rgba(255,255,255,0.9)",
-    backdropFilter: "blur(6px)",
-
+      theme.palette.mode === "dark" ? "#1e1e1e" : "#ffffff",
     boxShadow:
       theme.palette.mode === "dark"
-        ? "0 20px 40px rgba(0,0,0,0.5)"
-        : "0 20px 40px rgba(0,0,0,0.2)",
+        ? "0 12px 28px rgba(0,0,0,0.6)"
+        : "0 12px 28px rgba(0,0,0,0.15)",
 
-    transition: "all 0.3s ease",
+    transition: "0.3s ease",
 
-    // Responsive padding
     [theme.breakpoints.down("sm")]: {
       padding: theme.spacing(3),
-      borderRadius: 16,
+      borderRadius: 18,
+      gap: theme.spacing(2.5),
     },
   }),
 
   titulo: (theme) => ({
-    fontWeight: 700,
     textAlign: "center",
-    fontSize: "1.8rem",
-    color: theme.palette.mode === "dark" ? "#64b5f6" : "#0d47a1",
+    fontSize: "1.9rem",
+    fontWeight: 700,
+    letterSpacing: "0.5px",
+
+    color:
+      theme.palette.mode === "dark" ? "#90caf9" : "#1565c0",
 
     [theme.breakpoints.down("sm")]: {
-      fontSize: "1.5rem",
+      fontSize: "1.6rem",
     },
   }),
 
   subtitulo: {
     textAlign: "center",
-    opacity: 0.8,
-    marginBottom: 8,
+    opacity: 0.7,
+    fontSize: "0.95rem",
+    marginTop: "-10px",
   },
 
   botonLogin: (theme) => ({
     padding: "14px",
-    borderRadius: 12,
     fontWeight: 700,
+    borderRadius: 14,
+    fontSize: "1rem",
 
     background:
       theme.palette.mode === "dark"
-        ? "linear-gradient(135deg, #1e88e5, #42a5f5)"
-        : "linear-gradient(135deg, #1976d2, #64b5f6)",
-
+        ? "linear-gradient(135deg, #42a5f5, #1e88e5)"
+        : "linear-gradient(135deg, #1e88e5, #42a5f5)",
     color: "#fff",
-    boxShadow: "0 6px 18px rgba(0,0,0,0.2)",
+
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 6px 14px rgba(66,165,245,0.4)"
+        : "0 6px 14px rgba(30,136,229,0.35)",
 
     transition: "all 0.25s ease",
     "&:hover": {
-      transform: "scale(1.03)",
-      boxShadow: "0 8px 20px rgba(0,0,0,0.25)",
+      transform: "scale(1.02)",
+      boxShadow:
+        theme.palette.mode === "dark"
+          ? "0 8px 18px rgba(66,165,245,0.45)"
+          : "0 8px 18px rgba(30,136,229,0.4)",
+    },
+
+    [theme.breakpoints.down("sm")]: {
+      padding: "12px",
+      borderRadius: 12,
     },
   }),
 
   botonRegister: (theme) => ({
-    padding: "14px",
-    borderRadius: 12,
+    padding: "13px",
     fontWeight: 700,
-    borderWidth: 2,
-    borderStyle: "solid",
-    borderColor: theme.palette.mode === "dark" ? "#64b5f6" : "#1976d2",
-    color: theme.palette.mode === "dark" ? "#64b5f6" : "#0d47a1",
+    borderRadius: 12,
+    fontSize: "1rem",
+
+    border: `2px solid ${
+      theme.palette.mode === "dark" ? "#42a5f5" : "#1e88e5"
+    }`,
+    color: theme.palette.mode === "dark" ? "#42a5f5" : "#1e88e5",
 
     transition: "all 0.25s ease",
     "&:hover": {
       background:
         theme.palette.mode === "dark"
-          ? "rgba(100,181,246,0.12)"
-          : "rgba(25,118,210,0.12)",
-      transform: "scale(1.03)",
+          ? "rgba(66,165,245,0.12)"
+          : "rgba(30,136,229,0.12)",
+      transform: "scale(1.02)",
+    },
+
+    [theme.breakpoints.down("sm")]: {
+      padding: "11px",
+      borderRadius: 10,
     },
   }),
 };
