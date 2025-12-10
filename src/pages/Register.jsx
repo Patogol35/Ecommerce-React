@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+import { useState, useMemo } from "react";
 import { register as apiRegister } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -32,53 +32,50 @@ export default function Register() {
     password: "",
     confirm: "",
   });
+
   const [loading, setLoading] = useState(false);
   const [showPasswords, setShowPasswords] = useState(false);
 
-  // Handler genérico
-  const handleChange = useCallback((field) => (e) => {
-    const value = e.target.value;
-    setForm((prev) => ({ ...prev, [field]: value }));
-  }, []);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((f) => ({ ...f, [name]: value }));
+  };
 
-  const isEmailValid = useCallback((email) => {
-    return /\S+@\S+\.\S+/.test(email);
-  }, []);
+  // -------- VALIDACIONES --------
+  const validators = {
+    username: (v) => {
+      if (!v.trim()) return "El usuario es obligatorio";
+      if (/\s/.test(v)) return "El usuario no puede contener espacios";
+      return null;
+    },
+    email: (v) => {
+      if (!v.trim()) return "El correo es obligatorio";
+      if (!/\S+@\S+\.\S+/.test(v)) return "El correo no es válido";
+      return null;
+    },
+    password: (v) => {
+      if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
+      return null;
+    },
+    confirm: (v, data) => {
+      if (v !== data.password) return "Las contraseñas no coinciden";
+      return null;
+    },
+  };
 
-  // VALIDACIÓN ACTUALIZADA
-  const validateForm = useCallback(() => {
-    if (!form.username.trim()) {
-      toast.error("El usuario es obligatorio");
-      return false;
-    }
-
-    // 🚀 Nueva validación: bloquear espacios en username
-    if (/\s/.test(form.username)) {
-      toast.error("El usuario no puede contener espacios");
-      return false;
-    }
-
-    if (!form.email.trim()) {
-      toast.error("El correo es obligatorio");
-      return false;
-    }
-    if (!isEmailValid(form.email)) {
-      toast.error("El correo no es válido");
-      return false;
-    }
-    if (form.password.length < 6) {
-      toast.error("La contraseña debe tener al menos 6 caracteres");
-      return false;
-    }
-    if (form.password !== form.confirm) {
-      toast.error("Las contraseñas no coinciden");
-      return false;
+  const validateForm = () => {
+    for (const key in validators) {
+      const error = validators[key](form[key], form);
+      if (error) {
+        toast.error(error);
+        return false;
+      }
     }
     return true;
-  }, [form, isEmailValid]);
+  };
 
-  // Fuerza de contraseña
-  const passwordStrength = useCallback((pwd = "") => {
+  // -------- FUERZA DE CONTRASEÑA --------
+  const passwordStrength = (pwd = "") => {
     let score = 0;
     if (pwd.length >= 6) score++;
     if (pwd.length >= 10) score++;
@@ -90,44 +87,38 @@ export default function Register() {
     if (score === 3) return { label: "Media", color: "orange", value: 60 };
     if (score === 4) return { label: "Fuerte", color: "green", value: 80 };
     return { label: "Muy fuerte", color: "darkgreen", value: 100 };
-  }, []);
+  };
 
   const strength = useMemo(
     () => passwordStrength(form.password),
-    [form.password, passwordStrength]
+    [form.password]
   );
 
-  const handleSubmit = useCallback(
-    async (e) => {
-      e.preventDefault();
-      if (!validateForm()) return;
+  // -------- SUBMIT --------
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    if (!validateForm()) return;
 
-      setLoading(true);
-      try {
-        await apiRegister({
-          username: form.username.trim(),
-          email: form.email.toLowerCase().trim(),
-          password: form.password,
-        });
+    setLoading(true);
+    try {
+      await apiRegister({
+        username: form.username.trim(),
+        email: form.email.toLowerCase().trim(),
+        password: form.password,
+      });
 
-        toast.success("Usuario registrado correctamente");
-        navigate("/login");
-      } catch (error) {
-        const resp = error?.response?.data;
+      toast.success("Usuario registrado correctamente");
+      navigate("/login");
+    } catch (error) {
+      const resp = error?.response?.data;
 
-        if (resp?.email) {
-          toast.error("El correo ya está registrado");
-        } else if (resp?.username) {
-          toast.error("El usuario ya existe");
-        } else {
-          toast.error("Ocurrió un error en el registro");
-        }
-      } finally {
-        setLoading(false);
-      }
-    },
-    [form, navigate, validateForm]
-  );
+      if (resp?.email) toast.error("El correo ya está registrado");
+      else if (resp?.username) toast.error("El usuario ya existe");
+      else toast.error("Ocurrió un error en el registro");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Container maxWidth="xs" sx={registerStyles.container(theme)}>
@@ -142,12 +133,7 @@ export default function Register() {
           Crear cuenta
         </Typography>
 
-        <Typography
-          variant="body1"
-          align="center"
-          color="text.secondary"
-          sx={registerStyles.subtitulo}
-        >
+        <Typography align="center" color="text.secondary" sx={registerStyles.subtitulo}>
           Completa tus datos para registrarte
         </Typography>
 
@@ -158,7 +144,7 @@ export default function Register() {
             fullWidth
             margin="normal"
             value={form.username}
-            onChange={handleChange("username")}
+            onChange={handleChange}
             required
             InputProps={{
               startAdornment: (
@@ -173,11 +159,11 @@ export default function Register() {
             label="Correo"
             name="email"
             type="email"
-            required
             fullWidth
             margin="normal"
             value={form.email}
-            onChange={handleChange("email")}
+            onChange={handleChange}
+            required
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -194,7 +180,7 @@ export default function Register() {
             fullWidth
             margin="normal"
             value={form.password}
-            onChange={handleChange("password")}
+            onChange={handleChange}
             required
             InputProps={{
               startAdornment: (
@@ -213,10 +199,7 @@ export default function Register() {
                 value={strength.value}
                 sx={registerStyles.strengthBar(theme, strength.color)}
               />
-              <Typography
-                variant="caption"
-                sx={registerStyles.strengthLabel(strength.color)}
-              >
+              <Typography variant="caption" sx={registerStyles.strengthLabel(strength.color)}>
                 {strength.label}
               </Typography>
             </Box>
@@ -229,7 +212,7 @@ export default function Register() {
             fullWidth
             margin="normal"
             value={form.confirm}
-            onChange={handleChange("confirm")}
+            onChange={handleChange}
             required
             InputProps={{
               startAdornment: (
@@ -269,4 +252,4 @@ export default function Register() {
       </Paper>
     </Container>
   );
-        }
+}
