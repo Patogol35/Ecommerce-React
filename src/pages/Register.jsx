@@ -54,9 +54,10 @@ export default function Register() {
       return null;
     },
     password: (v) => {
-      if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
-      return null;
-    },
+  if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
+  if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
+  return null;
+},
     confirm: (v, data) => {
       if (v !== data.password) return "Las contraseñas no coinciden";
       return null;
