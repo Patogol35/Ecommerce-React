@@ -50,16 +50,15 @@ export default function Register() {
     },
     email: (v) => {
       if (!v.trim()) return "El correo es obligatorio";
-      if (!/\S+@\S+\.\S+/.test(v)) return "El correo no es válido";
+      if (!/\S+@\S+\.\S+/.test(v)) return "El correo no es vÃ¡lido";
       return null;
     },
     password: (v) => {
-  if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
-  if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
-  return null;
-},
+      if (v.length < 6) return "La contraseÃ±a debe tener al menos 6 caracteres";
+      return null;
+    },
     confirm: (v, data) => {
-      if (v !== data.password) return "Las contraseñas no coinciden";
+      if (v !== data.password) return "Las contraseÃ±as no coinciden";
       return null;
     },
   };
@@ -75,7 +74,7 @@ export default function Register() {
     return true;
   };
 
-  // -------- FUERZA DE CONTRASEÑA --------
+  // -------- FUERZA DE CONTRASEÃ‘A --------
   const passwordStrength = (pwd = "") => {
     let score = 0;
     if (pwd.length >= 6) score++;
@@ -84,7 +83,7 @@ export default function Register() {
     if (/[0-9]/.test(pwd)) score++;
     if (/[^A-Za-z0-9]/.test(pwd)) score++;
 
-    if (score <= 2) return { label: "Débil", color: "red", value: 40 };
+    if (score <= 2) return { label: "DÃ©bil", color: "red", value: 40 };
     if (score === 3) return { label: "Media", color: "orange", value: 60 };
     if (score === 4) return { label: "Fuerte", color: "green", value: 80 };
     return { label: "Muy fuerte", color: "darkgreen", value: 100 };
@@ -113,9 +112,9 @@ export default function Register() {
     } catch (error) {
       const resp = error?.response?.data;
 
-      if (resp?.email) toast.error("El correo ya está registrado");
+      if (resp?.email) toast.error("El correo ya estÃ¡ registrado");
       else if (resp?.username) toast.error("El usuario ya existe");
-      else toast.error("Ocurrió un error en el registro");
+      else toast.error("OcurriÃ³ un error en el registro");
     } finally {
       setLoading(false);
     }
@@ -175,7 +174,7 @@ export default function Register() {
           />
 
           <TextField
-            label="Contraseña"
+            label="ContraseÃ±a"
             name="password"
             type={showPasswords ? "text" : "password"}
             fullWidth
@@ -207,7 +206,7 @@ export default function Register() {
           )}
 
           <TextField
-            label="Confirmar contraseña"
+            label="Confirmar contraseÃ±a"
             name="confirm"
             type={showPasswords ? "text" : "password"}
             fullWidth
@@ -234,7 +233,7 @@ export default function Register() {
                 checkedIcon={<Visibility />}
               />
             }
-            label="Mostrar contraseñas"
+            label="Mostrar contraseÃ±as"
             sx={registerStyles.checkbox}
           />
 
@@ -253,4 +252,4 @@ export default function Register() {
       </Paper>
     </Container>
   );
-}
+                }
