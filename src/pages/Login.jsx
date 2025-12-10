@@ -3,6 +3,7 @@ import { login as apiLogin } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import {
   Container,
   Paper,
@@ -14,11 +15,13 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
+
 import { useTheme } from "@mui/material/styles";
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import PersonOutline from "@mui/icons-material/PersonOutline";
 import LockOutlined from "@mui/icons-material/LockOutlined";
+
 import loginStyles from "./Login.styles";
 
 export default function Login() {
@@ -29,6 +32,31 @@ export default function Login() {
   const [form, setForm] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+
+  // -------- VALIDACIONES (MISMA LÓGICA QUE REGISTER) ----------
+  const validators = {
+    username: (v) => {
+      if (!v.trim()) return "El usuario es obligatorio";
+      return null;
+    },
+    password: (v) => {
+      if (!v.trim()) return "La contraseña es obligatoria";
+      return null;
+    },
+  };
+
+  const validateForm = () => {
+    for (const key in validators) {
+      const error = validators[key](form[key], form);
+      if (error) {
+        toast.error(error);
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // -----------------------------------------------------------
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
@@ -52,7 +80,6 @@ export default function Login() {
       return;
     }
 
-    // Normalizar errores comunes de Django SimpleJWT
     const normalized = errorMessage.toLowerCase();
 
     if (
@@ -67,6 +94,10 @@ export default function Login() {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    // VALIDAR antes de enviar (igual que Register)
+    if (!validateForm()) return;
+
     setLoading(true);
 
     try {
@@ -176,4 +207,4 @@ export default function Login() {
       </Paper>
     </Container>
   );
-}
+        }
