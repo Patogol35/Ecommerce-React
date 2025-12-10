@@ -16,7 +16,6 @@ import {
   Button,
   Drawer,
   Divider,
-  Modal,
 } from "@mui/material";
 import {
   Menu as MenuIcon,
@@ -27,10 +26,8 @@ import {
   Brightness7 as LightModeIcon,
   AccountCircle as AccountCircleIcon,
 } from "@mui/icons-material";
-
 import { motion, AnimatePresence } from "framer-motion";
-import Login from "../pages/Login";
-import Register from "../pages/Register";
+
 import styles from "./Navbar.styles";
 
 export default function Navbar() {
@@ -41,10 +38,6 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const scrolled = useScrollTrigger(50);
 
-  // Estado de modales
-  const [openLoginModal, setOpenLoginModal] = useState(false);
-  const [openRegisterModal, setOpenRegisterModal] = useState(false);
-
   const menuItems = isAuthenticated ? authMenu : guestMenu;
 
   const handleLogout = () => {
@@ -53,30 +46,9 @@ export default function Navbar() {
     setOpen(false);
   };
 
-  const menuHandler = (item, onClick) => {
-    if (item.path === "/login") {
-      setOpenLoginModal(true);
-      if (onClick) onClick();
-      return;
-    }
-    if (item.path === "/register") {
-      setOpenRegisterModal(true);
-      if (onClick) onClick();
-      return;
-    }
-    navigate(item.path);
-    if (onClick) onClick();
-  };
-
   const renderMenuItems = (onClick) =>
     menuItems.map((item, i) => (
-      <Button
-        key={i}
-        onClick={() => menuHandler(item, onClick)}
-        sx={styles.menuItemButton}
-      >
-        {item.label}
-      </Button>
+      <NavButton key={i} item={item} onClick={onClick} />
     ));
 
   const renderUserSection = (showLogout = true, isMobile = false) =>
@@ -117,12 +89,18 @@ export default function Navbar() {
           sx={styles.appBar(scrolled)}
         >
           <Toolbar sx={styles.toolbar}>
-            <Typography component={Link} to="/" sx={styles.logo}>
+            {/* Logo */}
+            <Typography
+              variant="h6"
+              component={Link}
+              to="/"
+              sx={styles.logo}
+            >
               <ShoppingBagIcon sx={styles.logoIcon} />
               E-commerce Patricio
             </Typography>
 
-            {/* Menú Desktop */}
+            {/* Desktop Menu */}
             <Box sx={styles.desktopMenu}>
               {renderMenuItems()}
               <IconButton onClick={toggleMode} sx={{ color: "#fff" }}>
@@ -131,20 +109,27 @@ export default function Navbar() {
               {renderUserSection(true, false)}
             </Box>
 
-            {/* Botón móvil */}
+            {/* Botón menú móvil con animación */}
             <IconButton
               sx={styles.menuBtnMobile}
               onClick={() => setOpen(!open)}
+              aria-label={open ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={open}
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={open ? "close" : "menu"}
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
+                  initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.25, ease: "easeInOut" }}
+                  style={styles.menuIconWrapper}
                 >
-                  {open ? <CloseIcon /> : <MenuIcon />}
+                  {open ? (
+                    <CloseIcon fontSize="large" />
+                  ) : (
+                    <MenuIcon fontSize="large" />
+                  )}
                 </motion.div>
               </AnimatePresence>
             </IconButton>
@@ -152,39 +137,41 @@ export default function Navbar() {
         </AppBar>
       </motion.div>
 
-      {/* Drawer Mobile */}
+      {/* Drawer Móvil */}
       <Drawer
         anchor="right"
         open={open}
         onClose={() => setOpen(false)}
+        sx={{ display: { xs: "block", md: "none" } }}
         PaperProps={{ sx: styles.drawerPaper }}
       >
         <Stack sx={styles.drawerStack} spacing={3}>
+          {/* User info móvil */}
           {renderUserSection(false, true)}
-          <Divider sx={{ bgcolor: "rgba(255,255,255,0.3)" }} />
+
+          <Divider sx={{ bgcolor: "rgba(255,255,255,0.3)", my: 2 }} />
+
+          {/* Menú móvil */}
           {renderMenuItems(() => setOpen(false))}
-          <IconButton onClick={toggleMode} sx={styles.toggleModeBtn}>
-            {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
-          </IconButton>
+
+          {isAuthenticated && (
+            <Button
+              onClick={handleLogout}
+              startIcon={<LogoutIcon />}
+              sx={styles.logoutBtn}
+            >
+              Cerrar sesión
+            </Button>
+          )}
+
+          {/* Botones utilitarios */}
+          <Stack spacing={2} alignItems="center" sx={styles.drawerUtilStack}>
+            <IconButton onClick={toggleMode} sx={styles.toggleModeBtn}>
+              {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+            </IconButton>
+          </Stack>
         </Stack>
       </Drawer>
-
-      {/* Modal Login */}
-      <Modal open={openLoginModal} onClose={() => setOpenLoginModal(false)}>
-        <Box sx={styles.modalBox}>
-          <Login onClose={() => setOpenLoginModal(false)} />
-        </Box>
-      </Modal>
-
-      {/* Modal Registro */}
-      <Modal
-        open={openRegisterModal}
-        onClose={() => setOpenRegisterModal(false)}
-      >
-        <Box sx={styles.modalBox}>
-          <Register onClose={() => setOpenRegisterModal(false)} />
-        </Box>
-      </Modal>
     </>
   );
-            }
+}
