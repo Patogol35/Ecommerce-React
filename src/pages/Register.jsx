@@ -42,27 +42,29 @@ setForm((f) => ({ ...f, [name]: value }));
 };
 
 // -------- VALIDACIONES --------
-const validators = {
-username: (v) => {
-if (!v.trim()) return "El usuario es obligatorio";
-if (/\s/.test(v)) return "El usuario no puede contener espacios";
-return null;
-},
-email: (v) => {
-if (!v.trim()) return "El correo es obligatorio";
-if (!/\S+@\S+.\S+/.test(v)) return "El correo no es válido";
-return null;
-},
-password: (v) => {
-if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
-return null;
-},
-confirm: (v, data) => {
-if (v !== data.password) return "Las contraseñas no coinciden";
-return null;
-},
-};
 
+
+const validators = {
+  username: (v) => {
+    if (!v.trim()) return "El usuario es obligatorio";
+    if (/\s/.test(v)) return "El usuario no puede contener espacios";
+    return null;
+  },
+  email: (v) => {
+    if (!v.trim()) return "El correo es obligatorio";
+    if (!/\S+@\S+.\S+/.test(v)) return "El correo no es válido";
+    return null;
+  },
+  password: (v) => {
+    if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
+    if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
+    return null;
+  },
+  confirm: (v, data) => {
+    if (v !== data.password) return "Las contraseñas no coinciden";
+    return null;
+  },
+};
 const validateForm = () => {
 for (const key in validators) {
 const error = validators[key](form[key], form);
