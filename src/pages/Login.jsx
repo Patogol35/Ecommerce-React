@@ -3,7 +3,6 @@ import { login as apiLogin } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-
 import {
   Container,
   Paper,
@@ -15,8 +14,8 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
-
 import { useTheme } from "@mui/material/styles";
+
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import PersonOutline from "@mui/icons-material/PersonOutline";
@@ -44,18 +43,19 @@ export default function Login() {
 
   const handleErrors = useCallback((error) => {
     const resp = error?.response?.data;
+    const status = error?.response?.status;
 
-    const errorMessage =
+    let message =
       resp?.message ||
       resp?.detail ||
-      (error?.response?.status === 401 ? "Usuario o contraseña incorrectos" : null);
+      (status === 401 ? "Usuario o contraseña incorrectos" : null);
 
-    if (!errorMessage) {
+    if (!message) {
       toast.error("Ocurrió un error al iniciar sesión");
       return;
     }
 
-    const normalized = errorMessage.toLowerCase();
+    const normalized = message.toLowerCase();
 
     if (
       normalized.includes("no active account") ||
@@ -63,25 +63,12 @@ export default function Login() {
     ) {
       toast.error("Usuario o contraseña incorrectos");
     } else {
-      toast.error(errorMessage);
+      toast.error(message);
     }
   }, []);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // ---------- VALIDACIONES OBLIGATORIAS ----------
-    if (!form.username.trim()) {
-      toast.error("El usuario es obligatorio");
-      return;
-    }
-
-    if (!form.password.trim()) {
-      toast.error("La contraseña es obligatoria");
-      return;
-    }
-    // ------------------------------------------------
-
     setLoading(true);
 
     try {
@@ -124,6 +111,7 @@ export default function Login() {
         </Typography>
 
         <form onSubmit={handleSubmit}>
+          {/* Usuario */}
           <TextField
             name="username"
             label="Usuario"
@@ -141,6 +129,7 @@ export default function Login() {
             }}
           />
 
+          {/* Contraseña */}
           <TextField
             name="password"
             label="Contraseña"
@@ -166,13 +155,16 @@ export default function Login() {
             }}
           />
 
+          {/* Botones */}
           <Box mt={3} display="flex" flexDirection="column" gap={2}>
             <Button
               type="submit"
               variant="contained"
               fullWidth
               disabled={loading}
-              startIcon={loading && <CircularProgress size={20} color="inherit" />}
+              startIcon={
+                loading && <CircularProgress size={20} color="inherit" />
+              }
               sx={loginStyles.botonLogin(theme)}
             >
               {loading ? "Entrando..." : "Iniciar sesión"}
