@@ -1,8 +1,9 @@
-import { useState } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useThemeMode } from "../context/ThemeContext";
 import { useScrollTrigger } from "../hooks/useScrollTrigger";
+
 import { authMenu, guestMenu } from "../config/menuConfig";
 import NavButton from "./NavButton";
 
@@ -29,7 +30,6 @@ import {
 } from "@mui/icons-material";
 
 import { motion, AnimatePresence } from "framer-motion";
-
 import styles from "./Navbar.styles";
 
 export default function Navbar() {
@@ -40,26 +40,30 @@ export default function Navbar() {
   const [open, setOpen] = useState(false);
   const scrolled = useScrollTrigger(50);
 
-  const menuItems = isAuthenticated ? authMenu : guestMenu;
+  const menuItems = useMemo(
+    () => (isAuthenticated ? authMenu : guestMenu),
+    [isAuthenticated]
+  );
 
-  const handleLogout = () => {
+  const handleToggleMenu = useCallback(() => {
+    setOpen((prev) => !prev);
+  }, []);
+
+  const handleCloseMenu = useCallback(() => setOpen(false), []);
+
+  const handleLogout = useCallback(() => {
     logout();
     navigate("/login");
-    setOpen(false);
-  };
+    handleCloseMenu();
+  }, [logout, navigate]);
 
-  const renderMenuItems = (onClick) =>
-    menuItems.map((item, i) => (
-      <NavButton key={i} item={item} onClick={onClick} />
-    ));
-
-  const renderUserSection = (showLogout = true, isMobile = false) =>
+  const UserSection = ({ showLogout = true, mobile = false }) =>
     isAuthenticated && (
       <Stack
-        direction={isMobile ? "column" : "row"}
+        direction={mobile ? "column" : "row"}
         spacing={1.5}
         alignItems="center"
-        sx={styles.userSection(isMobile)}
+        sx={styles.userSection(mobile)}
       >
         <AccountCircleIcon sx={{ color: "#fff" }} />
         <Typography sx={{ color: "#fff", fontWeight: 600 }}>
@@ -78,9 +82,13 @@ export default function Navbar() {
       </Stack>
     );
 
+  const MenuList = ({ onClick }) =>
+    menuItems.map((item, idx) => (
+      <NavButton key={idx} item={item} onClick={onClick} />
+    ));
+
   return (
     <>
-      {/* Navbar Desktop */}
       <motion.div
         initial={{ y: -80, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
@@ -92,7 +100,6 @@ export default function Navbar() {
           sx={styles.appBar(scrolled)}
         >
           <Toolbar sx={styles.toolbar}>
-            {/* Logo */}
             <Typography
               variant="h6"
               component={Link}
@@ -103,19 +110,19 @@ export default function Navbar() {
               E-commerce Jorge Patricio
             </Typography>
 
-            {/* Menú Desktop */}
+            {/* Desktop */}
             <Box sx={styles.desktopMenu}>
-              {renderMenuItems()}
+              <MenuList />
               <IconButton onClick={toggleMode} sx={{ color: "#fff" }}>
                 {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
-              {renderUserSection(true, false)}
+              <UserSection />
             </Box>
 
-            {/* Botón móvil */}
+            {/* Mobile button */}
             <IconButton
               sx={styles.menuBtnMobile}
-              onClick={() => setOpen(!open)}
+              onClick={handleToggleMenu}
               aria-label={open ? "Cerrar menú" : "Abrir menú"}
               aria-expanded={open}
             >
@@ -125,14 +132,10 @@ export default function Navbar() {
                   initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
                   animate={{ rotate: 0, opacity: 1, scale: 1 }}
                   exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                  transition={{ duration: 0.25 }}
                   style={styles.menuIconWrapper}
                 >
-                  {open ? (
-                    <CloseIcon fontSize="large" />
-                  ) : (
-                    <MenuIcon fontSize="large" />
-                  )}
+                  {open ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
                 </motion.div>
               </AnimatePresence>
             </IconButton>
@@ -140,22 +143,20 @@ export default function Navbar() {
         </AppBar>
       </motion.div>
 
-      {/* Drawer Móvil */}
+      {/* Drawer mobile */}
       <Drawer
         anchor="right"
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={handleCloseMenu}
         sx={{ display: { xs: "block", md: "none" } }}
         PaperProps={{ sx: styles.drawerPaper }}
       >
         <Stack sx={styles.drawerStack} spacing={3}>
-          {/* Usuario móvil */}
-          {renderUserSection(false, true)}
+          <UserSection showLogout={false} mobile />
 
           <Divider sx={{ bgcolor: "rgba(255,255,255,0.3)", my: 2 }} />
 
-          {/* Menú móvil */}
-          {renderMenuItems(() => setOpen(false))}
+          <MenuList onClick={handleCloseMenu} />
 
           {isAuthenticated && (
             <Button
