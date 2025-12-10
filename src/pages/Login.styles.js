@@ -1,16 +1,10 @@
 const loginStyles = {
   container: (theme) => ({
-    minHeight: "100vh",
+    minHeight: "75vh", // 🔥 REDUCE EL FONDO AZUL ARRIBA/ABAJO
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-
-    // Solo 1 de padding vertical (antes era 2)
-    py: 1,
-
-    // Mantener padding horizontal igual
-    px: 2,
-
+    p: 2,
     background:
       theme.palette.mode === "dark"
         ? "linear-gradient(135deg, #121212 0%, #1e1e1e 100%)"
@@ -21,7 +15,6 @@ const loginStyles = {
     p: 4,
     borderRadius: 3,
     width: "100%",
-    maxWidth: 420, // mejora visual sin romper nada
     display: "flex",
     flexDirection: "column",
     gap: 3,
