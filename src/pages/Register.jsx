@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { register as apiRegister } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
@@ -17,12 +17,53 @@ import {
 } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
-import Visibility from "@mui/icons-material/Visibility";
-import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import PersonOutline from "@mui/icons-material/PersonOutline";
-import EmailOutlined from "@mui/icons-material/EmailOutlined";
-import LockOutlined from "@mui/icons-material/LockOutlined";
+import {
+  Visibility,
+  VisibilityOff,
+  PersonOutline,
+  EmailOutlined,
+  LockOutlined,
+} from "@mui/icons-material";
 import registerStyles from "./Register.styles";
+
+// ---------- HELPERS ----------
+const getPasswordStrength = (pwd = "") => {
+  let score = 0;
+  if (pwd.length >= 6) score++;
+  if (pwd.length >= 10) score++;
+  if (/[A-Z]/.test(pwd)) score++;
+  if (/[0-9]/.test(pwd)) score++;
+  if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+  if (score <= 2) return { label: "Débil", color: "red", value: 40 };
+  if (score === 3) return { label: "Media", color: "orange", value: 60 };
+  if (score === 4) return { label: "Fuerte", color: "green", value: 80 };
+  return { label: "Muy fuerte", color: "darkgreen", value: 100 };
+};
+
+const validators = {
+  username: (v) => {
+    if (!v.trim()) return "El usuario es obligatorio";
+    if (/\s/.test(v)) return "El usuario no puede contener espacios";
+    return null;
+  },
+  email: (v) => {
+    if (!v.trim()) return "El correo es obligatorio";
+    if (!/\S+@\S+\.\S+/.test(v)) return "El correo no es válido";
+    return null;
+  },
+  password: (v) => {
+    if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
+    if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
+    if (!/[!@#$%^&*(),.?":{}|<>_\-\\/[\]=+~`]/.test(v))
+      return "La contraseña debe incluir al menos un símbolo";
+    return null;
+  },
+  confirm: (v, data) => {
+    if (v !== data.password) return "Las contraseñas no coinciden";
+    return null;
+  },
+};
 
 export default function Register() {
   const theme = useTheme();
@@ -38,37 +79,10 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
   const [showPasswords, setShowPasswords] = useState(false);
 
-  const handleChange = (e) => {
+  const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-    setForm((f) => ({ ...f, [name]: value }));
-  };
-
-  // -------- VALIDACIONES --------
-  const validators = {
-    username: (v) => {
-      if (!v.trim()) return "El usuario es obligatorio";
-      if (/\s/.test(v)) return "El usuario no puede contener espacios";
-      return null;
-    },
-    email: (v) => {
-      if (!v.trim()) return "El correo es obligatorio";
-      if (!/\S+@\S+\.\S+/.test(v)) return "El correo no es válido";
-      return null;
-    },
-
-    password: (v) => {
-  console.log("Validando:", v);
-  if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
-  if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
-  if (!/[!@#$%^&*(),.?":{}|<>_\-\\/[\]=+~`]/.test(v))
-    return "La contraseña debe incluir al menos un símbolo";
-  return null;
-},
-    confirm: (v, data) => {
-      if (v !== data.password) return "Las contraseñas no coinciden";
-      return null;
-    },
-  };
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }, []);
 
   const validateForm = () => {
     for (const key in validators) {
@@ -81,27 +95,11 @@ export default function Register() {
     return true;
   };
 
-  // -------- FUERZA DE CONTRASEÑA --------
-  const passwordStrength = (pwd = "") => {
-    let score = 0;
-    if (pwd.length >= 6) score++;
-    if (pwd.length >= 10) score++;
-    if (/[A-Z]/.test(pwd)) score++;
-    if (/[0-9]/.test(pwd)) score++;
-    if (/[^A-Za-z0-9]/.test(pwd)) score++;
-
-    if (score <= 2) return { label: "Débil", color: "red", value: 40 };
-    if (score === 3) return { label: "Media", color: "orange", value: 60 };
-    if (score === 4) return { label: "Fuerte", color: "green", value: 80 };
-    return { label: "Muy fuerte", color: "darkgreen", value: 100 };
-  };
-
   const strength = useMemo(
-    () => passwordStrength(form.password),
+    () => getPasswordStrength(form.password),
     [form.password]
   );
 
-  // -------- SUBMIT --------
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -127,6 +125,25 @@ export default function Register() {
     }
   };
 
+  const renderInput = (label, name, icon, type = "text") => (
+    <TextField
+      label={label}
+      name={name}
+      type={type}
+      fullWidth
+      margin="normal"
+      value={form[name]}
+      onChange={handleChange}
+      required
+      InputProps={{
+        startAdornment: (
+          <InputAdornment position="start">{icon}</InputAdornment>
+        ),
+      }}
+      autoComplete="new-password"
+    />
+  );
+
   return (
     <Container maxWidth="xs" sx={registerStyles.container(theme)}>
       <Paper elevation={8} sx={registerStyles.paper(theme)}>
@@ -140,68 +157,20 @@ export default function Register() {
           Crear cuenta
         </Typography>
 
-        <Typography
-          align="center"
-          color="text.secondary"
-          sx={registerStyles.subtitulo}
-        >
+        <Typography align="center" color="text.secondary" sx={registerStyles.subtitulo}>
           Completa tus datos para registrarte
         </Typography>
 
         <form onSubmit={handleSubmit} noValidate>
-          <TextField
-            label="Usuario"
-            name="username"
-            fullWidth
-            margin="normal"
-            value={form.username}
-            onChange={handleChange}
-            required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonOutline color="action" />
-                </InputAdornment>
-              ),
-            }}
-          />
+          {renderInput("Usuario", "username", <PersonOutline color="action" />)}
+          {renderInput("Correo", "email", <EmailOutlined color="action" />, "email")}
 
-          <TextField
-            label="Correo"
-            name="email"
-            type="email"
-            fullWidth
-            margin="normal"
-            value={form.email}
-            onChange={handleChange}
-            required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <EmailOutlined color="action" />
-                </InputAdornment>
-              ),
-            }}
-          />
-
-          <TextField
-            label="Contraseña"
-            name="password"
-            type={showPasswords ? "text" : "password"}
-            fullWidth
-            margin="normal"
-            value={form.password}
-            onChange={handleChange}
-            required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LockOutlined color="action" />
-                </InputAdornment>
-              ),
-            }}
-            autoComplete="new-password"
-          />
+          {renderInput(
+            "Contraseña",
+            "password",
+            <LockOutlined color="action" />,
+            showPasswords ? "text" : "password"
+          )}
 
           {form.password && (
             <Box sx={registerStyles.strengthBox}>
@@ -219,24 +188,12 @@ export default function Register() {
             </Box>
           )}
 
-          <TextField
-            label="Confirmar contraseña"
-            name="confirm"
-            type={showPasswords ? "text" : "password"}
-            fullWidth
-            margin="normal"
-            value={form.confirm}
-            onChange={handleChange}
-            required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LockOutlined color="action" />
-                </InputAdornment>
-              ),
-            }}
-            autoComplete="new-password"
-          />
+          {renderInput(
+            "Confirmar contraseña",
+            "confirm",
+            <LockOutlined color="action" />,
+            showPasswords ? "text" : "password"
+          )}
 
           <FormControlLabel
             control={
