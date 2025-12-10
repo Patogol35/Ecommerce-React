@@ -4,7 +4,7 @@ const loginStyles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    padding: theme.spacing(1), // 🔥 MUCHÍSIMO MENOS ESPACIO
+    padding: theme.spacing(1),
     background:
       theme.palette.mode === "dark"
         ? "linear-gradient(160deg, #0a0a0a 0%, #141414 100%)"
@@ -13,72 +13,56 @@ const loginStyles = {
 
   paper: (theme) => ({
     padding: theme.spacing(3),
-    borderRadius: 14,
+    borderRadius: 12,          // 👈🔥 YA NO ES OVALADO (ANTES 50% indirecto)
     width: "100%",
-    maxWidth: 360,                // 🔥 MÁS PEQUEÑO Y ELEGANTE
+    maxWidth: 380,             // 👈 más compacto, no gigante
     display: "flex",
     flexDirection: "column",
     gap: theme.spacing(2),
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? "rgba(20,20,20,0.85)"
-        : "rgba(255,255,255,0.95)",
-    backdropFilter: "blur(6px)",
-    border: "1px solid rgba(255,255,255,0.06)",
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "0 12px 28px rgba(0,0,0,0.6)"
-        : "0 12px 28px rgba(0,0,0,0.15)",
+    backgroundColor: "#ffffff",
+    boxShadow: "0 6px 18px rgba(0,0,0,0.12)",
+
+    // 👇 Esto evita que se deforme por padding o grid
+    overflow: "hidden",
   }),
 
-  titulo: (theme) => ({
+  titulo: {
+    textAlign: "center",
     fontWeight: 700,
-    textAlign: "center",
-    fontSize: "1.6rem",
-    marginBottom: theme.spacing(1), // 🔥 MENOS ESPACIO ARRIBA Y ABAJO
-    color: theme.palette.mode === "dark" ? "#64b5f6" : "#0d47a1",
-  }),
-
-  subtitulo: {
-    textAlign: "center",
-    opacity: 0.75,
-    marginTop: -8,               // 🔥 MÁS COMPACTO
+    fontSize: "1.5rem",
     marginBottom: 4,
   },
 
-  botonLogin: (theme) => ({
-    padding: "10px",
-    fontWeight: 600,
-    borderRadius: 10,
-    background:
-      theme.palette.mode === "dark"
-        ? "linear-gradient(135deg, #1e88e5, #1565c0)"
-        : "linear-gradient(135deg, #1565c0, #42a5f5)",
-    transition: "0.25s ease",
-    "&:hover": {
-      transform: "translateY(-2px)",
-      boxShadow:
-        theme.palette.mode === "dark"
-          ? "0 8px 18px rgba(0,0,0,0.55)"
-          : "0 8px 18px rgba(0,0,0,0.22)",
-    },
-  }),
+  subtitulo: {
+    textAlign: "center",
+    opacity: 0.8,
+    marginTop: -10,
+    marginBottom: 6,
+  },
 
-  botonRegister: (theme) => ({
-    padding: "10px",
+  botonLogin: {
+    padding: "12px",
     fontWeight: 600,
-    borderRadius: 10,
-    borderColor: theme.palette.mode === "dark" ? "#64b5f6" : "#1565c0",
-    color: theme.palette.mode === "dark" ? "#64b5f6" : "#1565c0",
-    transition: "0.25s ease",
+    borderRadius: 8,
+    background: "linear-gradient(135deg, #1976d2, #42a5f5)",
+    transition: "0.25s",
     "&:hover": {
-      backgroundColor:
-        theme.palette.mode === "dark"
-          ? "rgba(100,181,246,0.1)"
-          : "rgba(21,101,192,0.1)",
+      transform: "translateY(-2px)",
+      boxShadow: "0 6px 12px rgba(0,0,0,0.15)",
+    },
+  },
+
+  botonRegister: {
+    padding: "12px",
+    fontWeight: 600,
+    borderRadius: 8,
+    borderColor: "#1976d2",
+    color: "#1976d2",
+    "&:hover": {
+      backgroundColor: "rgba(25,118,210,0.1)",
       transform: "translateY(-2px)",
     },
-  }),
+  },
 };
 
 export default loginStyles;
