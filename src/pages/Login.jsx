@@ -39,6 +39,32 @@ export default function Login() {
     setShowPassword((prev) => !prev);
   }, []);
 
+  const handleErrors = useCallback((error) => {
+    const resp = error?.response?.data;
+
+    const errorMessage =
+      resp?.message ||
+      resp?.detail ||
+      (error?.response?.status === 401 ? "Usuario o contraseña incorrectos" : null);
+
+    if (!errorMessage) {
+      toast.error("Ocurrió un error al iniciar sesión");
+      return;
+    }
+
+    // Normalizar errores comunes de Django SimpleJWT
+    const normalized = errorMessage.toLowerCase();
+
+    if (
+      normalized.includes("no active account") ||
+      normalized.includes("credentials")
+    ) {
+      toast.error("Usuario o contraseña incorrectos");
+    } else {
+      toast.error(errorMessage);
+    }
+  }, []);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -53,30 +79,8 @@ export default function Login() {
       } else {
         toast.error("Credenciales inválidas");
       }
-
     } catch (error) {
-      const resp = error?.response?.data;
-
-      if (resp?.detail) {
-        // Traducir mensaje de SimpleJWT
-        if (
-          resp.detail.includes("No active account") ||
-          resp.detail.toLowerCase().includes("credentials")
-        ) {
-          toast.error("Usuario o contraseña incorrectos");
-        } else {
-          toast.error(resp.detail);
-        }
-
-      } else if (resp?.message) {
-        toast.error(resp.message);
-
-      } else if (error?.response?.status === 401) {
-        toast.error("Usuario o contraseña incorrectos");
-
-      } else {
-        toast.error("Ocurrió un error al iniciar sesión");
-      }
+      handleErrors(error);
     } finally {
       setLoading(false);
     }
