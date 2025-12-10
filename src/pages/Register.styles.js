@@ -1,6 +1,6 @@
 const registerStyles = {
   container: (theme) => ({
-    minHeight: "100vh",
+    minHeight: "75vh", 
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
