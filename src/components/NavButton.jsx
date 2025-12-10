@@ -10,25 +10,15 @@ function NavButton({ item, onClick }) {
   const Icon = item.icon;
   const alwaysColoredPaths = ["/login", "/register"];
 
-  const isAction = Boolean(item.action);
-
   return (
     <motion.div whileHover={{ y: -2, scale: 1.05 }} whileTap={{ scale: 0.95 }}>
       <Button
-        {...(!isAction && { component: Link, to: item.path })}
-        onClick={(e) => {
-          if (isAction) {
-            e.preventDefault();
-            onClick(item.action);
-          } else {
-            onClick?.();
-          }
-        }}
+        component={Link}
+        to={item.path}
         startIcon={<Icon />}
+        onClick={onClick}
         aria-current={isActive ? "page" : undefined}
-        sx={(theme) =>
-          navButtonStyles(theme, isActive, item, alwaysColoredPaths)
-        }
+        sx={(theme) => navButtonStyles(theme, isActive, item, alwaysColoredPaths)}
       >
         {item.label}
       </Button>
