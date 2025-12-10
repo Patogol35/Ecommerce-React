@@ -3,6 +3,7 @@ import { login as apiLogin } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import {
   Container,
   Paper,
@@ -14,11 +15,14 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
+
 import { useTheme } from "@mui/material/styles";
+
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import PersonOutline from "@mui/icons-material/PersonOutline";
 import LockOutlined from "@mui/icons-material/LockOutlined";
+
 import loginStyles from "./Login.styles";
 
 export default function Login() {
@@ -30,15 +34,18 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
+  // Manejo de campos
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
   }, []);
 
+  // Mostrar / ocultar contraseña
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword((prev) => !prev);
   }, []);
 
+  // Normalización de errores
   const handleErrors = useCallback((error) => {
     const resp = error?.response?.data;
 
@@ -52,7 +59,6 @@ export default function Login() {
       return;
     }
 
-    // Normalizar errores comunes de Django SimpleJWT
     const normalized = errorMessage.toLowerCase();
 
     if (
@@ -65,6 +71,7 @@ export default function Login() {
     }
   }, []);
 
+  // Enviar formulario
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -176,4 +183,4 @@ export default function Login() {
       </Paper>
     </Container>
   );
-}
+  }
