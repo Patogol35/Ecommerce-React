@@ -1,192 +1,190 @@
-import { useContext, useState } from "react";
-import { Link as RouterLink, useNavigate } from "react-router-dom";
-import { AuthContext } from "../../context/AuthContext";
-import {
-  Box,
-  Button,
-  Divider,
-  Drawer,
-  IconButton,
-  List,
-  ListItem,
-  ListItemButton,
-  ListItemIcon,
-  ListItemText,
-  Modal,
-  Typography,
-} from "@mui/material";
-import MenuIcon from "@mui/icons-material/Menu";
-import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import NavButton from "../buttons/NavButton";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
-import LogoutIcon from "@mui/icons-material/Logout";
-import FavoriteBorderIcon from "@mui/icons-material/FavoriteBorder";
-import Login from "../auth/Login";
-import Register from "../auth/Register";
+import { useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { useAuth } from "../context/AuthContext";
+import { useThemeMode } from "../context/ThemeContext";
+import { useScrollTrigger } from "../hooks/useScrollTrigger";
+import { authMenu, guestMenu } from "../config/menuConfig";
+import NavButton from "./NavButton";
 
-const Navbar = () => {
-  const { user, logout } = useContext(AuthContext);
+import {
+  AppBar,
+  Toolbar,
+  Typography,
+  IconButton,
+  Box,
+  Stack,
+  Button,
+  Drawer,
+  Divider,
+  Modal,
+} from "@mui/material";
+import {
+  Menu as MenuIcon,
+  Close as CloseIcon,
+  ShoppingBag as ShoppingBagIcon,
+  Logout as LogoutIcon,
+  Brightness4 as DarkModeIcon,
+  Brightness7 as LightModeIcon,
+  AccountCircle as AccountCircleIcon,
+} from "@mui/icons-material";
+
+import { motion, AnimatePresence } from "framer-motion";
+import Login from "../pages/Login";
+import Register from "../pages/Register";
+import styles from "./Navbar.styles";
+
+export default function Navbar() {
+  const { isAuthenticated, logout, user } = useAuth();
+  const { mode, toggleMode } = useThemeMode();
   const navigate = useNavigate();
-  const [drawerOpen, setDrawerOpen] = useState(false);
+
+  const [open, setOpen] = useState(false);
+  const scrolled = useScrollTrigger(50);
+
+  // Estado de modales
   const [openLoginModal, setOpenLoginModal] = useState(false);
   const [openRegisterModal, setOpenRegisterModal] = useState(false);
 
-  const menuItems = user
-    ? [
-        { label: "Inicio", path: "/" },
-        { label: "Tienda", path: "/products" },
-        { label: "Perfil", path: "/profile" },
-      ]
-    : [
-        { label: "Inicio", path: "/" },
-        { label: "Tienda", path: "/products" },
-        { label: "Iniciar Sesión", path: "/login" },
-        { label: "Crear Cuenta", path: "/register" },
-      ];
+  const menuItems = isAuthenticated ? authMenu : guestMenu;
 
   const handleLogout = () => {
     logout();
-    navigate("/");
-    setDrawerOpen(false);
+    navigate("/login");
+    setOpen(false);
+  };
+
+  const menuHandler = (item, onClick) => {
+    if (item.path === "/login") {
+      setOpenLoginModal(true);
+      if (onClick) onClick();
+      return;
+    }
+    if (item.path === "/register") {
+      setOpenRegisterModal(true);
+      if (onClick) onClick();
+      return;
+    }
+    navigate(item.path);
+    if (onClick) onClick();
   };
 
   const renderMenuItems = (onClick) =>
-    menuItems.map((item, i) => {
-      if (item.path === "/login") {
-        return (
-          <Button
-            key={i}
-            onClick={() => {
-              setOpenLoginModal(true);
-              if (onClick) onClick();
-            }}
-            sx={{ color: "#fff", fontWeight: 600 }}
-          >
-            {item.label}
-          </Button>
-        );
-      }
+    menuItems.map((item, i) => (
+      <Button
+        key={i}
+        onClick={() => menuHandler(item, onClick)}
+        sx={styles.menuItemButton}
+      >
+        {item.label}
+      </Button>
+    ));
 
-      if (item.path === "/register") {
-        return (
+  const renderUserSection = (showLogout = true, isMobile = false) =>
+    isAuthenticated && (
+      <Stack
+        direction={isMobile ? "column" : "row"}
+        spacing={1.5}
+        alignItems="center"
+        sx={styles.userSection(isMobile)}
+      >
+        <AccountCircleIcon sx={{ color: "#fff" }} />
+        <Typography sx={{ color: "#fff", fontWeight: 600 }}>
+          {user?.username}
+        </Typography>
+        {showLogout && (
           <Button
-            key={i}
-            onClick={() => {
-              setOpenRegisterModal(true);
-              if (onClick) onClick();
-            }}
-            sx={{ color: "#fff", fontWeight: 600 }}
+            onClick={handleLogout}
+            startIcon={<LogoutIcon />}
+            sx={styles.logoutBtn}
           >
-            {item.label}
+            Cerrar sesión
           </Button>
-        );
-      }
-
-      return <NavButton key={i} item={item} onClick={onClick} />;
-    });
+        )}
+      </Stack>
+    );
 
   return (
     <>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          px: 3,
-          py: 1,
-          backgroundColor: "#131921",
-        }}
+      {/* Navbar Desktop */}
+      <motion.div
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
+        transition={{ duration: 0.6 }}
       >
-        <Typography variant="h6" sx={{ color: "#fff" }}>
-          Mi Tienda
-        </Typography>
+        <AppBar
+          position="fixed"
+          elevation={scrolled ? 6 : 2}
+          sx={styles.appBar(scrolled)}
+        >
+          <Toolbar sx={styles.toolbar}>
+            <Typography component={Link} to="/" sx={styles.logo}>
+              <ShoppingBagIcon sx={styles.logoIcon} />
+              E-commerce Patricio
+            </Typography>
 
-        <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
-          {renderMenuItems()}
-        </Box>
+            {/* Menú Desktop */}
+            <Box sx={styles.desktopMenu}>
+              {renderMenuItems()}
+              <IconButton onClick={toggleMode} sx={{ color: "#fff" }}>
+                {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+              </IconButton>
+              {renderUserSection(true, false)}
+            </Box>
 
-        <Box sx={{ display: { xs: "flex", md: "none" } }}>
-          <IconButton sx={{ color: "#fff" }} onClick={() => setDrawerOpen(true)}>
-            <MenuIcon />
+            {/* Botón móvil */}
+            <IconButton
+              sx={styles.menuBtnMobile}
+              onClick={() => setOpen(!open)}
+            >
+              <AnimatePresence mode="wait" initial={false}>
+                <motion.div
+                  key={open ? "close" : "menu"}
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
+                  transition={{ duration: 0.25, ease: "easeInOut" }}
+                >
+                  {open ? <CloseIcon /> : <MenuIcon />}
+                </motion.div>
+              </AnimatePresence>
+            </IconButton>
+          </Toolbar>
+        </AppBar>
+      </motion.div>
+
+      {/* Drawer Mobile */}
+      <Drawer
+        anchor="right"
+        open={open}
+        onClose={() => setOpen(false)}
+        PaperProps={{ sx: styles.drawerPaper }}
+      >
+        <Stack sx={styles.drawerStack} spacing={3}>
+          {renderUserSection(false, true)}
+          <Divider sx={{ bgcolor: "rgba(255,255,255,0.3)" }} />
+          {renderMenuItems(() => setOpen(false))}
+          <IconButton onClick={toggleMode} sx={styles.toggleModeBtn}>
+            {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
           </IconButton>
-        </Box>
-
-        {user && (
-          <Box sx={{ display: { xs: "none", md: "flex" }, gap: 2 }}>
-            <IconButton
-              component={RouterLink}
-              to="/cart"
-              sx={{ color: "#fff" }}
-            >
-              <ShoppingCartIcon />
-            </IconButton>
-            <IconButton
-              component={RouterLink}
-              to="/favorites"
-              sx={{ color: "#fff" }}
-            >
-              <FavoriteBorderIcon />
-            </IconButton>
-            <IconButton component="button" sx={{ color: "#fff" }} onClick={handleLogout}>
-              <LogoutIcon />
-            </IconButton>
-          </Box>
-        )}
-
-      </Box>
-
-      <Drawer anchor="right" open={drawerOpen} onClose={() => setDrawerOpen(false)}>
-        <Box sx={{ width: 250 }}>
-          <List>
-            {renderMenuItems(() => setDrawerOpen(false))}
-          </List>
-
-          {user && (
-            <>
-              <Divider />
-              <ListItem disablePadding>
-                <ListItemButton onClick={handleLogout}>
-                  <ListItemIcon><LogoutIcon /></ListItemIcon>
-                  <ListItemText primary="Cerrar Sesión" />
-                </ListItemButton>
-              </ListItem>
-            </>
-          )}
-        </Box>
+        </Stack>
       </Drawer>
 
-      {/* MODAL LOGIN */}
+      {/* Modal Login */}
       <Modal open={openLoginModal} onClose={() => setOpenLoginModal(false)}>
-        <Box sx={{
-          width: 400,
-          margin: "auto",
-          mt: "10vh",
-          bgcolor: "background.paper",
-          borderRadius: 3,
-          p: 3,
-          outline: "none"
-        }}>
+        <Box sx={styles.modalBox}>
           <Login onClose={() => setOpenLoginModal(false)} />
         </Box>
       </Modal>
 
-      {/* MODAL REGISTER */}
-      <Modal open={openRegisterModal} onClose={() => setOpenRegisterModal(false)}>
-        <Box sx={{
-          width: 450,
-          margin: "auto",
-          mt: "10vh",
-          bgcolor: "background.paper",
-          borderRadius: 3,
-          p: 3,
-          outline: "none"
-        }}>
+      {/* Modal Registro */}
+      <Modal
+        open={openRegisterModal}
+        onClose={() => setOpenRegisterModal(false)}
+      >
+        <Box sx={styles.modalBox}>
           <Register onClose={() => setOpenRegisterModal(false)} />
         </Box>
       </Modal>
-
     </>
   );
-};
-
-export default Navbar;
+            }
