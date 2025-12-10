@@ -33,31 +33,6 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  // -------- VALIDACIONES (MISMA LÓGICA QUE REGISTER) ----------
-  const validators = {
-    username: (v) => {
-      if (!v.trim()) return "El usuario es obligatorio";
-      return null;
-    },
-    password: (v) => {
-      if (!v.trim()) return "La contraseña es obligatoria";
-      return null;
-    },
-  };
-
-  const validateForm = () => {
-    for (const key in validators) {
-      const error = validators[key](form[key], form);
-      if (error) {
-        toast.error(error);
-        return false;
-      }
-    }
-    return true;
-  };
-
-  // -----------------------------------------------------------
-
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
     setForm((prev) => ({ ...prev, [name]: value }));
@@ -95,8 +70,17 @@ export default function Login() {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // VALIDAR antes de enviar (igual que Register)
-    if (!validateForm()) return;
+    // ---------- VALIDACIONES OBLIGATORIAS ----------
+    if (!form.username.trim()) {
+      toast.error("El usuario es obligatorio");
+      return;
+    }
+
+    if (!form.password.trim()) {
+      toast.error("La contraseña es obligatoria");
+      return;
+    }
+    // ------------------------------------------------
 
     setLoading(true);
 
@@ -207,4 +191,4 @@ export default function Login() {
       </Paper>
     </Container>
   );
-        }
+}
