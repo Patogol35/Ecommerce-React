@@ -1,10 +1,12 @@
 const loginStyles = {
   container: (theme) => ({
-    minHeight: "100vh",
+    minHeight: `calc(100vh - ${theme.mixins.toolbar.minHeight}px)`, 
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
     p: 2,
+
+    // Opcional: si ya tienes fondo en el Layout, puedes comentar esto 👇
     background:
       theme.palette.mode === "dark"
         ? "linear-gradient(135deg, #121212 0%, #1e1e1e 100%)"
@@ -15,6 +17,7 @@ const loginStyles = {
     p: 4,
     borderRadius: 3,
     width: "100%",
+    maxWidth: 420,  // Evita que sea demasiado grande
     display: "flex",
     flexDirection: "column",
     gap: 3,
