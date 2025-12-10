@@ -4,7 +4,13 @@ const loginStyles = {
     display: "flex",
     justifyContent: "center",
     alignItems: "center",
-    p: 0.5, // 🔥 MENOS ESPACIO EXTERNO
+
+    // Solo 1 de padding vertical (antes era 2)
+    py: 1,
+
+    // Mantener padding horizontal igual
+    px: 2,
+
     background:
       theme.palette.mode === "dark"
         ? "linear-gradient(135deg, #121212 0%, #1e1e1e 100%)"
@@ -12,10 +18,10 @@ const loginStyles = {
   }),
 
   paper: (theme) => ({
-    p: 2.5, // 🔥 MENOS ALTURA DEL CONTENEDOR
+    p: 4,
     borderRadius: 3,
     width: "100%",
-    maxWidth: 420, // 🔥 evita que se deforme (NO cambia tu diseño)
+    maxWidth: 420, // mejora visual sin romper nada
     display: "flex",
     flexDirection: "column",
     gap: 3,
