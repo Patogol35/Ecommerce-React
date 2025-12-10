@@ -1,3 +1,4 @@
+Menuconfig
 import {
   Home as HomeIcon,
   ShoppingCart as ShoppingCartIcon,
@@ -30,13 +31,13 @@ export const authMenu = [
 export const guestMenu = [
   {
     label: "Iniciar sesión",
-    action: "login",
+    path: "/login",
     icon: LoginIcon,
     color: "linear-gradient(135deg, #0288d1, #26c6da)",
   },
   {
     label: "Registrarse",
-    action: "register",
+    path: "/register",
     icon: PersonAddIcon,
     color: "linear-gradient(135deg, #6a1b9a, #ab47bc)",
   },
