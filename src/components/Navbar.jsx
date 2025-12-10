@@ -100,7 +100,7 @@ export default function Navbar() {
               sx={styles.logo}
             >
               <ShoppingBagIcon sx={styles.logoIcon} />
-              E-commerce Patricio
+              E-commerce Jorge Patricio
             </Typography>
 
             {/* Menú Desktop */}
