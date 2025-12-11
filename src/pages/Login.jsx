@@ -17,24 +17,16 @@ import {
 } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
-
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import PersonOutline from "@mui/icons-material/PersonOutline";
 import LockOutlined from "@mui/icons-material/LockOutlined";
-
 import loginStyles from "./Login.styles";
 
-// ------- VALIDACIONES (como register) -------
+// Validaciones compactas
 const validators = {
-  username: (v) => {
-    if (!v.trim()) return "El usuario es obligatorio";
-    return null;
-  },
-  password: (v) => {
-    if (!v.trim()) return "La contraseña es obligatoria";
-    return null;
-  },
+  username: (v) => (!v.trim() ? "El usuario es obligatorio" : null),
+  password: (v) => (!v.trim() ? "La contraseña es obligatoria" : null),
 };
 
 export default function Login() {
@@ -44,77 +36,48 @@ export default function Login() {
 
   const [form, setForm] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPass, setShowPass] = useState(false);
 
-  const handleChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  }, []);
+  const handleChange = (e) =>
+    setForm({ ...form, [e.target.name]: e.target.value });
 
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((prev) => !prev);
-  }, []);
-
-  // -------- VALIDACIÓN como en register --------
   const validateForm = () => {
-    for (const key in validators) {
-      const error = validators[key](form[key], form);
-      if (error) {
-        toast.error(error);
-        return false;
-      }
+    for (const k in validators) {
+      const err = validators[k](form[k]);
+      if (err) return toast.error(err), false;
     }
     return true;
   };
 
-  // -------- ERRORES DEL SERVIDOR --------
-  const handleErrors = useCallback((error) => {
-    const resp = error?.response?.data;
-    const status = error?.response?.status;
+  const handleErrors = (error) => {
+    const msg =
+      error?.response?.data?.message ||
+      error?.response?.data?.detail ||
+      (error?.response?.status === 401
+        ? "Usuario o contraseña incorrectos"
+        : "Error al iniciar sesión");
 
-    let message =
-      resp?.message ||
-      resp?.detail ||
-      (status === 401 ? "Usuario o contraseña incorrectos" : null);
+    if (msg.toLowerCase().includes("credentials"))
+      return toast.error("Usuario o contraseña incorrectos");
 
-    if (!message) {
-      toast.error("Ocurrió un error al iniciar sesión");
-      return;
-    }
+    toast.error(msg);
+  };
 
-    const normalized = message.toLowerCase();
-
-    if (
-      normalized.includes("no active account") ||
-      normalized.includes("credentials")
-    ) {
-      toast.error("Usuario o contraseña incorrectos");
-    } else {
-      toast.error(message);
-    }
-  }, []);
-
-  // -------- SUBMIT --------
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    // Validación frontend como register
     if (!validateForm()) return;
 
     setLoading(true);
-
     try {
       const data = await apiLogin(form);
+      if (!data?.access || !data?.refresh)
+        return toast.error("Credenciales inválidas");
 
-      if (data?.access && data?.refresh) {
-        login(data.access, data.refresh);
-        toast.success(`Bienvenido/a, ${form.username} 👋`);
-        navigate("/");
-      } else {
-        toast.error("Credenciales inválidas");
-      }
-    } catch (error) {
-      handleErrors(error);
+      login(data.access, data.refresh);
+      toast.success(`Bienvenido/a, ${form.username} 👋`);
+      navigate("/");
+    } catch (err) {
+      handleErrors(err);
     } finally {
       setLoading(false);
     }
@@ -123,27 +86,15 @@ export default function Login() {
   return (
     <Container maxWidth="xs" sx={loginStyles.container(theme)}>
       <Paper elevation={8} sx={loginStyles.paper(theme)}>
-        <Typography
-          variant="h4"
-          align="center"
-          fontWeight="bold"
-          gutterBottom
-          sx={loginStyles.titulo(theme)}
-        >
+        <Typography variant="h4" align="center" fontWeight="bold" gutterBottom>
           Bienvenido
         </Typography>
 
-        <Typography
-          variant="body1"
-          align="center"
-          color="text.secondary"
-          sx={loginStyles.subtitulo}
-        >
-          Ingresa tus credenciales para continuar
+        <Typography align="center" color="text.secondary">
+          Ingresa tus credenciales
         </Typography>
 
         <form onSubmit={handleSubmit}>
-          {/* Usuario */}
           <TextField
             name="username"
             label="Usuario"
@@ -160,11 +111,10 @@ export default function Login() {
             }}
           />
 
-          {/* Contraseña */}
           <TextField
             name="password"
             label="Contraseña"
-            type={showPassword ? "text" : "password"}
+            type={showPass ? "text" : "password"}
             fullWidth
             margin="normal"
             value={form.password}
@@ -177,25 +127,23 @@ export default function Login() {
               ),
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={togglePasswordVisibility} edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  <IconButton onClick={() => setShowPass(!showPass)} edge="end">
+                    {showPass ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               ),
             }}
           />
 
-          {/* Botones */}
           <Box mt={3} display="flex" flexDirection="column" gap={2}>
             <Button
               type="submit"
               variant="contained"
-              fullWidth
               disabled={loading}
+              fullWidth
               startIcon={
                 loading && <CircularProgress size={20} color="inherit" />
               }
-              sx={loginStyles.botonLogin(theme)}
             >
               {loading ? "Entrando..." : "Iniciar sesión"}
             </Button>
@@ -204,7 +152,6 @@ export default function Login() {
               variant="outlined"
               fullWidth
               onClick={() => navigate("/register")}
-              sx={loginStyles.botonRegister(theme)}
             >
               Registrarse
             </Button>
