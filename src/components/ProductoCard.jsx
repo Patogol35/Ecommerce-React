@@ -36,7 +36,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   const onAdd = async () => {
     if (!isAuthenticated) {
-      toast.warn("Debes iniciar sesión para agregar productos 🛒");
+      toast.warn("Debes iniciar sesión para agregar productos");
       navigate("/login");
       return;
     }
