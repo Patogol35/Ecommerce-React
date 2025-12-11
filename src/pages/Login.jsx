@@ -3,6 +3,7 @@ import { login as apiLogin } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import {
   Container,
   Paper,
@@ -14,6 +15,7 @@ import {
   InputAdornment,
   IconButton,
 } from "@mui/material";
+
 import { useTheme } from "@mui/material/styles";
 
 import Visibility from "@mui/icons-material/Visibility";
@@ -23,29 +25,49 @@ import LockOutlined from "@mui/icons-material/LockOutlined";
 
 import loginStyles from "./Login.styles";
 
+// ------- VALIDACIONES (como register) -------
+const validators = {
+  username: (v) => {
+    if (!v.trim()) return "El usuario es obligatorio";
+    return null;
+  },
+  password: (v) => {
+    if (!v.trim()) return "La contraseña es obligatoria";
+    return null;
+  },
+};
+
 export default function Login() {
   const theme = useTheme();
   const navigate = useNavigate();
   const { login } = useAuth();
 
   const [form, setForm] = useState({ username: "", password: "" });
-  const [errors, setErrors] = useState({ username: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = useCallback((e) => {
     const { name, value } = e.target;
-
     setForm((prev) => ({ ...prev, [name]: value }));
-
-    // Limpia errores al escribir
-    setErrors((prev) => ({ ...prev, [name]: "" }));
   }, []);
 
   const togglePasswordVisibility = useCallback(() => {
     setShowPassword((prev) => !prev);
   }, []);
 
+  // -------- VALIDACIÓN como en register --------
+  const validateForm = () => {
+    for (const key in validators) {
+      const error = validators[key](form[key], form);
+      if (error) {
+        toast.error(error);
+        return false;
+      }
+    }
+    return true;
+  };
+
+  // -------- ERRORES DEL SERVIDOR --------
   const handleErrors = useCallback((error) => {
     const resp = error?.response?.data;
     const status = error?.response?.status;
@@ -72,24 +94,12 @@ export default function Login() {
     }
   }, []);
 
+  // -------- SUBMIT --------
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validación frontend
-    let newErrors = {};
-
-    if (!form.username.trim()) {
-      newErrors.username = "El usuario es obligatorio";
-    }
-
-    if (!form.password.trim()) {
-      newErrors.password = "La contraseña es obligatoria";
-    }
-
-    if (Object.keys(newErrors).length > 0) {
-      setErrors(newErrors);
-      return; // no llamar backend
-    }
+    // Validación frontend como register
+    if (!validateForm()) return;
 
     setLoading(true);
 
@@ -141,8 +151,6 @@ export default function Login() {
             margin="normal"
             value={form.username}
             onChange={handleChange}
-            error={Boolean(errors.username)}
-            helperText={errors.username}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -161,8 +169,6 @@ export default function Login() {
             margin="normal"
             value={form.password}
             onChange={handleChange}
-            error={Boolean(errors.password)}
-            helperText={errors.password}
             InputProps={{
               startAdornment: (
                 <InputAdornment position="start">
@@ -207,4 +213,4 @@ export default function Login() {
       </Paper>
     </Container>
   );
-            }
+}
