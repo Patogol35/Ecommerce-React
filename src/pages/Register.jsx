@@ -198,11 +198,11 @@ export default function Register() {
           <FormControlLabel
             control={
               <Checkbox
-                checked={showPasswords}
-                onChange={() => setShowPasswords((s) => !s)}
-                icon={<VisibilityOff />}
-                checkedIcon={<Visibility />}
-              />
+  checked={showPasswords}
+  onChange={() => setShowPasswords((s) => !s)}
+  icon={<Visibility />}
+  checkedIcon={<VisibilityOff />}
+/>
             }
             label="Mostrar contraseñas"
             sx={registerStyles.checkbox}
