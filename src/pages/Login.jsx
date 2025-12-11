@@ -1,8 +1,9 @@
-import { useState, useCallback } from "react";
+import { useState } from "react";
 import { login as apiLogin } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import {
   Container,
   Paper,
@@ -10,65 +11,58 @@ import {
   TextField,
   Button,
   Box,
-  CircularProgress,
+  LinearProgress,
   InputAdornment,
   IconButton,
 } from "@mui/material";
-import { useTheme } from "@mui/material/styles";
 
 import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
-import PersonOutline from "@mui/icons-material/PersonOutline";
-import LockOutlined from "@mui/icons-material/LockOutlined";
-
-import loginStyles from "./Login.styles";
 
 export default function Login() {
-  const theme = useTheme();
   const navigate = useNavigate();
   const { login } = useAuth();
 
-  const [form, setForm] = useState({ username: "", password: "" });
+  const [form, setForm] = useState({
+    username: "",
+    password: "",
+  });
+
   const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+  const [showPass, setShowPass] = useState(false);
 
-  const handleChange = useCallback((e) => {
-    const { name, value } = e.target;
-    setForm((prev) => ({ ...prev, [name]: value }));
-  }, []);
+  const handleChange = (e) => {
+    setForm({ ...form, [e.target.name]: e.target.value });
+  };
 
-  const togglePasswordVisibility = useCallback(() => {
-    setShowPassword((prev) => !prev);
-  }, []);
+  // ---------------------
+  // MANEJO DE ERROR GLOBAL
+  // ---------------------
+  const handleErrors = async (error) => {
+    try {
+      const errorData = await error.json();
+      if (errorData.detail) {
+        toast.error(errorData.detail);
+      } else {
+        toast.error("Ocurrió un error inesperado");
+      }
+    } catch {
+      toast.error("Error en el servidor");
+    }
+  };
 
-  const handleErrors = useCallback((error) => {
-    const resp = error?.response?.data;
-    const status = error?.response?.status;
+  // ---------------------
+  // SUBMIT LOGIN
+  // ---------------------
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
-    let message =
-      resp?.message ||
-      resp?.detail ||
-      (status === 401 ? "Usuario o contraseña incorrectos" : null);
-
-    if (!message) {
-      toast.error("Ocurrió un error al iniciar sesión");
+    // Validación mínima
+    if (!form.username.trim() || !form.password.trim()) {
+      toast.error("Todos los campos son obligatorios");
       return;
     }
 
-    const normalized = message.toLowerCase();
-
-    if (
-      normalized.includes("no active account") ||
-      normalized.includes("credentials")
-    ) {
-      toast.error("Usuario o contraseña incorrectos");
-    } else {
-      toast.error(message);
-    }
-  }, []);
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
     setLoading(true);
 
     try {
@@ -89,97 +83,56 @@ export default function Login() {
   };
 
   return (
-    <Container maxWidth="xs" sx={loginStyles.container(theme)}>
-      <Paper elevation={8} sx={loginStyles.paper(theme)}>
-        <Typography
-          variant="h4"
-          align="center"
-          fontWeight="bold"
-          gutterBottom
-          sx={loginStyles.titulo(theme)}
-        >
-          Bienvenido
+    <Container maxWidth="sm" sx={{ mt: 5 }}>
+      <Paper elevation={3} sx={{ p: 4 }}>
+        <Typography variant="h5" align="center" sx={{ mb: 3 }}>
+          Iniciar Sesión
         </Typography>
 
-        <Typography
-          variant="body1"
-          align="center"
-          color="text.secondary"
-          sx={loginStyles.subtitulo}
-        >
-          Ingresa tus credenciales para continuar
-        </Typography>
+        {loading && <LinearProgress sx={{ mb: 2 }} />}
 
-        <form onSubmit={handleSubmit}>
-          {/* Usuario */}
+        <Box component="form" onSubmit={handleSubmit}>
           <TextField
-            name="username"
-            label="Usuario"
             fullWidth
-            margin="normal"
+            label="Usuario"
+            name="username"
             value={form.username}
             onChange={handleChange}
+            margin="normal"
             required
-            InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <PersonOutline color="action" />
-                </InputAdornment>
-              ),
-            }}
           />
 
-          {/* Contraseña */}
           <TextField
-            name="password"
-            label="Contraseña"
-            type={showPassword ? "text" : "password"}
             fullWidth
-            margin="normal"
+            label="Contraseña"
+            name="password"
+            type={showPass ? "text" : "password"}
             value={form.password}
             onChange={handleChange}
+            margin="normal"
             required
             InputProps={{
-              startAdornment: (
-                <InputAdornment position="start">
-                  <LockOutlined color="action" />
-                </InputAdornment>
-              ),
               endAdornment: (
                 <InputAdornment position="end">
-                  <IconButton onClick={togglePasswordVisibility} edge="end">
-                    {showPassword ? <VisibilityOff /> : <Visibility />}
+                  <IconButton onClick={() => setShowPass(!showPass)}>
+                    {showPass ? <VisibilityOff /> : <Visibility />}
                   </IconButton>
                 </InputAdornment>
               ),
             }}
           />
 
-          {/* Botones */}
-          <Box mt={3} display="flex" flexDirection="column" gap={2}>
-            <Button
-              type="submit"
-              variant="contained"
-              fullWidth
-              disabled={loading}
-              startIcon={
-                loading && <CircularProgress size={20} color="inherit" />
-              }
-              sx={loginStyles.botonLogin(theme)}
-            >
-              {loading ? "Entrando..." : "Iniciar sesión"}
-            </Button>
-
-            <Button
-              variant="outlined"
-              fullWidth
-              onClick={() => navigate("/register")}
-              sx={loginStyles.botonRegister(theme)}
-            >
-              Registrarse
-            </Button>
-          </Box>
-        </form>
+          <Button
+            type="submit"
+            fullWidth
+            variant="contained"
+            color="primary"
+            disabled={loading}
+            sx={{ mt: 3, py: 1.4 }}
+          >
+            Entrar
+          </Button>
+        </Box>
       </Paper>
     </Container>
   );
