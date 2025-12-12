@@ -1,11 +1,11 @@
-// =====================
+// ===============================
 // BASE URL
-// =====================
-const BASE_URL = import.meta?.env?.VITE_API_URL || "http://localhost:8000/api";
+// ===============================
+const BASE_URL = import.meta.env.VITE_API_URL;
 
-// =====================
+// ===============================
 // REFRESH TOKEN
-// =====================
+// ===============================
 export const refreshToken = async (refresh) => {
   const res = await fetch(`${BASE_URL}/token/refresh/`, {
     method: "POST",
@@ -17,138 +17,137 @@ export const refreshToken = async (refresh) => {
   return res.json();
 };
 
-// =====================
-// FETCH CON AUTO REFRESH
-// =====================
-async function authFetch(url, options = {}, token) {
-  let headers = {
-    ...(options.headers || {}),
-    ...(options.body && { "Content-Type": "application/json" }),
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-
-  let res = await fetch(url, { ...options, headers });
-
-  // Si expira el access → intentar refrescar
-  if (res.status === 401 && localStorage.getItem("refresh")) {
-    try {
-      const newTokens = await refreshToken(localStorage.getItem("refresh"));
-      if (newTokens?.access) {
-        localStorage.setItem("access", newTokens.access);
-        token = newTokens.access;
-
-        // reintento con nuevo token
-        headers = {
-          ...(options.headers || {}),
-          ...(options.body && { "Content-Type": "application/json" }),
-          Authorization: `Bearer ${token}`,
-        };
-        res = await fetch(url, { ...options, headers });
-      }
-    } catch (err) {
-      console.error("Refresh token inválido:", err);
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-      throw new Error("⚠️ Tu sesión expiró, vuelve a iniciar sesión.");
-    }
-  }
-
-  const text = await res.text();
-  let data = null;
+// ===============================
+// FETCH CON AUTH Y REFRESH AUTO
+// ===============================
+async function authFetch(url, options = {}, tokens, setTokens) {
   try {
-    data = text ? JSON.parse(text) : null;
-  } catch {
-    data = null;
-  }
+    const res = await fetch(url, {
+      ...options,
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: tokens?.access ? `Bearer ${tokens.access}` : "",
+        ...options.headers,
+      },
+    });
 
-  if (!res.ok) {
-    const msg = data?.detail || data?.error || `Error ${res.status}`;
-    throw new Error(msg);
-  }
+    // Si el token expiró
+    if (res.status === 401 && tokens?.refresh) {
+      const newTokens = await refreshToken(tokens.refresh);
+      setTokens({
+        access: newTokens.access,
+        refresh: tokens.refresh,
+      });
 
-  return data;
+      // Reintentar petición con nuevo access
+      const retry = await fetch(url, {
+        ...options,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${newTokens.access}`,
+          ...options.headers,
+        },
+      });
+
+      return retry;
+    }
+
+    return res;
+  } catch (err) {
+    console.error("Request failed:", err);
+    throw err;
+  }
 }
 
-// =====================
-// ENDPOINTS
-// =====================
-
-// AUTH
-export const login = async (credentials) => {
-  return authFetch(`${BASE_URL}/token/`, {
+// ===============================
+// LOGIN
+// ===============================
+export const login = async (username, password) => {
+  const res = await fetch(`${BASE_URL}/login/`, {
     method: "POST",
-    body: JSON.stringify(credentials),
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ username, password }),
   });
+
+  if (!res.ok) throw new Error("Credenciales incorrectas");
+  return res.json();
 };
 
+// ===============================
+// REGISTRO
+// ===============================
 export const register = async (data) => {
-  return authFetch(`${BASE_URL}/register/`, {
+  const res = await fetch(`${BASE_URL}/register/`, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(data),
   });
+
+  if (!res.ok) throw new Error("Error al registrar");
+  return res.json();
 };
 
-// PRODUCTOS (con filtros opcionales)
-export const getProductos = async (params = {}) => {
-  const query = new URLSearchParams(params).toString();
-  const url = query ? `${BASE_URL}/productos/?${query}` : `${BASE_URL}/productos/`;
-  return authFetch(url, { method: "GET" });
+// ===============================
+// OBTENER PRODUCTOS
+// ===============================
+export const getProductos = async () => {
+  const res = await fetch(`${BASE_URL}/productos/`);
+
+  if (!res.ok) throw new Error("No se pudieron obtener los productos");
+  return res.json();
 };
 
-// CATEGORÍAS
-export const getCategorias = async () => {
-  return authFetch(`${BASE_URL}/categorias/`, { method: "GET" });
+// ===============================
+// CARRITO
+// ===============================
+export const getCarrito = async (tokens, setTokens) => {
+  const res = await authFetch(`${BASE_URL}/carrito/`, {}, tokens, setTokens);
+
+  if (!res.ok) throw new Error("No se pudo obtener el carrito");
+  return res.json();
 };
 
-// =====================
-// CARRITO (CORREGIDO)
-// =====================
-export const getCarrito = async (token) => {
-  return authFetch(`${BASE_URL}/carrito/`, { method: "GET" }, token);
-};
-
-export const agregarAlCarrito = async (producto_id, cantidad = 1, token) => {
-  return authFetch(
+export const agregarAlCarrito = async (producto_id, cantidad, tokens, setTokens) => {
+  const res = await authFetch(
     `${BASE_URL}/carrito/agregar/`,
     {
       method: "POST",
       body: JSON.stringify({ producto_id, cantidad }),
     },
-    token
+    tokens,
+    setTokens
   );
+
+  if (!res.ok) throw new Error("No se pudo agregar al carrito");
+  return res.json();
 };
 
-export const eliminarDelCarrito = async (itemId, token) => {
-  return authFetch(
-    `${BASE_URL}/carrito/eliminar/${itemId}/`,
-    { method: "DELETE" },
-    token
+export const setCantidadItem = async (item_id, cantidad, tokens, setTokens) => {
+  const res = await authFetch(
+    `${BASE_URL}/carrito/cantidad/`,
+    {
+      method: "PUT",
+      body: JSON.stringify({ item_id, cantidad }),
+    },
+    tokens,
+    setTokens
   );
+
+  if (!res.ok) throw new Error("No se pudo actualizar cantidad");
+  return res.json();
 };
 
-export const setCantidadItem = async (itemId, cantidad, token) => {
-  return authFetch(
-    `${BASE_URL}/carrito/actualizar/${itemId}/`,
-    { method: "PUT", body: JSON.stringify({ cantidad }) },
-    token
+export const eliminarDelCarrito = async (item_id, tokens, setTokens) => {
+  const res = await authFetch(
+    `${BASE_URL}/carrito/eliminar/`,
+    {
+      method: "DELETE",
+      body: JSON.stringify({ item_id }),
+    },
+    tokens,
+    setTokens
   );
-};
 
-// =====================
-// PEDIDOS
-// =====================
-export const crearPedido = async (token) => {
-  return authFetch(`${BASE_URL}/pedido/crear/`, { method: "POST" }, token);
-};
-
-export const getPedidos = async (token, page = 1) => {
-  return authFetch(`${BASE_URL}/pedidos/?page=${page}`, { method: "GET" }, token);
-};
-
-// =====================
-// PERFIL DE USUARIO
-// =====================
-export const getUserProfile = async (token) => {
-  const API_ROOT = BASE_URL.replace("/api", "");
-  return authFetch(`${API_ROOT}/user/profile/`, { method: "GET" }, token);
+  if (!res.ok) throw new Error("No se pudo eliminar del carrito");
+  return res.json();
 };
