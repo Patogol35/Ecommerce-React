@@ -72,10 +72,18 @@ async function authFetch(url, options = {}, token) {
 // ENDPOINTS
 // AUTH
 export const login = async (credentials) => {
-  return authFetch(`${BASE_URL}/token/`, {
+  const res = await fetch(`${BASE_URL}/token/`, {
     method: "POST",
+    headers: { "Content-Type": "application/json" },
     body: JSON.stringify(credentials),
   });
+
+  if (!res.ok) {
+    const errorText = await res.text();
+    throw new Error(errorText || "Error al iniciar sesión");
+  }
+
+  return res.json();
 };
 
 export const register = async (data) => {
@@ -149,3 +157,4 @@ export const getPedidos = async (token, page = 1) => {
 export const getUserProfile = async (token) => {
   return authFetch(`${BASE_URL}/user/profile/`, { method: "GET" }, token);
 };
+
