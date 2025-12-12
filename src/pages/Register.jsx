@@ -56,7 +56,9 @@ const validators = {
     return null;
   },
 
-  password: (v) => {
+password: (v) => {
+  console.log("VALIDANDO PASSWORD:", v);
+
   if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
   if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
   if (!/[^A-Za-z0-9]/.test(v))
