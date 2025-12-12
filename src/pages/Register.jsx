@@ -117,8 +117,15 @@ export default function Register() {
     } catch (error) {
       const resp = error?.response?.data;
 
-      if (resp?.email) toast.error("El correo ya está registrado");
-      else if (resp?.username) toast.error("El usuario ya existe");
+      // ------ ERRORES DETALLADOS DEL BACKEND ------
+      if (resp?.email?.[0]) toast.error(resp.email[0]);
+      else if (resp?.username?.[0]) toast.error(resp.username[0]);
+      else if (resp?.password?.[0]) toast.error(resp.password[0]);
+
+      // Si el backend manda un array de errores general
+      else if (Array.isArray(resp)) toast.error(resp[0]);
+
+      // Error desconocido
       else toast.error("Ocurrió un error en el registro");
     } finally {
       setLoading(false);
