@@ -105,6 +105,7 @@ export default function Register() {
     if (!validateForm()) return;
 
     setLoading(true);
+
     try {
       await apiRegister({
         username: form.username.trim(),
@@ -114,19 +115,32 @@ export default function Register() {
 
       toast.success("Usuario registrado correctamente");
       navigate("/login");
+
     } catch (error) {
       const resp = error?.response?.data;
 
-      // ------ ERRORES DETALLADOS DEL BACKEND ------
-      if (resp?.email?.[0]) toast.error(resp.email[0]);
-      else if (resp?.username?.[0]) toast.error(resp.username[0]);
-      else if (resp?.password?.[0]) toast.error(resp.password[0]);
+      // ---- SOLO TRADUCIR MENSAJE DEL USUARIO REPETIDO ----
+      const traducirUsuario = (msg) => {
+        if (msg === "A user with that username already exists.") {
+          return "El usuario ya existe";
+        }
+        return msg;
+      };
 
-      // Si el backend manda un array de errores general
-      else if (Array.isArray(resp)) toast.error(resp[0]);
+      if (resp?.username?.[0])
+        toast.error(traducirUsuario(resp.username[0]));
 
-      // Error desconocido
+      else if (resp?.email?.[0])
+        toast.error(resp.email[0]);
+
+      else if (resp?.password?.[0])
+        toast.error(resp.password[0]);
+
+      else if (Array.isArray(resp))
+        toast.error(resp[0]);
+
       else toast.error("Ocurrió un error en el registro");
+
     } finally {
       setLoading(false);
     }
