@@ -1,229 +1,245 @@
-import { useState, useMemo, useCallback } from "react";
-import { register as apiRegister } from "../api/api";
-import { useNavigate } from "react-router-dom";
-import { toast } from "react-toastify";
+// BASE URL
 
-import {
-Container,
-Paper,
-Typography,
-TextField,
-Button,
-Box,
-LinearProgress,
-InputAdornment,
-FormControlLabel,
-Checkbox,
-} from "@mui/material";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
-import { useTheme } from "@mui/material/styles";
-import {
-Visibility,
-VisibilityOff,
-PersonOutline,
-EmailOutlined,
-LockOutlined,
-} from "@mui/icons-material";
-import registerStyles from "./Register.styles";
+// REFRESH TOKEN
 
-// ---------- HELPERS ----------
-const getPasswordStrength = (pwd = "") => {
-let score = 0;
-if (pwd.length >= 6) score++;
-if (pwd.length >= 10) score++;
-if (/[A-Z]/.test(pwd)) score++;
-if (/[0-9]/.test(pwd)) score++;
-if (/[^A-Za-z0-9]/.test(pwd)) score++;
+export const refreshToken = async (refresh) => {
 
-if (score <= 2) return { label: "Débil", color: "red", value: 40 };
-if (score === 3) return { label: "Media", color: "orange", value: 60 };
-if (score === 4) return { label: "Fuerte", color: "green", value: 80 };
-return { label: "Muy fuerte", color: "darkgreen", value: 100 };
-};
+const res = await fetch(${BASE_URL}/token/refresh/, {
 
-const validators = {
-username: (v) => {
-if (!v.trim()) return "El usuario es obligatorio";
-if (/\s/.test(v)) return "El usuario no puede contener espacios";
-return null;
-},
-email: (v) => {
-if (!v.trim()) return "El correo es obligatorio";
-if (!/\S+@\S+.\S+/.test(v)) return "El correo no es válido";
-return null;
-},
-password: (v) => {
-if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
-if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
-if (!/[!@#$%^&*(),.?":{}|<>_-\/[]=+~`]/.test(v))
-return "La contraseña debe incluir al menos un símbolo";
-return null;
-},
-confirm: (v, data) => {
-if (v !== data.password) return "Las contraseñas no coinciden";
-return null;
-},
-};
+method: "POST",
 
-export default function Register() {
-const theme = useTheme();
-const navigate = useNavigate();
+headers: { "Content-Type": "application/json" },
 
-const [form, setForm] = useState({
-username: "",
-email: "",
-password: "",
-confirm: "",
+body: JSON.stringify({ refresh }),
+
 });
 
-const [loading, setLoading] = useState(false);
-const [showPasswords, setShowPasswords] = useState(false);
+if (!res.ok) throw new Error("No se pudo refrescar el token");
 
-const handleChange = useCallback((e) => {
-const { name, value } = e.target;
-setForm((prev) => ({ ...prev, [name]: value }));
-}, []);
-
-const validateForm = () => {
-for (const key in validators) {
-const error = validators[key](form[key], form);
-if (error) {
-toast.error(error);
-return false;
-}
-}
-return true;
-};
-
-const strength = useMemo(
-() => getPasswordStrength(form.password),
-[form.password]
-);
-
-const handleSubmit = async (e) => {
-e.preventDefault();
-if (!validateForm()) return;
-
-setLoading(true);  
-try {  
-  await apiRegister({  
-    username: form.username.trim(),  
-    email: form.email.toLowerCase().trim(),  
-    password: form.password,  
-  });  
-
-  toast.success("Usuario registrado correctamente");  
-  navigate("/login");  
-} catch (error) {  
-  const resp = error?.response?.data;  
-
-  if (resp?.email) toast.error("El correo ya está registrado");  
-  else if (resp?.username) toast.error("El usuario ya existe");  
-  else toast.error("Ocurrió un error en el registro");  
-} finally {  
-  setLoading(false);  
-}
+return res.json();
 
 };
 
-const renderInput = (label, name, icon, type = "text") => (
-<TextField
-label={label}
-name={name}
-type={type}
-fullWidth
-margin="normal"
-value={form[name]}
-onChange={handleChange}
-required
-InputProps={{
-startAdornment: (
-<InputAdornment position="start">{icon}</InputAdornment>
-),
-}}
-autoComplete="new-password"
-/>
-);
+// FETCH CON AUTO REFRESH
 
-return (
-<Container maxWidth="xs" sx={registerStyles.container(theme)}>
-<Paper elevation={8} sx={registerStyles.paper(theme)}>
-<Typography  
-variant="h4"  
-align="center"  
-fontWeight="bold"  
-gutterBottom  
-sx={registerStyles.titulo(theme)}  
->
-Crear cuenta
-</Typography>
+async function authFetch(url, options = {}, token) {
 
-<Typography align="center" color="text.secondary" sx={registerStyles.subtitulo}>  
-      Completa tus datos para registrarte  
-    </Typography>  
+let headers = {
 
-    <form onSubmit={handleSubmit} noValidate>  
-      {renderInput("Usuario", "username", <PersonOutline color="action" />)}  
-      {renderInput("Correo", "email", <EmailOutlined color="action" />, "email")}  
+...(options.headers || {}),
 
-      {renderInput(  
-        "Contraseña",  
-        "password",  
-        <LockOutlined color="action" />,  
-        showPasswords ? "text" : "password"  
-      )}  
+...(options.body && { "Content-Type": "application/json" }),
 
-      {form.password && (  
-        <Box sx={registerStyles.strengthBox}>  
-          <LinearProgress  
-            variant="determinate"  
-            value={strength.value}  
-            sx={registerStyles.strengthBar(theme, strength.color)}  
-          />  
-          <Typography  
-            variant="caption"  
-            sx={registerStyles.strengthLabel(strength.color)}  
-          >  
-            {strength.label}  
-          </Typography>  
-        </Box>  
-      )}  
+...(token ? { Authorization: `Bearer ${token}` } : {}),
 
-      {renderInput(  
-        "Confirmar contraseña",  
-        "confirm",  
-        <LockOutlined color="action" />,  
-        showPasswords ? "text" : "password"  
-      )}  
+};
 
-      <FormControlLabel  
-        control={  
-          <Checkbox
+let res = await fetch(url, { ...options, headers });
 
-checked={showPasswords}
-onChange={() => setShowPasswords((s) => !s)}
-icon={<Visibility />}
-checkedIcon={<VisibilityOff />}
-/>
+// Si expira el access â†’ reintenta con refresh
+
+if (res.status === 401 && localStorage.getItem("refresh")) {
+
+try {
+
+  const newTokens = await refreshToken(localStorage.getItem("refresh"));
+
+  if (newTokens?.access) {
+
+    localStorage.setItem("access", newTokens.access);
+
+    token = newTokens.access;
+
+
+
+    headers = {
+
+      ...(options.headers || {}),
+
+      ...(options.body && { "Content-Type": "application/json" }),
+
+      Authorization: `Bearer ${token}`,
+
+    };
+
+
+
+    res = await fetch(url, { ...options, headers });
+
+  }
+
+} catch (err) {
+
+  console.error("Refresh token invÃ¡lido:", err);
+
+  localStorage.removeItem("access");
+
+  localStorage.removeItem("refresh");
+
+  throw new Error("âš ï¸ Tu sesiÃ³n expirÃ³, vuelve a iniciar sesiÃ³n.");
+
 }
-label="Mostrar contraseñas"
-sx={registerStyles.checkbox}
-/>
 
-<Box mt={3}>  
-        <Button  
-          type="submit"  
-          variant="contained"  
-          fullWidth  
-          disabled={loading}  
-          sx={registerStyles.boton(theme)}  
-        >  
-          {loading ? "Creando cuenta..." : "Registrarse"}  
-        </Button>  
-      </Box>  
-    </form>  
-  </Paper>  
-</Container>
+}
+
+const text = await res.text();
+
+let data = null;
+
+try {
+
+data = text ? JSON.parse(text) : null;
+
+} catch {
+
+data = null;
+
+}
+
+if (!res.ok) {
+
+const error = new Error("Request failed");
+
+error.response = {
+
+status: res.status,
+
+data: data, // ← aquí mantienes todo el JSON original del backend
+
+};
+
+throw error;
+
+}
+
+return data;
+
+}
+
+// ENDPOINTS
+
+// AUTH
+
+export const login = async (credentials) => {
+
+return authFetch(${BASE_URL}/token/, {
+
+method: "POST",
+
+body: JSON.stringify(credentials),
+
+});
+
+};
+
+export const register = async (data) => {
+
+return authFetch(${BASE_URL}/register/, {
+
+method: "POST",
+
+body: JSON.stringify(data),
+
+});
+
+};
+
+// PRODUCTOS
+
+export const getProductos = async (params = {}) => {
+
+const query = new URLSearchParams(params).toString();
+
+const url = query ? ${BASE_URL}/productos/?${query} : ${BASE_URL}/productos/;
+
+return authFetch(url, { method: "GET" });
+
+};
+
+// CATEGORÃAS
+
+export const getCategorias = async () => {
+
+return authFetch(${BASE_URL}/categorias/, { method: "GET" });
+
+};
+
+// CARRITO
+
+export const getCarrito = async (token) => {
+
+return authFetch(${BASE_URL}/carrito/, { method: "GET" }, token);
+
+};
+
+export const agregarAlCarrito = async (producto_id, cantidad = 1, token) => {
+
+return authFetch(
+
+`${BASE_URL}/carrito/agregar/`,
+
+{
+
+  method: "POST",
+
+  body: JSON.stringify({ producto_id, cantidad }),
+
+},
+
+token
 
 );
-                             }
+
+};
+
+export const eliminarDelCarrito = async (itemId, token) => {
+
+return authFetch(
+
+`${BASE_URL}/carrito/eliminar/${itemId}/`,
+
+{ method: "DELETE" },
+
+token
+
+);
+
+};
+
+export const setCantidadItem = async (itemId, cantidad, token) => {
+
+return authFetch(
+
+`${BASE_URL}/carrito/actualizar/${itemId}/`,
+
+{ method: "PUT", body: JSON.stringify({ cantidad }) },
+
+token
+
+);
+
+};
+
+// PEDIDOS
+
+export const crearPedido = async (token) => {
+
+return authFetch(${BASE_URL}/pedido/crear/, { method: "POST" }, token);
+
+};
+
+export const getPedidos = async (token, page = 1) => {
+
+return authFetch(${BASE_URL}/pedidos/?page=${page}, { method: "GET" }, token);
+
+};
+
+// PERFIL DE USUARIO (CORREGIDO)
+
+export const getUserProfile = async (token) => {
+
+return authFetch(${BASE_URL}/user/profile/, { method: "GET" }, token);
+
+};
