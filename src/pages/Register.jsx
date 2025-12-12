@@ -119,10 +119,10 @@ export default function Register() {
     } catch (error) {
       const resp = error?.response?.data;
 
-      // ---- SOLO TRADUCIR MENSAJE DEL USUARIO REPETIDO ----
+      // ---- TRADUCIR MENSAJE DEL USUARIO REPETIDO ----
       const traducirUsuario = (msg) => {
         if (msg === "A user with that username already exists.") {
-          return "El usuario ya existe";
+          return "El nombre de usuario ya se encuentra registrado";
         }
         return msg;
       };
