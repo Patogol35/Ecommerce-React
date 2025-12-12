@@ -1,234 +1,227 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback } from "react";
 import { register as apiRegister } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 
 import {
-  Container,
-  Paper,
-  Typography,
-  TextField,
-  Button,
-  Box,
-  LinearProgress,
-  InputAdornment,
-  FormControlLabel,
-  Checkbox,
+Container,
+Paper,
+Typography,
+TextField,
+Button,
+Box,
+LinearProgress,
+InputAdornment,
+FormControlLabel,
+Checkbox,
 } from "@mui/material";
 
 import { useTheme } from "@mui/material/styles";
-import { Visibility, VisibilityOff } from "@mui/icons-material";
+import {
+Visibility,
+VisibilityOff,
+PersonOutline,
+EmailOutlined,
+LockOutlined,
+} from "@mui/icons-material";
+import registerStyles from "./Register.styles";
+
+// ---------- HELPERS ----------
+const getPasswordStrength = (pwd = "") => {
+let score = 0;
+if (pwd.length >= 6) score++;
+if (pwd.length >= 10) score++;
+if (/[A-Z]/.test(pwd)) score++;
+if (/[0-9]/.test(pwd)) score++;
+if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+if (score <= 2) return { label: "Débil", color: "red", value: 40 };
+if (score === 3) return { label: "Media", color: "orange", value: 60 };
+if (score === 4) return { label: "Fuerte", color: "green", value: 80 };
+return { label: "Muy fuerte", color: "darkgreen", value: 100 };
+};
+
+const validators = {
+username: (v) => {
+if (!v.trim()) return "El usuario es obligatorio";
+if (/\s/.test(v)) return "El usuario no puede contener espacios";
+return null;
+},
+email: (v) => {
+if (!v.trim()) return "El correo es obligatorio";
+if (!/\S+@\S+.\S+/.test(v)) return "El correo no es válido";
+return null;
+},
+password: (v) => {
+if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
+if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
+if (!/[!@#$%^&*(),.?":{}|<>_-/[]=+~`]/.test(v))
+return "La contraseña debe incluir al menos un símbolo";
+return null;
+},
+confirm: (v, data) => {
+if (v !== data.password) return "Las contraseñas no coinciden";
+return null;
+},
+};
 
 export default function Register() {
-  const theme = useTheme();
-  const navigate = useNavigate();
+const theme = useTheme();
+const navigate = useNavigate();
 
-  const [loading, setLoading] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+const [form, setForm] = useState({
+username: "",
+email: "",
+password: "",
+confirm: "",
+});
 
-  const [form, setForm] = useState({
-    username: "",
-    email: "",
-    password: "",
-    acceptTerms: false,
-  });
+const [loading, setLoading] = useState(false);
+const [showPasswords, setShowPasswords] = useState(false);
 
-  const [errors, setErrors] = useState({});
+const handleChange = useCallback((e) => {
+const { name, value } = e.target;
+setForm((prev) => ({ ...prev, [name]: value }));
+}, []);
 
-  // --------------------------
-  // VALIDACIONES
-  // --------------------------
-  const validators = {
-    username: (v) => {
-      if (!v.trim()) return "El nombre de usuario es obligatorio";
-      if (v.length < 3)
-        return "El nombre de usuario debe tener al menos 3 caracteres";
-      return null;
-    },
+const validateForm = () => {
+for (const key in validators) {
+const error = validators[key](form[key], form);
+if (error) {
+toast.error(error);
+return false;
+}
+}
+return true;
+};
 
-    email: (v) => {
-      if (!v.trim()) return "El correo es obligatorio";
-      const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!regex.test(v)) return "Ingresa un correo válido";
-      return null;
-    },
+const strength = useMemo(
+() => getPasswordStrength(form.password),
+[form.password]
+);
 
-    password: (v) => {
-      const pwd = v.trim(); // *** SOLUCIÓN DEL PROBLEMA ***
+const handleSubmit = async (e) => {
+e.preventDefault();
+if (!validateForm()) return;
 
-      if (pwd.length < 6)
-        return "La contraseña debe tener al menos 6 caracteres";
+setLoading(true);
+try {
+await apiRegister({
+username: form.username.trim(),
+email: form.email.toLowerCase().trim(),
+password: form.password,
+});
 
-      if (!/[0-9]/.test(pwd))
-        return "La contraseña debe incluir al menos un número";
+toast.success("Usuario registrado correctamente");
+navigate("/login");
+} catch (error) {
+const resp = error?.response?.data;
 
-      if (!/[^A-Za-z0-9]/.test(pwd))
-        return "La contraseña debe incluir al menos un símbolo";
+if (resp?.email) toast.error("El correo ya está registrado");
+else if (resp?.username) toast.error("El usuario ya existe");
+else toast.error("Ocurrió un error en el registro");
+} finally {
+setLoading(false);
+}
 
-      return null;
-    },
+};
 
-    acceptTerms: (v) =>
-      v ? null : "Debes aceptar los términos y condiciones",
-  };
+const renderInput = (label, name, icon, type = "text") => (
+<TextField
+label={label}
+name={name}
+type={type}
+fullWidth
+margin="normal"
+value={form[name]}
+onChange={handleChange}
+required
+InputProps={{
+startAdornment: (
+<InputAdornment position="start">{icon}</InputAdornment>
+),
+}}
+autoComplete="new-password"
+/>
+);
 
-  // --------------------------
-  // MANEJAR CAMBIOS DEL FORM
-  // --------------------------
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+return (
+<Container maxWidth="xs" sx={registerStyles.container(theme)}>
+<Paper elevation={8} sx={registerStyles.paper(theme)}>
+<Typography
+variant="h4"
+align="center"
+fontWeight="bold"
+gutterBottom
+sx={registerStyles.titulo(theme)}
 
-    setForm((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+> 
 
-    // Validar campo inmediato
-    setErrors((prev) => ({
-      ...prev,
-      [name]: validators[name](type === "checkbox" ? checked : value),
-    }));
-  };
+Crear cuenta
+</Typography>
 
-  // --------------------------
-  // ENVIAR FORMULARIO
-  // --------------------------
-  const handleSubmit = async () => {
-    const newErrors = {};
+<Typography align="center" color="text.secondary" sx={registerStyles.subtitulo}>    
+      Completa tus datos para registrarte    
+    </Typography>    <form onSubmit={handleSubmit} noValidate>    
+  {renderInput("Usuario", "username", <PersonOutline color="action" />)}    
+  {renderInput("Correo", "email", <EmailOutlined color="action" />, "email")}    
 
-    // Validar todo antes de enviar
-    Object.keys(form).forEach((key) => {
-      const err = validators[key](form[key]);
-      if (err) newErrors[key] = err;
-    });
+  {renderInput(    
+    "Contraseña",    
+    "password",    
+    <LockOutlined color="action" />,    
+    showPasswords ? "text" : "password"    
+  )}    
 
-    setErrors(newErrors);
+  {form.password && (    
+    <Box sx={registerStyles.strengthBox}>    
+      <LinearProgress    
+        variant="determinate"    
+        value={strength.value}    
+        sx={registerStyles.strengthBar(theme, strength.color)}    
+      />    
+      <Typography    
+        variant="caption"    
+        sx={registerStyles.strengthLabel(strength.color)}    
+      >    
+        {strength.label}    
+      </Typography>    
+    </Box>    
+  )}    
 
-    if (Object.keys(newErrors).length > 0) return;
+  {renderInput(    
+    "Confirmar contraseña",    
+    "confirm",    
+    <LockOutlined color="action" />,    
+    showPasswords ? "text" : "password"    
+  )}    
 
-    try {
-      setLoading(true);
+  <FormControlLabel    
+    control={    
+      <Checkbox
 
-      const res = await apiRegister({
-        username: form.username,
-        email: form.email,
-        password: form.password.trim(),
-      });
+checked={showPasswords}
+onChange={() => setShowPasswords((s) => !s)}
+icon={<Visibility />}
+checkedIcon={<VisibilityOff />}
+/>
+}
+label="Mostrar contraseñas"
+sx={registerStyles.checkbox}
+/>
 
-      toast.success("Registro exitoso 🎉");
-      navigate("/login");
-    } catch (err) {
-      // MENSAJES REALES DEL BACKEND
-      if (err.response?.data) {
-        const data = err.response.data;
-
-        if (data.username) toast.error(data.username[0]);
-        else if (data.email) toast.error(data.email[0]);
-        else if (data.password) toast.error(data.password[0]);
-        else toast.error("Ocurrió un error en el registro");
-      } else {
-        toast.error("Error de conexión");
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <Container maxWidth="sm">
-      <Paper
-        elevation={3}
-        sx={{ padding: 4, marginTop: 4, borderRadius: 3 }}
-      >
-        <Typography variant="h5" sx={{ mb: 2 }}>
-          Crear cuenta
-        </Typography>
-
-        {/* USERNAME */}
-        <TextField
-          label="Nombre de usuario"
-          name="username"
-          fullWidth
-          value={form.username}
-          onChange={handleChange}
-          error={Boolean(errors.username)}
-          helperText={errors.username}
-          sx={{ mb: 2 }}
-        />
-
-        {/* EMAIL */}
-        <TextField
-          label="Correo electrónico"
-          name="email"
-          fullWidth
-          value={form.email}
-          onChange={handleChange}
-          error={Boolean(errors.email)}
-          helperText={errors.email}
-          sx={{ mb: 2 }}
-        />
-
-        {/* PASSWORD */}
-        <TextField
-          label="Contraseña"
-          name="password"
-          type={showPassword ? "text" : "password"}
-          fullWidth
-          value={form.password}
-          onChange={handleChange}
-          error={Boolean(errors.password)}
-          helperText={errors.password}
-          sx={{ mb: 2 }}
-          InputProps={{
-            endAdornment: (
-              <InputAdornment position="end">
-                {showPassword ? (
-                  <VisibilityOff
-                    sx={{ cursor: "pointer" }}
-                    onClick={() => setShowPassword(false)}
-                  />
-                ) : (
-                  <Visibility
-                    sx={{ cursor: "pointer" }}
-                    onClick={() => setShowPassword(true)}
-                  />
-                )}
-              </InputAdornment>
-            ),
-          }}
-        />
-
-        {/* TERMS */}
-        <FormControlLabel
-          control={
-            <Checkbox
-              name="acceptTerms"
-              checked={form.acceptTerms}
-              onChange={handleChange}
-            />
-          }
-          label="Acepto los términos y condiciones"
-        />
-
-        {errors.acceptTerms && (
-          <Typography color="error" sx={{ mb: 1 }}>
-            {errors.acceptTerms}
-          </Typography>
-        )}
-
-        {/* LOADING */}
-        {loading && <LinearProgress sx={{ mb: 2 }} />}
-
-        {/* BUTTON */}
-        <Button
-          variant="contained"
-          fullWidth
-          onClick={handleSubmit}
-          disabled={loading}
-        >
-          Registrarme
-        </Button>
-      </Paper>
-    </Container>
-  );
-          }
+<Box mt={3}>    
+        <Button    
+          type="submit"    
+          variant="contained"    
+          fullWidth    
+          disabled={loading}    
+          sx={registerStyles.boton(theme)}    
+        >    
+          {loading ? "Creando cuenta..." : "Registrarse"}    
+        </Button>    
+      </Box>    
+    </form>    
+  </Paper>    
+</Container>  );
+}
