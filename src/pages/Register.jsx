@@ -52,17 +52,12 @@ if (!v.trim()) return "El correo es obligatorio";
 if (!/\S+@\S+.\S+/.test(v)) return "El correo no es válido";
 return null;
 },
-password: (v) => {
-if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
-if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
-if (!/[!@#$%^&*(),.?":{}|<>_\-\[\]\\/+=~`]/.test(v))
-  return "La contraseña debe incluir al menos un símbolo";
-return null;
-},
-confirm: (v, data) => {
-if (v !== data.password) return "Las contraseñas no coinciden";
-return null;
-},
+ password: (v) => {
+  if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
+  if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
+  if (!/[^A-Za-z0-9]/.test(v)) return "La contraseña debe incluir al menos un símbolo";
+  return null;
+}, 
 };
 
 export default function Register() {
