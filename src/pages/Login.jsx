@@ -60,16 +60,16 @@ const handleErrors = useCallback((error) => {
 const data = error?.response?.data;
 const status = error?.response?.status;
 
-const message =  
-  data?.message ||  
-  data?.detail ||  
-  (status === 401 && "Usuario o contraseña incorrectos");  
+const message =
+data?.message ||
+data?.detail ||
+(status === 401 && "Usuario o contraseña incorrectos");
 
-if (!message) return toast.error("Ocurrió un error al iniciar sesión");  
+if (!message) return toast.error("Ocurrió un error al iniciar sesión");
 
-const normalized = message.toLowerCase();  
-if (normalized.includes("credentials"))  
-  return toast.error("Usuario o contraseña incorrectos");  
+const normalized = message.toLowerCase();
+if (normalized.includes("credentials"))
+return toast.error("Usuario o contraseña incorrectos");
 
 toast.error(message);
 
@@ -79,20 +79,20 @@ const handleSubmit = async (e) => {
 e.preventDefault();
 if (!validateForm()) return;
 
-setLoading(true);  
-try {  
-  const data = await apiLogin(form);  
+setLoading(true);
+try {
+const data = await apiLogin(form);
 
-  if (!data?.access || !data?.refresh)  
-    return toast.error("Credenciales inválidas");  
+if (!data?.access || !data?.refresh)
+return toast.error("Credenciales inválidas");
 
-  login(data.access, data.refresh);  
-  toast.success(`Bienvenido/a, ${form.username} 👋`);  
-  navigate("/");  
-} catch (error) {  
-  handleErrors(error);  
-} finally {  
-  setLoading(false);  
+login(data.access, data.refresh);
+toast.success(Bienvenido/a, ${form.username} 👋);
+navigate("/");
+} catch (error) {
+handleErrors(error);
+} finally {
+setLoading(false);
 }
 
 };
@@ -100,95 +100,96 @@ try {
 return (
 <Container maxWidth="xs" sx={loginStyles.container(theme)}>
 <Paper elevation={8} sx={loginStyles.paper(theme)}>
-<Typography  
-variant="h4"  
-align="center"  
-fontWeight="bold"  
-gutterBottom  
-sx={loginStyles.titulo(theme)}  
->
+<Typography
+variant="h4"
+align="center"
+fontWeight="bold"
+gutterBottom
+sx={loginStyles.titulo(theme)}
+
+> 
+
 Bienvenido
 </Typography>
 
-<Typography  
-      variant="body1"  
-      align="center"  
-      color="text.secondary"  
-      sx={loginStyles.subtitulo}  
-    >  
-      Ingresa tus credenciales para continuar  
-    </Typography>  
+<Typography    
+variant="body1"    
+align="center"    
+color="text.secondary"    
+sx={loginStyles.subtitulo}    
+>
+Ingresa tus credenciales para continuar
+</Typography>
 
-    <form onSubmit={handleSubmit}>  
-      {/* Usuario */}  
-      <TextField  
-        name="username"  
-        label="Usuario"  
-        fullWidth  
-        margin="normal"  
-        value={form.username}  
-        onChange={handleChange}  
-        InputProps={{  
-          startAdornment: (  
-            <InputAdornment position="start">  
-              <PersonOutline color="action" />  
-            </InputAdornment>  
-          ),  
-        }}  
-      />  
+<form onSubmit={handleSubmit}>    
+  {/* Usuario */}    
+  <TextField    
+    name="username"    
+    label="Usuario"    
+    fullWidth    
+    margin="normal"    
+    value={form.username}    
+    onChange={handleChange}    
+    InputProps={{    
+      startAdornment: (    
+        <InputAdornment position="start">    
+          <PersonOutline color="action" />    
+        </InputAdornment>    
+      ),    
+    }}    
+  />    
 
-      {/* Contraseña */}  
-      <TextField  
-        name="password"  
-        label="Contraseña"  
-        type={showPassword ? "text" : "password"}  
-        fullWidth  
-        margin="normal"  
-        value={form.password}  
-        onChange={handleChange}  
-        InputProps={{  
-          startAdornment: (  
-            <InputAdornment position="start">  
-              <LockOutlined color="action" />  
-            </InputAdornment>  
-          ),  
-          endAdornment: (  
-            <InputAdornment position="end">  
-              <IconButton onClick={togglePasswordVisibility} edge="end">  
-                {showPassword ? <VisibilityOff /> : <Visibility />}  
-              </IconButton>  
-            </InputAdornment>  
-          ),  
-        }}  
-      />  
+  {/* Contraseña */}    
+  <TextField    
+    name="password"    
+    label="Contraseña"    
+    type={showPassword ? "text" : "password"}    
+    fullWidth    
+    margin="normal"    
+    value={form.password}    
+    onChange={handleChange}    
+    InputProps={{    
+      startAdornment: (    
+        <InputAdornment position="start">    
+          <LockOutlined color="action" />    
+        </InputAdornment>    
+      ),    
+      endAdornment: (    
+        <InputAdornment position="end">    
+          <IconButton onClick={togglePasswordVisibility} edge="end">    
+            {showPassword ? <VisibilityOff /> : <Visibility />}    
+          </IconButton>    
+        </InputAdornment>    
+      ),    
+    }}    
+  />    
 
-      {/* Botones */}  
-      <Box mt={3} display="flex" flexDirection="column" gap={2}>  
-        <Button  
-          type="submit"  
-          variant="contained"  
-          fullWidth  
-          disabled={loading}  
-          startIcon={  
-            loading && <CircularProgress size={20} color="inherit" />  
-          }  
-          sx={loginStyles.botonLogin(theme)}  
-        >  
-          {loading ? "Entrando..." : "Iniciar sesión"}  
-        </Button>  
+  {/* Botones */}    
+  <Box mt={3} display="flex" flexDirection="column" gap={2}>    
+    <Button    
+      type="submit"    
+      variant="contained"    
+      fullWidth    
+      disabled={loading}    
+      startIcon={    
+        loading && <CircularProgress size={20} color="inherit" />    
+      }    
+      sx={loginStyles.botonLogin(theme)}    
+    >    
+      {loading ? "Entrando..." : "Iniciar sesión"}    
+    </Button>    
 
-        <Button  
-          variant="outlined"  
-          fullWidth  
-          onClick={() => navigate("/register")}  
-          sx={loginStyles.botonRegister(theme)}  
-        >  
-          Registrarse  
-        </Button>  
-      </Box>  
-    </form>  
-  </Paper>  
-</Container>
+    <Button    
+      variant="outlined"    
+      fullWidth    
+      onClick={() => navigate("/register")}    
+      sx={loginStyles.botonRegister(theme)}    
+    >    
+      Registrarse    
+    </Button>    
+  </Box>    
+</form>
 
-);
+  </Paper>    
+</Container>  );
 }
