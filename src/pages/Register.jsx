@@ -24,6 +24,7 @@ import {
   EmailOutlined,
   LockOutlined,
 } from "@mui/icons-material";
+
 import registerStyles from "./Register.styles";
 
 // ---------- HELPERS ----------
@@ -54,8 +55,9 @@ const validators = {
   },
   password: (v) => {
     if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
-    if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
-    if (!/[^A-Za-z0-9]/.test(v))
+    if (!/[0-9]/.test(v))
+      return "La contraseña debe incluir al menos un número";
+    if (!/[!@#$%^&*(),.?\":{}|<>_\\-\\/\\[\\]=+~`]/.test(v))
       return "La contraseña debe incluir al menos un símbolo";
     return null;
   },
@@ -105,6 +107,7 @@ export default function Register() {
     if (!validateForm()) return;
 
     setLoading(true);
+
     try {
       await apiRegister({
         username: form.username.trim(),
@@ -114,18 +117,21 @@ export default function Register() {
 
       toast.success("Usuario registrado correctamente");
       navigate("/login");
+
     } catch (error) {
       const resp = error?.response?.data;
 
-      if (resp?.email) toast.error("El correo ya está registrado");
-      else if (resp?.username) toast.error("El usuario ya existe");
+      if (resp?.email) toast.error(resp.email[0] || "El correo ya está registrado");
+      else if (resp?.username) toast.error(resp.username[0] || "El usuario ya existe");
+      else if (resp?.password) toast.error(resp.password[0]);   // ✅ MENSAJE DEL BACKEND
       else toast.error("Ocurrió un error en el registro");
+
     } finally {
       setLoading(false);
     }
   };
 
-  const renderInput = (label, name, icon, type = "text", auto = "") => (
+  const renderInput = (label, name, icon, type = "text") => (
     <TextField
       label={label}
       name={name}
@@ -140,7 +146,7 @@ export default function Register() {
           <InputAdornment position="start">{icon}</InputAdornment>
         ),
       }}
-      autoComplete={auto}
+      autoComplete="new-password"
     />
   );
 
@@ -157,37 +163,19 @@ export default function Register() {
           Crear cuenta
         </Typography>
 
-        <Typography
-          align="center"
-          color="text.secondary"
-          sx={registerStyles.subtitulo}
-        >
+        <Typography align="center" color="text.secondary" sx={registerStyles.subtitulo}>
           Completa tus datos para registrarte
         </Typography>
 
         <form onSubmit={handleSubmit} noValidate>
-          {renderInput(
-            "Usuario",
-            "username",
-            <PersonOutline color="action" />,
-            "text",
-            "username"
-          )}
-
-          {renderInput(
-            "Correo",
-            "email",
-            <EmailOutlined color="action" />,
-            "email",
-            "email"
-          )}
+          {renderInput("Usuario", "username", <PersonOutline color="action" />)}
+          {renderInput("Correo", "email", <EmailOutlined color="action" />, "email")}
 
           {renderInput(
             "Contraseña",
             "password",
             <LockOutlined color="action" />,
-            showPasswords ? "text" : "password",
-            "new-password"
+            showPasswords ? "text" : "password"
           )}
 
           {form.password && (
@@ -210,8 +198,7 @@ export default function Register() {
             "Confirmar contraseña",
             "confirm",
             <LockOutlined color="action" />,
-            showPasswords ? "text" : "password",
-            "new-password"
+            showPasswords ? "text" : "password"
           )}
 
           <FormControlLabel
@@ -219,8 +206,8 @@ export default function Register() {
               <Checkbox
                 checked={showPasswords}
                 onChange={() => setShowPasswords((s) => !s)}
-                icon={<VisibilityOff />}
-                checkedIcon={<Visibility />}
+                icon={<Visibility />}
+                checkedIcon={<VisibilityOff />}
               />
             }
             label="Mostrar contraseñas"
