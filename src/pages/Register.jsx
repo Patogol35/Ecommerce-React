@@ -24,6 +24,7 @@ import {
   EmailOutlined,
   LockOutlined,
 } from "@mui/icons-material";
+
 import registerStyles from "./Register.styles";
 
 // ---------- HELPERS ----------
@@ -54,8 +55,9 @@ const validators = {
   },
   password: (v) => {
     if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
-    if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
-    if (!/[!@#$%^&*(),.?":{}|<>_\-\\/[\]=+~`]/.test(v))
+    if (!/[0-9]/.test(v))
+      return "La contraseña debe incluir al menos un número";
+    if (!/[!@#$%^&*(),.?\":{}|<>_\\-\\/\\[\\]=+~`]/.test(v))
       return "La contraseña debe incluir al menos un símbolo";
     return null;
   },
@@ -105,6 +107,7 @@ export default function Register() {
     if (!validateForm()) return;
 
     setLoading(true);
+
     try {
       await apiRegister({
         username: form.username.trim(),
@@ -114,12 +117,15 @@ export default function Register() {
 
       toast.success("Usuario registrado correctamente");
       navigate("/login");
+
     } catch (error) {
       const resp = error?.response?.data;
 
-      if (resp?.email) toast.error("El correo ya está registrado");
-      else if (resp?.username) toast.error("El usuario ya existe");
+      if (resp?.email) toast.error(resp.email[0] || "El correo ya está registrado");
+      else if (resp?.username) toast.error(resp.username[0] || "El usuario ya existe");
+      else if (resp?.password) toast.error(resp.password[0]);   // ✅ MENSAJE DEL BACKEND
       else toast.error("Ocurrió un error en el registro");
+
     } finally {
       setLoading(false);
     }
@@ -198,11 +204,11 @@ export default function Register() {
           <FormControlLabel
             control={
               <Checkbox
-  checked={showPasswords}
-  onChange={() => setShowPasswords((s) => !s)}
-  icon={<Visibility />}
-  checkedIcon={<VisibilityOff />}
-/>
+                checked={showPasswords}
+                onChange={() => setShowPasswords((s) => !s)}
+                icon={<Visibility />}
+                checkedIcon={<VisibilityOff />}
+              />
             }
             label="Mostrar contraseñas"
             sx={registerStyles.checkbox}
