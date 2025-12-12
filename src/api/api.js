@@ -29,6 +29,7 @@ async function authFetch(url, options = {}, token) {
 
   let res = await fetch(url, { ...options, headers });
 
+  // Auto-refresh del token
   if (res.status === 401 && localStorage.getItem("refresh")) {
     try {
       const newTokens = await refreshToken(localStorage.getItem("refresh"));
@@ -51,17 +52,23 @@ async function authFetch(url, options = {}, token) {
     }
   }
 
+  // Leer la respuesta como texto primero
   const text = await res.text();
   let data = null;
+
   try {
     data = text ? JSON.parse(text) : null;
   } catch {
     data = null;
   }
 
+  // -----------------------
+  //  FIX IMPORTANTE AQUÍ 👇
+  // -----------------------
   if (!res.ok) {
-    const msg = data?.detail || data?.error || `Error ${res.status}`;
-    throw new Error(msg);
+    const error = new Error("Error en la petición");
+    error.response = { data }; // ← Esto permite usar resp.username/email/password en el frontend
+    throw error;
   }
 
   return data;
@@ -99,13 +106,12 @@ export const getCategorias = async () => {
 };
 
 // =====================
-// CARRITO — ORDEN CORRECTO
+// CARRITO
 // =====================
 export const getCarrito = async (token) => {
   return authFetch(`${BASE_URL}/carrito/`, { method: "GET" }, token);
 };
 
-// ✔️ ESTE orden es el correcto para tu frontend
 export const agregarAlCarrito = async (producto_id, cantidad = 1, token) => {
   return authFetch(
     `${BASE_URL}/carrito/agregar/`,
@@ -125,7 +131,6 @@ export const eliminarDelCarrito = async (itemId, token) => {
   );
 };
 
-// ✔️ ESTE orden también lo usa tu frontend
 export const setCantidadItem = async (itemId, cantidad, token) => {
   return authFetch(
     `${BASE_URL}/carrito/actualizar/${itemId}/`,
