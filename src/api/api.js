@@ -1,146 +1,229 @@
-// BASE URL
-const BASE_URL = import.meta.env.VITE_API_URL;
+import { useState, useMemo, useCallback } from "react";
+import { register as apiRegister } from "../api/api";
+import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
-// REFRESH TOKEN
-export const refreshToken = async (refresh) => {
-  const res = await fetch(`${BASE_URL}/token/refresh/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ refresh }),
-  });
+import {
+Container,
+Paper,
+Typography,
+TextField,
+Button,
+Box,
+LinearProgress,
+InputAdornment,
+FormControlLabel,
+Checkbox,
+} from "@mui/material";
 
-  if (!res.ok) throw new Error("No se pudo refrescar el token");
-  return res.json();
+import { useTheme } from "@mui/material/styles";
+import {
+Visibility,
+VisibilityOff,
+PersonOutline,
+EmailOutlined,
+LockOutlined,
+} from "@mui/icons-material";
+import registerStyles from "./Register.styles";
+
+// ---------- HELPERS ----------
+const getPasswordStrength = (pwd = "") => {
+let score = 0;
+if (pwd.length >= 6) score++;
+if (pwd.length >= 10) score++;
+if (/[A-Z]/.test(pwd)) score++;
+if (/[0-9]/.test(pwd)) score++;
+if (/[^A-Za-z0-9]/.test(pwd)) score++;
+
+if (score <= 2) return { label: "Débil", color: "red", value: 40 };
+if (score === 3) return { label: "Media", color: "orange", value: 60 };
+if (score === 4) return { label: "Fuerte", color: "green", value: 80 };
+return { label: "Muy fuerte", color: "darkgreen", value: 100 };
 };
 
-// FETCH CON AUTO REFRESH
-async function authFetch(url, options = {}, token) {
-  let headers = {
-    ...(options.headers || {}),
-    ...(options.body && { "Content-Type": "application/json" }),
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
+const validators = {
+username: (v) => {
+if (!v.trim()) return "El usuario es obligatorio";
+if (/\s/.test(v)) return "El usuario no puede contener espacios";
+return null;
+},
+email: (v) => {
+if (!v.trim()) return "El correo es obligatorio";
+if (!/\S+@\S+.\S+/.test(v)) return "El correo no es válido";
+return null;
+},
+password: (v) => {
+if (v.length < 6) return "La contraseña debe tener al menos 6 caracteres";
+if (!/[0-9]/.test(v)) return "La contraseña debe incluir al menos un número";
+if (!/[!@#$%^&*(),.?":{}|<>_-\/[]=+~`]/.test(v))
+return "La contraseña debe incluir al menos un símbolo";
+return null;
+},
+confirm: (v, data) => {
+if (v !== data.password) return "Las contraseñas no coinciden";
+return null;
+},
+};
 
-  let res = await fetch(url, { ...options, headers });
+export default function Register() {
+const theme = useTheme();
+const navigate = useNavigate();
 
-  // Si expira el access â†’ reintenta con refresh
-  if (res.status === 401 && localStorage.getItem("refresh")) {
-    try {
-      const newTokens = await refreshToken(localStorage.getItem("refresh"));
-      if (newTokens?.access) {
-        localStorage.setItem("access", newTokens.access);
-        token = newTokens.access;
+const [form, setForm] = useState({
+username: "",
+email: "",
+password: "",
+confirm: "",
+});
 
-        headers = {
-          ...(options.headers || {}),
-          ...(options.body && { "Content-Type": "application/json" }),
-          Authorization: `Bearer ${token}`,
-        };
+const [loading, setLoading] = useState(false);
+const [showPasswords, setShowPasswords] = useState(false);
 
-        res = await fetch(url, { ...options, headers });
-      }
-    } catch (err) {
-      console.error("Refresh token invÃ¡lido:", err);
-      localStorage.removeItem("access");
-      localStorage.removeItem("refresh");
-      throw new Error("âš ï¸ Tu sesiÃ³n expirÃ³, vuelve a iniciar sesiÃ³n.");
-    }
-  }
+const handleChange = useCallback((e) => {
+const { name, value } = e.target;
+setForm((prev) => ({ ...prev, [name]: value }));
+}, []);
 
-  const text = await res.text();
-  let data = null;
+const validateForm = () => {
+for (const key in validators) {
+const error = validators[key](form[key], form);
+if (error) {
+toast.error(error);
+return false;
+}
+}
+return true;
+};
 
-  try {
-    data = text ? JSON.parse(text) : null;
-  } catch {
-    data = null;
-  }
+const strength = useMemo(
+() => getPasswordStrength(form.password),
+[form.password]
+);
 
-  if (!res.ok) {
-  const error = new Error("Request failed");
-  error.response = {
-    status: res.status,
-    data: data, // ← aquí mantienes todo el JSON original del backend
-  };
-  throw error;
+const handleSubmit = async (e) => {
+e.preventDefault();
+if (!validateForm()) return;
+
+setLoading(true);  
+try {  
+  await apiRegister({  
+    username: form.username.trim(),  
+    email: form.email.toLowerCase().trim(),  
+    password: form.password,  
+  });  
+
+  toast.success("Usuario registrado correctamente");  
+  navigate("/login");  
+} catch (error) {  
+  const resp = error?.response?.data;  
+
+  if (resp?.email) toast.error("El correo ya está registrado");  
+  else if (resp?.username) toast.error("El usuario ya existe");  
+  else toast.error("Ocurrió un error en el registro");  
+} finally {  
+  setLoading(false);  
 }
 
-  return data;
+};
+
+const renderInput = (label, name, icon, type = "text") => (
+<TextField
+label={label}
+name={name}
+type={type}
+fullWidth
+margin="normal"
+value={form[name]}
+onChange={handleChange}
+required
+InputProps={{
+startAdornment: (
+<InputAdornment position="start">{icon}</InputAdornment>
+),
+}}
+autoComplete="new-password"
+/>
+);
+
+return (
+<Container maxWidth="xs" sx={registerStyles.container(theme)}>
+<Paper elevation={8} sx={registerStyles.paper(theme)}>
+<Typography  
+variant="h4"  
+align="center"  
+fontWeight="bold"  
+gutterBottom  
+sx={registerStyles.titulo(theme)}  
+>
+Crear cuenta
+</Typography>
+
+<Typography align="center" color="text.secondary" sx={registerStyles.subtitulo}>  
+      Completa tus datos para registrarte  
+    </Typography>  
+
+    <form onSubmit={handleSubmit} noValidate>  
+      {renderInput("Usuario", "username", <PersonOutline color="action" />)}  
+      {renderInput("Correo", "email", <EmailOutlined color="action" />, "email")}  
+
+      {renderInput(  
+        "Contraseña",  
+        "password",  
+        <LockOutlined color="action" />,  
+        showPasswords ? "text" : "password"  
+      )}  
+
+      {form.password && (  
+        <Box sx={registerStyles.strengthBox}>  
+          <LinearProgress  
+            variant="determinate"  
+            value={strength.value}  
+            sx={registerStyles.strengthBar(theme, strength.color)}  
+          />  
+          <Typography  
+            variant="caption"  
+            sx={registerStyles.strengthLabel(strength.color)}  
+          >  
+            {strength.label}  
+          </Typography>  
+        </Box>  
+      )}  
+
+      {renderInput(  
+        "Confirmar contraseña",  
+        "confirm",  
+        <LockOutlined color="action" />,  
+        showPasswords ? "text" : "password"  
+      )}  
+
+      <FormControlLabel  
+        control={  
+          <Checkbox
+
+checked={showPasswords}
+onChange={() => setShowPasswords((s) => !s)}
+icon={<Visibility />}
+checkedIcon={<VisibilityOff />}
+/>
 }
+label="Mostrar contraseñas"
+sx={registerStyles.checkbox}
+/>
 
-// ENDPOINTS
+<Box mt={3}>  
+        <Button  
+          type="submit"  
+          variant="contained"  
+          fullWidth  
+          disabled={loading}  
+          sx={registerStyles.boton(theme)}  
+        >  
+          {loading ? "Creando cuenta..." : "Registrarse"}  
+        </Button>  
+      </Box>  
+    </form>  
+  </Paper>  
+</Container>
 
-// AUTH
-export const login = async (credentials) => {
-  return authFetch(`${BASE_URL}/token/`, {
-    method: "POST",
-    body: JSON.stringify(credentials),
-  });
-};
-
-export const register = async (data) => {
-  return authFetch(`${BASE_URL}/register/`, {
-    method: "POST",
-    body: JSON.stringify(data),
-  });
-};
-
-// PRODUCTOS
-export const getProductos = async (params = {}) => {
-  const query = new URLSearchParams(params).toString();
-  const url = query ? `${BASE_URL}/productos/?${query}` : `${BASE_URL}/productos/`;
-  return authFetch(url, { method: "GET" });
-};
-
-// CATEGORÃAS
-export const getCategorias = async () => {
-  return authFetch(`${BASE_URL}/categorias/`, { method: "GET" });
-};
-
-// CARRITO
-export const getCarrito = async (token) => {
-  return authFetch(`${BASE_URL}/carrito/`, { method: "GET" }, token);
-};
-
-export const agregarAlCarrito = async (producto_id, cantidad = 1, token) => {
-  return authFetch(
-    `${BASE_URL}/carrito/agregar/`,
-    {
-      method: "POST",
-      body: JSON.stringify({ producto_id, cantidad }),
-    },
-    token
-  );
-};
-
-export const eliminarDelCarrito = async (itemId, token) => {
-  return authFetch(
-    `${BASE_URL}/carrito/eliminar/${itemId}/`,
-    { method: "DELETE" },
-    token
-  );
-};
-
-export const setCantidadItem = async (itemId, cantidad, token) => {
-  return authFetch(
-    `${BASE_URL}/carrito/actualizar/${itemId}/`,
-    { method: "PUT", body: JSON.stringify({ cantidad }) },
-    token
-  );
-};
-
-// PEDIDOS
-export const crearPedido = async (token) => {
-  return authFetch(`${BASE_URL}/pedido/crear/`, { method: "POST" }, token);
-};
-
-export const getPedidos = async (token, page = 1) => {
-  return authFetch(`${BASE_URL}/pedidos/?page=${page}`, { method: "GET" }, token);
-};
-
-// PERFIL DE USUARIO (CORREGIDO)
-export const getUserProfile = async (token) => {
-  return authFetch(`${BASE_URL}/user/profile/`, { method: "GET" }, token);
-};
-
-
+);
+                             }
