@@ -122,7 +122,7 @@ export default function Register() {
       // ---- TRADUCIR MENSAJE DEL USUARIO REPETIDO ----
       const traducirUsuario = (msg) => {
         if (msg === "A user with that username already exists.") {
-          return "El nombre de usuario ya se encuentra registrado";
+          return "El nombre de usuario ya está registrado";
         }
         return msg;
       };
