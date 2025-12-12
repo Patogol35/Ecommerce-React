@@ -3,7 +3,7 @@ const BASE_URL = import.meta.env.VITE_API_URL;
 
 // REFRESH TOKEN
 export const refreshToken = async (refresh) => {
-  const res = await fetch(`${BASE_URL}/token/refresh/`, {
+  const res = await fetch(`${BASE_URL}/api/token/refresh/`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({ refresh }),
@@ -23,7 +23,6 @@ async function authFetch(url, options = {}, token) {
 
   let res = await fetch(url, { ...options, headers });
 
-  // Si expira el access → reintenta con refresh
   if (res.status === 401 && localStorage.getItem("refresh")) {
     try {
       const newTokens = await refreshToken(localStorage.getItem("refresh"));
@@ -72,14 +71,14 @@ async function authFetch(url, options = {}, token) {
 // ENDPOINTS
 // AUTH
 export const login = async (credentials) => {
-  return authFetch(`${BASE_URL}/token/`, {
+  return authFetch(`${BASE_URL}/api/token/`, {
     method: "POST",
     body: JSON.stringify(credentials),
   });
 };
 
 export const register = async (data) => {
-  return authFetch(`${BASE_URL}/register/`, {
+  return authFetch(`${BASE_URL}/api/register/`, {
     method: "POST",
     body: JSON.stringify(data),
   });
@@ -89,26 +88,25 @@ export const register = async (data) => {
 export const getProductos = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
   const url = query
-    ? `${BASE_URL}/productos/?${query}`
-    : `${BASE_URL}/productos/`;
+    ? `${BASE_URL}/api/productos/?${query}`
+    : `${BASE_URL}/api/productos/`;
 
   return authFetch(url, { method: "GET" });
 };
 
 // CATEGORÍAS
 export const getCategorias = async () => {
-  return authFetch(`${BASE_URL}/categorias/`, { method: "GET" });
+  return authFetch(`${BASE_URL}/api/categorias/`, { method: "GET" });
 };
 
 // CARRITO
 export const getCarrito = async (token) => {
-  return authFetch(`${BASE_URL}/carrito/`, { method: "GET" }, token);
+  return authFetch(`${BASE_URL}/api/carrito/`, { method: "GET" }, token);
 };
 
-// ❗Orden corregido: token va antes que cantidad por defecto
 export const agregarAlCarrito = async (producto_id, token, cantidad = 1) => {
   return authFetch(
-    `${BASE_URL}/carrito/agregar/`,
+    `${BASE_URL}/api/carrito/agregar/`,
     {
       method: "POST",
       body: JSON.stringify({ producto_id, cantidad }),
@@ -119,7 +117,7 @@ export const agregarAlCarrito = async (producto_id, token, cantidad = 1) => {
 
 export const eliminarDelCarrito = async (itemId, token) => {
   return authFetch(
-    `${BASE_URL}/carrito/eliminar/${itemId}/`,
+    `${BASE_URL}/api/carrito/eliminar/${itemId}/`,
     { method: "DELETE" },
     token
   );
@@ -127,7 +125,7 @@ export const eliminarDelCarrito = async (itemId, token) => {
 
 export const setCantidadItem = async (itemId, token, cantidad) => {
   return authFetch(
-    `${BASE_URL}/carrito/actualizar/${itemId}/`,
+    `${BASE_URL}/api/carrito/actualizar/${itemId}/`,
     { method: "PUT", body: JSON.stringify({ cantidad }) },
     token
   );
@@ -135,12 +133,12 @@ export const setCantidadItem = async (itemId, token, cantidad) => {
 
 // PEDIDOS
 export const crearPedido = async (token) => {
-  return authFetch(`${BASE_URL}/pedido/crear/`, { method: "POST" }, token);
+  return authFetch(`${BASE_URL}/api/pedido/crear/`, { method: "POST" }, token);
 };
 
 export const getPedidos = async (token, page = 1) => {
   return authFetch(
-    `${BASE_URL}/pedidos/?page=${page}`,
+    `${BASE_URL}/api/pedidos/?page=${page}`,
     { method: "GET" },
     token
   );
@@ -148,7 +146,5 @@ export const getPedidos = async (token, page = 1) => {
 
 // PERFIL
 export const getUserProfile = async (token) => {
-  return authFetch(`${BASE_URL}/user/profile/`, { method: "GET" }, token);
+  return authFetch(`${BASE_URL}/api/user/profile/`, { method: "GET" }, token);
 };
-
-
