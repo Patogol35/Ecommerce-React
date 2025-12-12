@@ -134,23 +134,25 @@ export default function Register() {
   };
 
   const renderInput = (label, name, icon, type = "text") => (
-    <TextField
-      label={label}
-      name={name}
-      type={type}
-      fullWidth
-      margin="normal"
-      value={form[name]}
-      onChange={handleChange}
-      required
-      autoComplete="new-password"
-      InputProps={{
-        startAdornment: (
-          <InputAdornment position="start">{icon}</InputAdornment>
-        ),
-      }}
-    />
-  );
+  <TextField
+    label={label}
+    name={name}
+    type={type}
+    fullWidth
+    margin="normal"
+    value={form[name]}
+    onChange={handleChange}
+    required
+    autoComplete="off"          // 🔥 evita que Android reemplace símbolos
+    inputMode="text"            // 🔥 fuerza texto plano
+    autoCapitalize="none"       // 🔥 evita mayúsculas automáticas en Android
+    InputProps={{
+      startAdornment: (
+        <InputAdornment position="start">{icon}</InputAdornment>
+      ),
+    }}
+  />
+);
 
   return (
     <Container maxWidth="xs" sx={registerStyles.container(theme)}>
