@@ -1,7 +1,11 @@
+// =====================
 // BASE URL
-const BASE_URL = import.meta.env.VITE_API_URL;
+// =====================
+const BASE_URL = import.meta?.env?.VITE_API_URL || "http://localhost:8000/api";
 
+// =====================
 // REFRESH TOKEN
+// =====================
 export const refreshToken = async (refresh) => {
   const res = await fetch(`${BASE_URL}/token/refresh/`, {
     method: "POST",
@@ -10,11 +14,12 @@ export const refreshToken = async (refresh) => {
   });
 
   if (!res.ok) throw new Error("No se pudo refrescar el token");
-
   return res.json();
 };
 
+// =====================
 // FETCH CON AUTO REFRESH
+// =====================
 async function authFetch(url, options = {}, token) {
   let headers = {
     ...(options.headers || {}),
@@ -24,7 +29,7 @@ async function authFetch(url, options = {}, token) {
 
   let res = await fetch(url, { ...options, headers });
 
-  // Si expira el access → reintenta con refresh
+  // Si expira el access → intentar refrescar
   if (res.status === 401 && localStorage.getItem("refresh")) {
     try {
       const newTokens = await refreshToken(localStorage.getItem("refresh"));
@@ -33,6 +38,7 @@ async function authFetch(url, options = {}, token) {
         localStorage.setItem("access", newTokens.access);
         token = newTokens.access;
 
+        // retry con nuevo token
         headers = {
           ...(options.headers || {}),
           ...(options.body && { "Content-Type": "application/json" }),
@@ -59,45 +65,38 @@ async function authFetch(url, options = {}, token) {
   }
 
   if (!res.ok) {
-    const error = new Error("Request failed");
-    error.response = {
-      status: res.status,
-      data: data,
-    };
+    const msg = data?.detail || data?.error || `Error ${res.status}`;
+    const error = new Error(msg);
+    error.response = { status: res.status, data };
     throw error;
   }
 
   return data;
 }
 
+// =====================
 // ENDPOINTS
+// =====================
+
 // AUTH
 export const login = async (credentials) => {
-  return authFetch(
-    `${BASE_URL}/token/`,
-    {
-      method: "POST",
-      body: JSON.stringify(credentials),
-    }
-  );
+  return authFetch(`${BASE_URL}/token/`, {
+    method: "POST",
+    body: JSON.stringify(credentials),
+  });
 };
 
 export const register = async (data) => {
-  return authFetch(
-    `${BASE_URL}/register/`,
-    {
-      method: "POST",
-      body: JSON.stringify(data),
-    }
-  );
+  return authFetch(`${BASE_URL}/register/`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
 };
 
 // PRODUCTOS
 export const getProductos = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
-  const url = query
-    ? `${BASE_URL}/productos/?${query}`
-    : `${BASE_URL}/productos/`;
+  const url = query ? `${BASE_URL}/productos/?${query}` : `${BASE_URL}/productos/`;
   return authFetch(url, { method: "GET" });
 };
 
@@ -106,13 +105,16 @@ export const getCategorias = async () => {
   return authFetch(`${BASE_URL}/categorias/`, { method: "GET" });
 };
 
-// CARRITO
+// =====================
+// CARRITO (ORDEN CORRECTO)
+// =====================
+
 export const getCarrito = async (token) => {
   return authFetch(`${BASE_URL}/carrito/`, { method: "GET" }, token);
 };
 
-// ❗ Orden corregido: token antes que cantidad
-export const agregarAlCarrito = async (producto_id, token, cantidad = 1) => {
+// ✔️ Orden correcto: producto_id, cantidad, token
+export const agregarAlCarrito = async (producto_id, cantidad = 1, token) => {
   return authFetch(
     `${BASE_URL}/carrito/agregar/`,
     {
@@ -131,15 +133,22 @@ export const eliminarDelCarrito = async (itemId, token) => {
   );
 };
 
-export const setCantidadItem = async (itemId, token, cantidad) => {
+// ✔️ Orden correcto: itemId, cantidad, token
+export const setCantidadItem = async (itemId, cantidad, token) => {
   return authFetch(
     `${BASE_URL}/carrito/actualizar/${itemId}/`,
-    { method: "PUT", body: JSON.stringify({ cantidad }) },
+    {
+      method: "PUT",
+      body: JSON.stringify({ cantidad }),
+    },
     token
   );
 };
 
+// =====================
 // PEDIDOS
+// =====================
+
 export const crearPedido = async (token) => {
   return authFetch(`${BASE_URL}/pedido/crear/`, { method: "POST" }, token);
 };
@@ -152,7 +161,10 @@ export const getPedidos = async (token, page = 1) => {
   );
 };
 
-// PERFIL
+// =====================
+// PERFIL DE USUARIO
+// =====================
 export const getUserProfile = async (token) => {
-  return authFetch(`${BASE_URL}/user/profile/`, { method: "GET" }, token);
+  const API_ROOT = BASE_URL.replace("/api", "");
+  return authFetch(`${API_ROOT}/user/profile/`, { method: "GET" }, token);
 };
