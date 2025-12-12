@@ -1,11 +1,7 @@
-// ===============================
 // BASE URL
-// ===============================
 const BASE_URL = import.meta.env.VITE_API_URL;
 
-// ===============================
 // REFRESH TOKEN
-// ===============================
 export const refreshToken = async (refresh) => {
   const res = await fetch(`${BASE_URL}/token/refresh/`, {
     method: "POST",
@@ -14,140 +10,149 @@ export const refreshToken = async (refresh) => {
   });
 
   if (!res.ok) throw new Error("No se pudo refrescar el token");
+
   return res.json();
 };
 
-// ===============================
-// FETCH CON AUTH Y REFRESH AUTO
-// ===============================
-async function authFetch(url, options = {}, tokens, setTokens) {
-  try {
-    const res = await fetch(url, {
-      ...options,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: tokens?.access ? `Bearer ${tokens.access}` : "",
-        ...options.headers,
-      },
-    });
+// FETCH CON AUTO REFRESH
+async function authFetch(url, options = {}, token) {
+  let headers = {
+    ...(options.headers || {}),
+    ...(options.body && { "Content-Type": "application/json" }),
+    ...(token ? { Authorization: `Bearer ${token}` } : {}),
+  };
 
-    // Si el token expiró
-    if (res.status === 401 && tokens?.refresh) {
-      const newTokens = await refreshToken(tokens.refresh);
-      setTokens({
-        access: newTokens.access,
-        refresh: tokens.refresh,
-      });
+  let res = await fetch(url, { ...options, headers });
 
-      // Reintentar petición con nuevo access
-      const retry = await fetch(url, {
-        ...options,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${newTokens.access}`,
-          ...options.headers,
-        },
-      });
+  // Si expira el access → reintenta con refresh
+  if (res.status === 401 && localStorage.getItem("refresh")) {
+    try {
+      const newTokens = await refreshToken(localStorage.getItem("refresh"));
 
-      return retry;
+      if (newTokens?.access) {
+        localStorage.setItem("access", newTokens.access);
+        token = newTokens.access;
+
+        headers = {
+          ...(options.headers || {}),
+          ...(options.body && { "Content-Type": "application/json" }),
+          Authorization: `Bearer ${token}`,
+        };
+
+        res = await fetch(url, { ...options, headers });
+      }
+    } catch (err) {
+      console.error("Refresh token inválido:", err);
+      localStorage.removeItem("access");
+      localStorage.removeItem("refresh");
+      throw new Error("⚠️ Tu sesión expiró, vuelve a iniciar sesión.");
     }
-
-    return res;
-  } catch (err) {
-    console.error("Request failed:", err);
-    throw err;
   }
+
+  const text = await res.text();
+  let data = null;
+
+  try {
+    data = text ? JSON.parse(text) : null;
+  } catch {
+    data = null;
+  }
+
+  if (!res.ok) {
+    const error = new Error("Request failed");
+    error.response = {
+      status: res.status,
+      data: data,
+    };
+    throw error;
+  }
+
+  return data;
 }
 
-// ===============================
-// LOGIN
-// ===============================
-export const login = async (username, password) => {
-  const res = await fetch(`${BASE_URL}/login/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-  });
-
-  if (!res.ok) throw new Error("Credenciales incorrectas");
-  return res.json();
+// ENDPOINTS
+// AUTH
+export const login = async (credentials) => {
+  return authFetch(
+    `${BASE_URL}/token/`,
+    {
+      method: "POST",
+      body: JSON.stringify(credentials),
+    }
+  );
 };
 
-// ===============================
-// REGISTRO
-// ===============================
 export const register = async (data) => {
-  const res = await fetch(`${BASE_URL}/register/`, {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify(data),
-  });
-
-  if (!res.ok) throw new Error("Error al registrar");
-  return res.json();
+  return authFetch(
+    `${BASE_URL}/register/`,
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    }
+  );
 };
 
-// ===============================
-// OBTENER PRODUCTOS
-// ===============================
-export const getProductos = async () => {
-  const res = await fetch(`${BASE_URL}/productos/`);
-
-  if (!res.ok) throw new Error("No se pudieron obtener los productos");
-  return res.json();
+// PRODUCTOS
+export const getProductos = async (params = {}) => {
+  const query = new URLSearchParams(params).toString();
+  const url = query
+    ? `${BASE_URL}/productos/?${query}`
+    : `${BASE_URL}/productos/`;
+  return authFetch(url, { method: "GET" });
 };
 
-// ===============================
+// CATEGORÍAS
+export const getCategorias = async () => {
+  return authFetch(`${BASE_URL}/categorias/`, { method: "GET" });
+};
+
 // CARRITO
-// ===============================
-export const getCarrito = async (tokens, setTokens) => {
-  const res = await authFetch(`${BASE_URL}/carrito/`, {}, tokens, setTokens);
-
-  if (!res.ok) throw new Error("No se pudo obtener el carrito");
-  return res.json();
+export const getCarrito = async (token) => {
+  return authFetch(`${BASE_URL}/carrito/`, { method: "GET" }, token);
 };
 
-export const agregarAlCarrito = async (producto_id, cantidad, tokens, setTokens) => {
-  const res = await authFetch(
+// ❗ Orden corregido: token antes que cantidad
+export const agregarAlCarrito = async (producto_id, token, cantidad = 1) => {
+  return authFetch(
     `${BASE_URL}/carrito/agregar/`,
     {
       method: "POST",
       body: JSON.stringify({ producto_id, cantidad }),
     },
-    tokens,
-    setTokens
+    token
   );
-
-  if (!res.ok) throw new Error("No se pudo agregar al carrito");
-  return res.json();
 };
 
-export const setCantidadItem = async (item_id, cantidad, tokens, setTokens) => {
-  const res = await authFetch(
-    `${BASE_URL}/carrito/cantidad/`,
-    {
-      method: "PUT",
-      body: JSON.stringify({ item_id, cantidad }),
-    },
-    tokens,
-    setTokens
+export const eliminarDelCarrito = async (itemId, token) => {
+  return authFetch(
+    `${BASE_URL}/carrito/eliminar/${itemId}/`,
+    { method: "DELETE" },
+    token
   );
-
-  if (!res.ok) throw new Error("No se pudo actualizar cantidad");
-  return res.json();
 };
 
-export const eliminarDelCarrito = async (item_id, tokens, setTokens) => {
-  const res = await authFetch(
-    `${BASE_URL}/carrito/eliminar/`,
-    {
-      method: "DELETE",
-      body: JSON.stringify({ item_id }),
-    },
-    tokens,
-    setTokens
+export const setCantidadItem = async (itemId, token, cantidad) => {
+  return authFetch(
+    `${BASE_URL}/carrito/actualizar/${itemId}/`,
+    { method: "PUT", body: JSON.stringify({ cantidad }) },
+    token
   );
+};
 
-  if (!res.ok) throw new Error("No se pudo eliminar del carrito");
-  return res.json();
+// PEDIDOS
+export const crearPedido = async (token) => {
+  return authFetch(`${BASE_URL}/pedido/crear/`, { method: "POST" }, token);
+};
+
+export const getPedidos = async (token, page = 1) => {
+  return authFetch(
+    `${BASE_URL}/pedidos/?page=${page}`,
+    { method: "GET" },
+    token
+  );
+};
+
+// PERFIL
+export const getUserProfile = async (token) => {
+  return authFetch(`${BASE_URL}/user/profile/`, { method: "GET" }, token);
 };
