@@ -1,7 +1,7 @@
 // =====================
 // BASE URL
 // =====================
-const BASE_URL = import.meta?.env?.VITE_API_URL || "http://localhost:8000/api";
+const BASE_URL = import.meta.env.VITE_API_URL;
 
 // =====================
 // REFRESH TOKEN
@@ -29,22 +29,18 @@ async function authFetch(url, options = {}, token) {
 
   let res = await fetch(url, { ...options, headers });
 
-  // Si expira el access → intentar refrescar
   if (res.status === 401 && localStorage.getItem("refresh")) {
     try {
       const newTokens = await refreshToken(localStorage.getItem("refresh"));
-
       if (newTokens?.access) {
         localStorage.setItem("access", newTokens.access);
         token = newTokens.access;
 
-        // retry con nuevo token
         headers = {
           ...(options.headers || {}),
           ...(options.body && { "Content-Type": "application/json" }),
           Authorization: `Bearer ${token}`,
         };
-
         res = await fetch(url, { ...options, headers });
       }
     } catch (err) {
@@ -57,7 +53,6 @@ async function authFetch(url, options = {}, token) {
 
   const text = await res.text();
   let data = null;
-
   try {
     data = text ? JSON.parse(text) : null;
   } catch {
@@ -66,9 +61,7 @@ async function authFetch(url, options = {}, token) {
 
   if (!res.ok) {
     const msg = data?.detail || data?.error || `Error ${res.status}`;
-    const error = new Error(msg);
-    error.response = { status: res.status, data };
-    throw error;
+    throw new Error(msg);
   }
 
   return data;
@@ -106,14 +99,13 @@ export const getCategorias = async () => {
 };
 
 // =====================
-// CARRITO (ORDEN CORRECTO)
+// CARRITO — ORDEN CORRECTO
 // =====================
-
 export const getCarrito = async (token) => {
   return authFetch(`${BASE_URL}/carrito/`, { method: "GET" }, token);
 };
 
-// ✔️ Orden correcto: producto_id, cantidad, token
+// ✔️ ESTE orden es el correcto para tu frontend
 export const agregarAlCarrito = async (producto_id, cantidad = 1, token) => {
   return authFetch(
     `${BASE_URL}/carrito/agregar/`,
@@ -133,7 +125,7 @@ export const eliminarDelCarrito = async (itemId, token) => {
   );
 };
 
-// ✔️ Orden correcto: itemId, cantidad, token
+// ✔️ ESTE orden también lo usa tu frontend
 export const setCantidadItem = async (itemId, cantidad, token) => {
   return authFetch(
     `${BASE_URL}/carrito/actualizar/${itemId}/`,
@@ -145,10 +137,7 @@ export const setCantidadItem = async (itemId, cantidad, token) => {
   );
 };
 
-// =====================
 // PEDIDOS
-// =====================
-
 export const crearPedido = async (token) => {
   return authFetch(`${BASE_URL}/pedido/crear/`, { method: "POST" }, token);
 };
@@ -161,10 +150,7 @@ export const getPedidos = async (token, page = 1) => {
   );
 };
 
-// =====================
-// PERFIL DE USUARIO
-// =====================
+// PERFIL
 export const getUserProfile = async (token) => {
-  const API_ROOT = BASE_URL.replace("/api", "");
-  return authFetch(`${API_ROOT}/user/profile/`, { method: "GET" }, token);
+  return authFetch(`${BASE_URL}/user/profile/`, { method: "GET" }, token);
 };
