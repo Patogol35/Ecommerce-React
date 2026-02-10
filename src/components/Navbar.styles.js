@@ -1,13 +1,8 @@
 const styles = {
-  appBar: (scrolled, theme) => ({
-    backgroundColor: "#1976d2", // 🔒 TU COLOR ORIGINAL
-    boxShadow: scrolled
-      ? theme.palette.mode === "dark"
-        ? "0 6px 30px rgba(0,0,0,0.6)"
-        : "0 4px 20px rgba(0,0,0,0.3)"
-      : "none",
+  appBar: (scrolled) => ({
+    backgroundColor: "#1976d2",
+    boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.3)" : "none",
     zIndex: 1400,
-    transition: "box-shadow .3s ease",
   }),
 
   toolbar: {
@@ -43,26 +38,28 @@ const styles = {
     color: "#fff",
   },
 
-  drawerPaper: (theme) => ({
+  menuIconWrapper: {
+    display: "flex",
+  },
+
+  drawerPaper: {
     width: 280,
-    backgroundColor: "#1976d2", // 🔒 IGUAL QUE ANTES
+    background: "#1976d2",
     borderRadius: "16px 0 0 16px",
     p: 2,
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "0 0 40px rgba(0,0,0,0.7)"
-        : "0 0 30px rgba(0,0,0,0.35)",
-  }),
+    display: "flex",
+    flexDirection: "column",
+  },
 
   drawerStack: {
     flex: 1,
     mt: 8,
   },
 
-  userSection: (mobile) => ({
-    my: mobile ? 2 : 0,
+  userSection: (isMobile) => ({
+    my: isMobile ? 2 : 0,
     textAlign: "center",
-    mt: mobile ? 12 : 0,
+    mt: isMobile ? 12 : 0,
   }),
 
   logoutBtn: {
@@ -79,10 +76,10 @@ const styles = {
     pb: 2,
   },
 
-  toggleBtn: {
+  toggleModeBtn: {
     color: "#fff",
-    background: "rgba(0,0,0,0.35)",
-    "&:hover": { background: "rgba(0,0,0,0.6)" },
+    background: "rgba(0,0,0,0.4)",
+    "&:hover": { background: "rgba(0,0,0,0.7)" },
     width: 48,
     height: 48,
   },
