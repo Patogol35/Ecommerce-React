@@ -162,14 +162,7 @@ export default function Home() {
         />
       </Box>
 
-      {/* ================== BOTÓN CARRITO ================== */}
-      <IconButton
-        onClick={handleCarritoClick}
-        sx={styles.carritoBtn}
-        aria-label="Abrir carrito"
-      >
-        <ShoppingCartIcon />
-      </IconButton>
+      
 
       {/* ================== MODAL DETALLE ================== */}
       <DetalleModal
