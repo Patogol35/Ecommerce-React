@@ -1,7 +1,10 @@
 const styles = {
-  appBar: (scrolled) => ({
-    backgroundColor: "#1976d2",
-    boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.3)" : "none",
+  appBar: (scrolled, isDark) => ({
+    backgroundColor: isDark ? "#0f172a" : "#1976d2",
+    boxShadow: scrolled ? "0 6px 24px rgba(0,0,0,.35)" : "none",
+    backdropFilter: scrolled ? "blur(10px)" : "none",
+    transition: "all .3s ease",
+    color: "#fff",
     zIndex: 1400,
   }),
 
@@ -16,13 +19,13 @@ const styles = {
     alignItems: "center",
     gap: 1,
     fontWeight: "bold",
-    color: "#fff",
+    color: "inherit",
     textDecoration: "none",
   },
 
   logoIcon: {
     fontSize: 28,
-    background: "linear-gradient(135deg, #FF5722, #FFC107)",
+    background: "linear-gradient(135deg,#FF5722,#FFC107)",
     WebkitBackgroundClip: "text",
     WebkitTextFillColor: "transparent",
   },
@@ -35,51 +38,42 @@ const styles = {
 
   menuBtnMobile: {
     display: { xs: "block", lg: "none" },
-    color: "#fff",
+    color: "inherit",
   },
 
-  menuIconWrapper: {
-    display: "flex",
-  },
-
-  drawerPaper: {
+  drawerPaper: (isDark) => ({
     width: 280,
-    background: "#1976d2", 
+    background: isDark ? "#020617" : "#1976d2",
+    color: "#fff",
     borderRadius: "16px 0 0 16px",
     p: 2,
-    display: "flex",
-    flexDirection: "column",
-  },
+  }),
 
   drawerStack: {
     flex: 1,
-    mt: 8, // espacio entre usuario y opciones
+    mt: 8,
+    alignItems: "center",
   },
 
-  userSection: (isMobile) => ({
-    my: isMobile ? 2 : 0,
+  userSection: (mobile) => ({
+    mt: mobile ? 8 : 0,
     textAlign: "center",
-    mt: isMobile ? 12 : 0, 
   }),
 
   logoutBtn: {
-    fontWeight: 600,
     color: "#fff",
-    background: "linear-gradient(135deg, #d32f2f, #f44336)",
+    fontWeight: 600,
+    background: "linear-gradient(135deg,#d32f2f,#f44336)",
     borderRadius: "12px",
     px: 2.5,
     py: 1,
   },
 
-  drawerUtilStack: {
-    mt: 3,
-    pb: 2,
-  },
-
   toggleModeBtn: {
+    mt: 2,
     color: "#fff",
-    background: "rgba(0,0,0,0.4)",
-    "&:hover": { background: "rgba(0,0,0,0.7)" },
+    background: "rgba(255,255,255,.15)",
+    "&:hover": { background: "rgba(255,255,255,.25)" },
     width: 48,
     height: 48,
   },
