@@ -30,17 +30,17 @@ import {
 } from "@mui/icons-material";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@mui/material/styles";
 import styles from "./Navbar.styles";
 
 export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
   const { mode, toggleMode } = useThemeMode();
+  const theme = useTheme();
   const navigate = useNavigate();
 
-  const isDark = mode === "dark";
-  const scrolled = useScrollTrigger(50);
-
   const [open, setOpen] = useState(false);
+  const scrolled = useScrollTrigger(50);
 
   const menuItems = useMemo(
     () => (isAuthenticated ? authMenu : guestMenu),
@@ -67,8 +67,10 @@ export default function Navbar() {
         alignItems="center"
         sx={styles.userSection(mobile)}
       >
-        <AccountCircleIcon />
-        <Typography fontWeight={600}>{user?.username}</Typography>
+        <AccountCircleIcon sx={{ color: theme.palette.text.primary }} />
+        <Typography sx={{ color: theme.palette.text.primary, fontWeight: 600 }}>
+          {user?.username}
+        </Typography>
 
         {showLogout && (
           <Button
@@ -97,31 +99,37 @@ export default function Navbar() {
         <AppBar
           position="fixed"
           elevation={scrolled ? 6 : 2}
-          sx={styles.appBar(scrolled, isDark)}
+          sx={styles.appBar(scrolled, theme)}
         >
           <Toolbar sx={styles.toolbar}>
-            <Typography component={Link} to="/" sx={styles.logo}>
+            <Typography
+              variant="h6"
+              component={Link}
+              to="/"
+              sx={styles.logo}
+            >
               <ShoppingBagIcon sx={styles.logoIcon} />
               E-commerce Jorge Patricio
             </Typography>
 
-            {/* Desktop */}
             <Box sx={styles.desktopMenu}>
               <MenuList />
-              <IconButton onClick={toggleMode}>
-                {isDark ? <LightModeIcon /> : <DarkModeIcon />}
+              <IconButton onClick={toggleMode} sx={styles.toggleBtn}>
+                {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
               <UserSection />
             </Box>
 
-            {/* Mobile */}
-            <IconButton sx={styles.menuBtnMobile} onClick={handleToggleMenu}>
+            <IconButton
+              sx={styles.menuBtnMobile}
+              onClick={handleToggleMenu}
+            >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={open ? "close" : "menu"}
-                  initial={{ rotate: -90, opacity: 0 }}
-                  animate={{ rotate: 0, opacity: 1 }}
-                  exit={{ rotate: 90, opacity: 0 }}
+                  initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
+                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                  exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.25 }}
                 >
                   {open ? <CloseIcon /> : <MenuIcon />}
@@ -132,19 +140,18 @@ export default function Navbar() {
         </AppBar>
       </motion.div>
 
-      {/* Drawer */}
       <Drawer
         anchor="right"
         open={open}
         onClose={handleCloseMenu}
-        PaperProps={{ sx: styles.drawerPaper(isDark) }}
-        sx={{ display: { xs: "block", lg: "none" } }}
+        sx={{ display: { xs: "block", md: "none" } }}
+        PaperProps={{
+          sx: styles.drawerPaper(theme),
+        }}
       >
         <Stack sx={styles.drawerStack} spacing={3}>
           <UserSection showLogout={false} mobile />
-
-          <Divider />
-
+          <Divider sx={{ opacity: 0.3 }} />
           <MenuList onClick={handleCloseMenu} />
 
           {isAuthenticated && (
@@ -157,11 +164,13 @@ export default function Navbar() {
             </Button>
           )}
 
-          <IconButton onClick={toggleMode} sx={styles.toggleModeBtn}>
-            {isDark ? <LightModeIcon /> : <DarkModeIcon />}
-          </IconButton>
+          <Stack alignItems="center" sx={styles.drawerUtilStack}>
+            <IconButton onClick={toggleMode} sx={styles.toggleBtn}>
+              {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+            </IconButton>
+          </Stack>
         </Stack>
       </Drawer>
     </>
   );
-        }
+}
