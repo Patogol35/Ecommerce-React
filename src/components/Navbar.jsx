@@ -30,13 +30,11 @@ import {
 } from "@mui/icons-material";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "@mui/material/styles";
 import styles from "./Navbar.styles";
 
 export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
   const { mode, toggleMode } = useThemeMode();
-  const theme = useTheme();
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -57,7 +55,7 @@ export default function Navbar() {
     logout();
     navigate("/login");
     handleCloseMenu();
-  }, [logout, navigate]);
+  }, [logout, navigate, handleCloseMenu]);
 
   const UserSection = ({ showLogout = true, mobile = false }) =>
     isAuthenticated && (
@@ -67,8 +65,8 @@ export default function Navbar() {
         alignItems="center"
         sx={styles.userSection(mobile)}
       >
-        <AccountCircleIcon sx={{ color: theme.palette.text.primary }} />
-        <Typography sx={{ color: theme.palette.text.primary, fontWeight: 600 }}>
+        <AccountCircleIcon sx={{ color: "#fff" }} />
+        <Typography sx={{ color: "#fff", fontWeight: 600 }}>
           {user?.username}
         </Typography>
 
@@ -99,7 +97,7 @@ export default function Navbar() {
         <AppBar
           position="fixed"
           elevation={scrolled ? 6 : 2}
-          sx={styles.appBar(scrolled, theme)}
+          sx={styles.appBar(scrolled)}
         >
           <Toolbar sx={styles.toolbar}>
             <Typography
@@ -112,17 +110,21 @@ export default function Navbar() {
               E-commerce Jorge Patricio
             </Typography>
 
+            {/* Desktop */}
             <Box sx={styles.desktopMenu}>
               <MenuList />
-              <IconButton onClick={toggleMode} sx={styles.toggleBtn}>
+              <IconButton onClick={toggleMode} sx={{ color: "#fff" }}>
                 {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
               <UserSection />
             </Box>
 
+            {/* Mobile button */}
             <IconButton
               sx={styles.menuBtnMobile}
               onClick={handleToggleMenu}
+              aria-label={open ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={open}
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -131,8 +133,13 @@ export default function Navbar() {
                   animate={{ rotate: 0, opacity: 1, scale: 1 }}
                   exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.25 }}
+                  style={styles.menuIconWrapper}
                 >
-                  {open ? <CloseIcon /> : <MenuIcon />}
+                  {open ? (
+                    <CloseIcon fontSize="large" />
+                  ) : (
+                    <MenuIcon fontSize="large" />
+                  )}
                 </motion.div>
               </AnimatePresence>
             </IconButton>
@@ -140,18 +147,19 @@ export default function Navbar() {
         </AppBar>
       </motion.div>
 
+      {/* Drawer mobile */}
       <Drawer
         anchor="right"
         open={open}
         onClose={handleCloseMenu}
         sx={{ display: { xs: "block", md: "none" } }}
-        PaperProps={{
-          sx: styles.drawerPaper(theme),
-        }}
+        PaperProps={{ sx: styles.drawerPaper }}
       >
         <Stack sx={styles.drawerStack} spacing={3}>
           <UserSection showLogout={false} mobile />
-          <Divider sx={{ opacity: 0.3 }} />
+
+          <Divider sx={{ bgcolor: "rgba(255,255,255,0.3)", my: 2 }} />
+
           <MenuList onClick={handleCloseMenu} />
 
           {isAuthenticated && (
@@ -164,8 +172,8 @@ export default function Navbar() {
             </Button>
           )}
 
-          <Stack alignItems="center" sx={styles.drawerUtilStack}>
-            <IconButton onClick={toggleMode} sx={styles.toggleBtn}>
+          <Stack spacing={2} alignItems="center" sx={styles.drawerUtilStack}>
+            <IconButton onClick={toggleMode} sx={styles.toggleModeBtn}>
               {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
             </IconButton>
           </Stack>
