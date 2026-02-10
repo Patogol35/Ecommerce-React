@@ -1,34 +1,38 @@
+/* ===== VARIABLES DE TEMA ===== */
+:root {
+  --product-card-border: #000;
+}
+
+[data-theme="dark"] {
+  --product-card-border: #fff;
+}
+
+/* ===== PRODUCT CARD ===== */
 .product-card {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+
   width: 100%;
   max-width: 300px;
   height: 100%;
 
   background: #fff;
+  border-radius: 20px;
   overflow: hidden;
 
-  /* 🎯 BORDE SUAVE (CLARO / OSCURO) */
-  border: 1px solid var(--product-card-border);
-  border-radius: 16px;
+  border: 2px solid var(--product-card-border);
 
-  /* 💎 SOMBRA ELEGANTE */
-  box-shadow:
-    0 4px 12px rgba(0, 0, 0, 0.08),
-    0 1px 3px rgba(0, 0, 0, 0.06);
-
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .product-card:hover {
-  transform: translateY(-6px);
-  box-shadow:
-    0 10px 24px rgba(0, 0, 0, 0.15),
-    0 4px 10px rgba(0, 0, 0, 0.1);
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* ================= Imagen ================= */
+/* ===== IMAGE ===== */
 .product-image-container {
   position: relative;
   width: 100%;
@@ -41,24 +45,28 @@
   width: 100%;
   height: 100%;
   object-fit: cover;
+  display: block;
   transition: transform 0.4s ease;
 }
 
 .product-image-container:hover img {
-  transform: scale(1.08);
+  transform: scale(1.1);
 }
 
-/* ================= Overlay ================= */
+/* ===== OVERLAY ===== */
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.45);
+  background: rgba(0, 0, 0, 0.5);
+
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+
   opacity: 0;
   transition: opacity 0.3s ease;
+
   color: #fff;
   padding: 1rem;
   text-align: center;
@@ -68,10 +76,11 @@
   opacity: 1;
 }
 
-/* ================= Info ================= */
+/* ===== INFO ===== */
 .product-info {
   padding: 16px;
   flex-grow: 1;
+
   display: flex;
   flex-direction: column;
   justify-content: space-between;
@@ -79,8 +88,9 @@
 
 .product-title {
   font-size: 1rem;
-  font-weight: 600;
+  font-weight: bold;
   margin-bottom: 8px;
+
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -88,6 +98,6 @@
 
 .product-price {
   font-size: 1.1rem;
-  font-weight: 700;
   color: #1976d2;
+  font-weight: bold;
 }
