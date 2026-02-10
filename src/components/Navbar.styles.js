@@ -1,14 +1,17 @@
 const styles = {
-  appBar: (scrolled, isDark = false) => ({
-    backgroundColor: isDark ? "#0f172a" : "#1976d2", // 👈 SOLO ESTO CAMBIA
-    boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.3)" : "none",
+  appBar: (scrolled, theme) => ({
+    backgroundColor:
+      theme.palette.mode === "dark" ? "#020617" : "#1976d2",
+    boxShadow: scrolled
+      ? "0 4px 20px rgba(0,0,0,0.3)"
+      : "none",
     zIndex: 1400,
+    transition: "background-color .3s ease",
   }),
 
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
-    alignItems: "center",
   },
 
   logo: {
@@ -38,18 +41,12 @@ const styles = {
     color: "#fff",
   },
 
-  menuIconWrapper: {
-    display: "flex",
-  },
-
-  drawerPaper: (isDark = false) => ({
+  drawerPaper: (theme) => ({
     width: 280,
-    background: isDark ? "#020617" : "#1976d2", // 👈 SOLO ESTO CAMBIA
+    backgroundColor:
+      theme.palette.mode === "dark" ? "#020617" : "#1976d2",
     borderRadius: "16px 0 0 16px",
     p: 2,
-    display: "flex",
-    flexDirection: "column",
-    color: "#fff",
   }),
 
   drawerStack: {
@@ -57,10 +54,10 @@ const styles = {
     mt: 8,
   },
 
-  userSection: (isMobile) => ({
-    my: isMobile ? 2 : 0,
+  userSection: (mobile) => ({
+    my: mobile ? 2 : 0,
     textAlign: "center",
-    mt: isMobile ? 12 : 0,
+    mt: mobile ? 12 : 0,
   }),
 
   logoutBtn: {
@@ -77,10 +74,10 @@ const styles = {
     pb: 2,
   },
 
-  toggleModeBtn: {
+  toggleBtn: {
     color: "#fff",
-    background: "rgba(0,0,0,0.4)",
-    "&:hover": { background: "rgba(0,0,0,0.7)" },
+    background: "rgba(0,0,0,0.35)",
+    "&:hover": { background: "rgba(0,0,0,0.6)" },
     width: 48,
     height: 48,
   },
