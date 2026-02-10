@@ -1,10 +1,7 @@
-import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useTheme } from "@mui/material/styles";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
 import { toast } from "react-toastify";
-
 import {
   Card,
   Typography,
@@ -14,29 +11,28 @@ import {
   Divider,
   Stack,
 } from "@mui/material";
-
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
-import "./ProductoCard.css";
+import {
+  cardSx,
+  imagenBoxSx,
+  imagenSx,
+  chipNuevoSx,
+  contenidoSx,
+  tituloSx,
+  precioStackSx,
+  dividerSx,
+  botonAgregarSx,
+  botonDetallesSx,
+} from "./ProductoCard.styles";
 
 export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { isAuthenticated } = useAuth();
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
-  const theme = useTheme();
-
-  /* 🔥 CONECTA MODO CLARO / OSCURO CON CSS */
-  useEffect(() => {
-    document.documentElement.style.setProperty(
-      "--product-card-border",
-      theme.palette.mode === "dark"
-        ? "rgba(255,255,255,0.9)"
-        : "rgba(0,0,0,0.9)"
-    );
-  }, [theme.palette.mode]);
 
   const onAdd = async () => {
     if (!isAuthenticated) {
@@ -59,15 +55,15 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   };
 
   return (
-    <Card
-      className="product-card"
-      sx={{
-        backgroundColor: "background.paper",
-      }}
-    >
+    <Card sx={cardSx}>
       {/* Imagen */}
-      <Box className="product-image-container">
-        <img src={producto.imagen} alt={producto.nombre} />
+      <Box sx={imagenBoxSx}>
+        <Box
+          component="img"
+          src={producto.imagen}
+          alt={producto.nombre}
+          sx={imagenSx}
+        />
 
         {producto.nuevo && (
           <Chip
@@ -75,31 +71,40 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
             label="Nuevo"
             color="secondary"
             size="small"
-            sx={{ position: "absolute", top: 10, left: 10 }}
+            sx={chipNuevoSx}
           />
         )}
       </Box>
 
       {/* Contenido */}
-      <Box className="product-info">
-        <Typography className="product-title">
+      <Box sx={contenidoSx}>
+        <Typography variant="h6" fontWeight="bold" sx={tituloSx}>
           {producto.nombre}
         </Typography>
 
-        <Stack direction="row" alignItems="center" spacing={0.5}>
+        {/* Precio */}
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={0.5}
+          sx={precioStackSx}
+        >
           <MonetizationOnIcon color="primary" />
-          <Typography className="product-price">
+          <Typography variant="h6" color="primary" fontWeight="bold">
             {producto.precio}
           </Typography>
         </Stack>
 
-        <Divider sx={{ my: 1 }} />
+        <Divider sx={dividerSx} />
 
+        {/* Botones */}
         <Stack spacing={1}>
           <Button
             variant="contained"
+            color="primary"
             fullWidth
             startIcon={<AddShoppingCartIcon />}
+            sx={botonAgregarSx(producto.stock)}
             onClick={onAdd}
             disabled={producto.stock === 0}
           >
@@ -108,8 +113,10 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
           <Button
             variant="outlined"
+            color="inherit"
             fullWidth
             startIcon={<InfoIcon />}
+            sx={botonDetallesSx}
             onClick={() =>
               onVerDetalle
                 ? onVerDetalle()
