@@ -10,6 +10,9 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   height: 100%; 
+
+  border: 2px solid var(--product-card-border);
+  border-radius: 20px;
 }
 
 .product-card:hover {
