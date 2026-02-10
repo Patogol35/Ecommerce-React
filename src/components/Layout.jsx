@@ -23,7 +23,6 @@ export default function Layout() {
         <Outlet />
       </Container>
 
-      {/* BOTÓN FLOTANTE DEL CARRITO */}
       <Fab
         color="primary"
         sx={{
@@ -34,10 +33,14 @@ export default function Layout() {
         }}
         onClick={() => navigate("/carrito")}
       >
-        <Badge badgeContent={carrito.length} color="error">
+        <Badge
+          badgeContent={carrito.length}
+          color="error"
+          invisible={carrito.length === 0}
+        >
           <ShoppingCartIcon />
         </Badge>
       </Fab>
     </Box>
   );
-        }
+}
