@@ -6,6 +6,8 @@
   --dark: #1f2937;
   --light: #ffffff;
   --radius: 12px;
+  /* 🧱 Bordes – modo claro */
+  --product-card-border: rgba(0, 0, 0, 0.85);
 }
 
 * {
@@ -14,7 +16,15 @@
   box-sizing: border-box;
   font-family: 'Inter', sans-serif;
 }
+/* 🌙 Modo oscuro */
+[data-theme="dark"] {
+  --secondary: #0f172a;
+  --dark: #e5e7eb;
+  --light: #020617;
 
+  /* 🧱 Bordes – modo oscuro */
+  --product-card-border: rgba(255, 255, 255, 0.85);
+}
 body {
   background-color: var(--secondary);
   color: var(--dark);
