@@ -1,17 +1,19 @@
 const styles = {
   appBar: (scrolled, theme) => ({
-    backgroundColor:
-      theme.palette.mode === "dark" ? "#020617" : "#1976d2",
+    backgroundColor: "#1976d2", // 🔒 TU COLOR ORIGINAL
     boxShadow: scrolled
-      ? "0 4px 20px rgba(0,0,0,0.3)"
+      ? theme.palette.mode === "dark"
+        ? "0 6px 30px rgba(0,0,0,0.6)"
+        : "0 4px 20px rgba(0,0,0,0.3)"
       : "none",
     zIndex: 1400,
-    transition: "background-color .3s ease",
+    transition: "box-shadow .3s ease",
   }),
 
   toolbar: {
     display: "flex",
     justifyContent: "space-between",
+    alignItems: "center",
   },
 
   logo: {
@@ -43,10 +45,13 @@ const styles = {
 
   drawerPaper: (theme) => ({
     width: 280,
-    backgroundColor:
-      theme.palette.mode === "dark" ? "#020617" : "#1976d2",
+    backgroundColor: "#1976d2", // 🔒 IGUAL QUE ANTES
     borderRadius: "16px 0 0 16px",
     p: 2,
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 0 40px rgba(0,0,0,0.7)"
+        : "0 0 30px rgba(0,0,0,0.35)",
   }),
 
   drawerStack: {
