@@ -37,8 +37,10 @@ export default function Navbar() {
   const { mode, toggleMode } = useThemeMode();
   const navigate = useNavigate();
 
-  const [open, setOpen] = useState(false);
+  const isDark = mode === "dark";
   const scrolled = useScrollTrigger(50);
+
+  const [open, setOpen] = useState(false);
 
   const menuItems = useMemo(
     () => (isAuthenticated ? authMenu : guestMenu),
@@ -65,10 +67,8 @@ export default function Navbar() {
         alignItems="center"
         sx={styles.userSection(mobile)}
       >
-        <AccountCircleIcon sx={{ color: "#fff" }} />
-        <Typography sx={{ color: "#fff", fontWeight: 600 }}>
-          {user?.username}
-        </Typography>
+        <AccountCircleIcon />
+        <Typography fontWeight={600}>{user?.username}</Typography>
 
         {showLogout && (
           <Button
@@ -97,15 +97,10 @@ export default function Navbar() {
         <AppBar
           position="fixed"
           elevation={scrolled ? 6 : 2}
-          sx={styles.appBar(scrolled)}
+          sx={styles.appBar(scrolled, isDark)}
         >
           <Toolbar sx={styles.toolbar}>
-            <Typography
-              variant="h6"
-              component={Link}
-              to="/"
-              sx={styles.logo}
-            >
+            <Typography component={Link} to="/" sx={styles.logo}>
               <ShoppingBagIcon sx={styles.logoIcon} />
               E-commerce Jorge Patricio
             </Typography>
@@ -113,29 +108,23 @@ export default function Navbar() {
             {/* Desktop */}
             <Box sx={styles.desktopMenu}>
               <MenuList />
-              <IconButton onClick={toggleMode} sx={{ color: "#fff" }}>
-                {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+              <IconButton onClick={toggleMode}>
+                {isDark ? <LightModeIcon /> : <DarkModeIcon />}
               </IconButton>
               <UserSection />
             </Box>
 
-            {/* Mobile button */}
-            <IconButton
-              sx={styles.menuBtnMobile}
-              onClick={handleToggleMenu}
-              aria-label={open ? "Cerrar menú" : "Abrir menú"}
-              aria-expanded={open}
-            >
+            {/* Mobile */}
+            <IconButton sx={styles.menuBtnMobile} onClick={handleToggleMenu}>
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
                   key={open ? "close" : "menu"}
-                  initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
-                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                  exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
+                  initial={{ rotate: -90, opacity: 0 }}
+                  animate={{ rotate: 0, opacity: 1 }}
+                  exit={{ rotate: 90, opacity: 0 }}
                   transition={{ duration: 0.25 }}
-                  style={styles.menuIconWrapper}
                 >
-                  {open ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
+                  {open ? <CloseIcon /> : <MenuIcon />}
                 </motion.div>
               </AnimatePresence>
             </IconButton>
@@ -143,18 +132,18 @@ export default function Navbar() {
         </AppBar>
       </motion.div>
 
-      {/* Drawer mobile */}
+      {/* Drawer */}
       <Drawer
         anchor="right"
         open={open}
         onClose={handleCloseMenu}
-        sx={{ display: { xs: "block", md: "none" } }}
-        PaperProps={{ sx: styles.drawerPaper }}
+        PaperProps={{ sx: styles.drawerPaper(isDark) }}
+        sx={{ display: { xs: "block", lg: "none" } }}
       >
         <Stack sx={styles.drawerStack} spacing={3}>
           <UserSection showLogout={false} mobile />
 
-          <Divider sx={{ bgcolor: "rgba(255,255,255,0.3)", my: 2 }} />
+          <Divider />
 
           <MenuList onClick={handleCloseMenu} />
 
@@ -168,13 +157,11 @@ export default function Navbar() {
             </Button>
           )}
 
-          <Stack spacing={2} alignItems="center" sx={styles.drawerUtilStack}>
-            <IconButton onClick={toggleMode} sx={styles.toggleModeBtn}>
-              {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
-            </IconButton>
-          </Stack>
+          <IconButton onClick={toggleMode} sx={styles.toggleModeBtn}>
+            {isDark ? <LightModeIcon /> : <DarkModeIcon />}
+          </IconButton>
         </Stack>
       </Drawer>
     </>
   );
-}
+        }
