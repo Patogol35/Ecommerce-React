@@ -30,11 +30,13 @@ import {
 } from "@mui/icons-material";
 
 import { motion, AnimatePresence } from "framer-motion";
+import { useTheme } from "@mui/material/styles";
 import styles from "./Navbar.styles";
 
 export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
   const { mode, toggleMode } = useThemeMode();
+  const theme = useTheme();
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -97,7 +99,7 @@ export default function Navbar() {
         <AppBar
           position="fixed"
           elevation={scrolled ? 6 : 2}
-          sx={styles.appBar(scrolled)}
+          sx={styles.appBar(scrolled, theme)}
         >
           <Toolbar sx={styles.toolbar}>
             <Typography
@@ -119,7 +121,7 @@ export default function Navbar() {
               <UserSection />
             </Box>
 
-            {/* Mobile button */}
+            {/* Mobile */}
             <IconButton
               sx={styles.menuBtnMobile}
               onClick={handleToggleMenu}
@@ -147,13 +149,13 @@ export default function Navbar() {
         </AppBar>
       </motion.div>
 
-      {/* Drawer mobile */}
+      {/* Drawer */}
       <Drawer
         anchor="right"
         open={open}
         onClose={handleCloseMenu}
         sx={{ display: { xs: "block", md: "none" } }}
-        PaperProps={{ sx: styles.drawerPaper }}
+        PaperProps={{ sx: styles.drawerPaper(theme) }}
       >
         <Stack sx={styles.drawerStack} spacing={3}>
           <UserSection showLogout={false} mobile />
@@ -181,4 +183,4 @@ export default function Navbar() {
       </Drawer>
     </>
   );
-}
+        }
