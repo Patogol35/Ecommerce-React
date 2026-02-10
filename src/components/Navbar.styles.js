@@ -1,13 +1,12 @@
+// styles.js
 const styles = {
-  appBar: (scrolled, theme) => ({
-    backgroundColor: "#1976d2",
-    boxShadow: scrolled
-      ? theme.palette.mode === "dark"
-        ? "0 6px 30px rgba(0,0,0,0.6)"
-        : "0 4px 20px rgba(0,0,0,0.3)"
-      : "none",
+  appBar: (theme, scrolled) => ({
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? theme.palette.background.paper
+        : "#1976d2",
+    boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.3)" : "none",
     zIndex: 1400,
-    transition: "box-shadow .3s ease",
   }),
 
   toolbar: {
@@ -38,26 +37,30 @@ const styles = {
     alignItems: "center",
   },
 
-  menuBtnMobile: {
+  // ☰ botón hamburguesa (3 rayas)
+  menuBtnMobile: (theme) => ({
     display: { xs: "block", lg: "none" },
-    color: "#fff",
-  },
+    color:
+      theme.palette.mode === "dark"
+        ? theme.palette.text.primary
+        : "#fff",
+  }),
 
   menuIconWrapper: {
     display: "flex",
   },
 
+  // Drawer
   drawerPaper: (theme) => ({
     width: 280,
-    background: "#1976d2",
+    background:
+      theme.palette.mode === "dark"
+        ? theme.palette.background.default
+        : "#1976d2",
     borderRadius: "16px 0 0 16px",
-    p: 2,
+    padding: 16,
     display: "flex",
     flexDirection: "column",
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "0 0 40px rgba(0,0,0,0.7)"
-        : "0 0 30px rgba(0,0,0,0.35)",
   }),
 
   drawerStack: {
@@ -71,27 +74,42 @@ const styles = {
     mt: isMobile ? 12 : 0,
   }),
 
-  logoutBtn: {
+  logoutBtn: (theme) => ({
     fontWeight: 600,
     color: "#fff",
-    background: "linear-gradient(135deg, #d32f2f, #f44336)",
+    background:
+      theme.palette.mode === "dark"
+        ? "linear-gradient(135deg, #b71c1c, #d32f2f)"
+        : "linear-gradient(135deg, #d32f2f, #f44336)",
     borderRadius: "12px",
     px: 2.5,
     py: 1,
-  },
+  }),
 
   drawerUtilStack: {
     mt: 3,
     pb: 2,
   },
 
-  toggleModeBtn: {
-    color: "#fff",
-    background: "rgba(0,0,0,0.4)",
-    "&:hover": { background: "rgba(0,0,0,0.7)" },
+  // 🌙 botón modo oscuro
+  toggleModeBtn: (theme) => ({
+    color:
+      theme.palette.mode === "dark"
+        ? theme.palette.text.primary
+        : "#fff",
+    background:
+      theme.palette.mode === "dark"
+        ? "rgba(255,255,255,0.1)"
+        : "rgba(0,0,0,0.4)",
+    "&:hover": {
+      background:
+        theme.palette.mode === "dark"
+          ? "rgba(255,255,255,0.2)"
+          : "rgba(0,0,0,0.7)",
+    },
     width: 48,
     height: 48,
-  },
+  }),
 };
 
 export default styles;
