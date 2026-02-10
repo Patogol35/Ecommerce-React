@@ -1,8 +1,13 @@
 const styles = {
-  appBar: (scrolled) => ({
+  appBar: (scrolled, theme) => ({
     backgroundColor: "#1976d2",
-    boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.3)" : "none",
+    boxShadow: scrolled
+      ? theme.palette.mode === "dark"
+        ? "0 6px 30px rgba(0,0,0,0.6)"
+        : "0 4px 20px rgba(0,0,0,0.3)"
+      : "none",
     zIndex: 1400,
+    transition: "box-shadow .3s ease",
   }),
 
   toolbar: {
@@ -42,14 +47,18 @@ const styles = {
     display: "flex",
   },
 
-  drawerPaper: {
+  drawerPaper: (theme) => ({
     width: 280,
     background: "#1976d2",
     borderRadius: "16px 0 0 16px",
     p: 2,
     display: "flex",
     flexDirection: "column",
-  },
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 0 40px rgba(0,0,0,0.7)"
+        : "0 0 30px rgba(0,0,0,0.35)",
+  }),
 
   drawerStack: {
     flex: 1,
