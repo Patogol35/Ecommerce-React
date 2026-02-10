@@ -9,17 +9,23 @@
   background: #fff;
   overflow: hidden;
 
-  /* 🔥 BORDE DINÁMICO */
-  border: 2px solid var(--product-card-border);
-  border-radius: 20px;
+  /* 🎯 BORDE SUAVE (CLARO / OSCURO) */
+  border: 1px solid var(--product-card-border);
+  border-radius: 16px;
 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  /* 💎 SOMBRA ELEGANTE */
+  box-shadow:
+    0 4px 12px rgba(0, 0, 0, 0.08),
+    0 1px 3px rgba(0, 0, 0, 0.06);
+
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
 
 .product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  transform: translateY(-6px);
+  box-shadow:
+    0 10px 24px rgba(0, 0, 0, 0.15),
+    0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
 /* ================= Imagen ================= */
@@ -39,14 +45,14 @@
 }
 
 .product-image-container:hover img {
-  transform: scale(1.1);
+  transform: scale(1.08);
 }
 
 /* ================= Overlay ================= */
 .overlay {
   position: absolute;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
+  background: rgba(0, 0, 0, 0.45);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -73,7 +79,7 @@
 
 .product-title {
   font-size: 1rem;
-  font-weight: bold;
+  font-weight: 600;
   margin-bottom: 8px;
   white-space: nowrap;
   overflow: hidden;
@@ -82,6 +88,6 @@
 
 .product-price {
   font-size: 1.1rem;
-  font-weight: bold;
+  font-weight: 700;
   color: #1976d2;
 }
