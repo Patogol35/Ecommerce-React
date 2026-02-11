@@ -4,7 +4,7 @@ export const cardSx = (theme) => ({
   height: 480,
   borderRadius: 3,
   bgcolor: "background.paper",
-  border: "1px solid",
+  border: "3px solid",
   borderColor: "divider", // ✅ línea sutil que separa del fondo
   boxShadow:
     theme.palette.mode === "dark"
