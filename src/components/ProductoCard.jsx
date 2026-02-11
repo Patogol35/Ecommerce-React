@@ -95,7 +95,8 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           </Typography>
         </Stack>
 
-        <Divider sx={dividerSx} />
+        {/* Divider CORRECTO */}
+        <Divider sx={(theme) => dividerSx(theme)} />
 
         {/* Botones */}
         <Stack spacing={1}>
@@ -116,7 +117,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
             color="inherit"
             fullWidth
             startIcon={<InfoIcon />}
-            sx={botonDetallesSx}
+            sx={(theme) => botonDetallesSx(theme)}
             onClick={() =>
               onVerDetalle
                 ? onVerDetalle()
