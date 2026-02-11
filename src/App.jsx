@@ -1,5 +1,4 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
-import { CssBaseline } from "@mui/material";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -18,8 +17,6 @@ import Layout from "./components/Layout";
 function App() {
   return (
     <ThemeModeProvider>
-      <CssBaseline />
-
       <BrowserRouter>
         <AuthProvider>
           <CarritoProvider>
