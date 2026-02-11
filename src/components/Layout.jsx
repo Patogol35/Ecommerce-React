@@ -12,18 +12,24 @@ export default function Layout() {
     <Box
       sx={{
         minHeight: "100vh",
+        display: "flex",
+        flexDirection: "column",
+
         backgroundColor:
           theme.palette.mode === "dark"
             ? "#0f172a"
             : "#f8fafc",
+
         transition: "background-color .3s ease",
       }}
     >
       <Navbar />
 
+      {/* CONTENIDO */}
       <Container
         maxWidth="lg"
         sx={{
+          flex: 1,
           pt: `calc(${theme.mixins.toolbar.minHeight}px + 24px)`,
           pb: 6,
         }}
@@ -64,8 +70,9 @@ export default function Layout() {
         <ShoppingCartIcon />
       </IconButton>
 
-      {/* Footer */}
+      {/* FOOTER */}
       <Box
+        component="footer"
         sx={{
           textAlign: "center",
           py: 3,
