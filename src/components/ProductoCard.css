@@ -1,101 +1,79 @@
-// ProductoCard.styles.js
+.product-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 300px;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  height: 100%; 
+}
 
-export const cardSx = (theme) => ({
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  width: "100%",
-  maxWidth: 300,
-  height: "100%",
-  borderRadius: 3,
-  overflow: "hidden",
-  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
 
-  backgroundColor: theme.palette.background.paper,
+.product-image-container {
+  position: relative;
+  width: 100%;
+  height: 220px; 
+  background: #f5f5f5;
+  overflow: hidden;
+}
 
-  // 🔥 BORDE DINÁMICO CLARO / OSCURO
-  border: `2px solid ${
-    theme.palette.mode === "dark"
-      ? theme.palette.grey[700]
-      : theme.palette.grey[300]
-  }`,
+.product-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover; 
+  transition: transform 0.4s ease;
+}
 
-  "&:hover": {
-    transform: "translateY(-8px)",
-    boxShadow: theme.shadows[8],
-  },
-});
+.product-image-container:hover img {
+  transform: scale(1.1);
+}
 
-export const imagenBoxSx = {
-  position: "relative",
-  width: "100%",
-  height: 220,
-  overflow: "hidden",
-};
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
 
-export const imagenSx = {
-  width: "100%",
-  height: "100%",
-  objectFit: "cover",
-  transition: "transform 0.4s ease",
-  "&:hover": {
-    transform: "scale(1.1)",
-  },
-};
+.product-image-container:hover .overlay {
+  opacity: 1;
+}
 
-export const chipNuevoSx = {
-  position: "absolute",
-  top: 10,
-  left: 10,
-  fontWeight: "bold",
-};
+.product-info {
+  padding: 16px;
+  flex-grow: 1; 
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
 
-export const contenidoSx = {
-  p: 2,
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
-  flexGrow: 1,
-};
+.product-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
 
-export const tituloSx = {
-  mb: 1,
-  whiteSpace: "nowrap",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-};
-
-export const precioStackSx = {
-  mb: 1,
-};
-
-export const dividerSx = (theme) => ({
-  my: 1,
-  borderColor:
-    theme.palette.mode === "dark"
-      ? theme.palette.grey[700]
-      : theme.palette.grey[300],
-});
-
-export const botonAgregarSx = (stock) => (theme) => ({
-  borderRadius: 2,
-  fontWeight: "bold",
-  ...(stock === 0 && {
-    backgroundColor: theme.palette.grey[500],
-  }),
-});
-
-export const botonDetallesSx = (theme) => ({
-  borderRadius: 2,
-
-  // 🔥 Borde visible en ambos modos
-  borderColor:
-    theme.palette.mode === "dark"
-      ? theme.palette.grey[600]
-      : theme.palette.grey[400],
-
-  color:
-    theme.palette.mode === "dark"
-      ? theme.palette.grey[300]
-      : theme.palette.text.primary,
-});
+.product-price {
+  font-size: 1.1rem;
+  color: #1976d2;
+  font-weight: bold;
+}
