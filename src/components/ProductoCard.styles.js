@@ -1,81 +1,49 @@
-// =============================
-// TARJETA PRINCIPAL
-// =============================
-export const cardSx = (theme) => {
-  const isDark = theme.palette.mode === "dark";
+// Tarjeta principal
+export const cardSx = (theme) => ({
+  width: 320,
+  height: 480,
+  borderRadius: 3,
+  bgcolor: "background.paper",
+  border: "1px solid",
+  borderColor: "divider", // ✅ línea sutil que separa del fondo
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "0 6px 18px rgba(0,0,0,0.6)"   // sombra más fuerte en dark
+      : "0 8px 24px rgba(0,0,0,0.06)",
+  overflow: "hidden",
+  display: "flex",
+  flexDirection: "column",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-6px)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 8px 24px rgba(0,0,0,0.9)"
+        : "0 12px 32px rgba(0,0,0,0.12)",
+  },
+});
 
-  return {
-    width: 320,
-    height: 480,
-    borderRadius: 3,
-
-    // 🔥 Fondo ligeramente diferente
-    bgcolor: isDark ? "#1e1e1e" : "#ffffff",
-
-    // 🔥 Borde más visible
-    border: isDark
-      ? "1px solid rgba(255,255,255,0.08)"
-      : "1px solid rgba(0,0,0,0.15)",
-
-    // 🔥 Sombra con más contraste
-    boxShadow: isDark
-      ? "0 12px 30px rgba(0,0,0,0.8)"
-      : "0 18px 40px rgba(0,0,0,0.12)",
-
-    overflow: "hidden",
-    display: "flex",
-    flexDirection: "column",
-    transition: "all 0.3s ease",
-
-    "&:hover": {
-      transform: "translateY(-8px)",
-      border: `1px solid ${theme.palette.primary.main}`,
-      boxShadow: isDark
-        ? "0 20px 45px rgba(0,0,0,0.9)"
-        : "0 28px 60px rgba(0,0,0,0.18)",
-    },
-  };
-};
-// =============================
-// CONTENEDOR IMAGEN
-// =============================
-export const imagenBoxSx = (theme) => ({
+// Imagen contenedor
+export const imagenBoxSx = {
   position: "relative",
   height: 240,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-
-  bgcolor:
-    theme.palette.mode === "dark"
-      ? "rgba(255,255,255,0.03)"
-      : "#fafafa",
-
+  bgcolor: "background.default", // ✅ adaptable
   overflow: "hidden",
-
-  borderBottom: `1px solid ${theme.palette.divider}`,
-});
-
-
-// =============================
-// IMAGEN
-// =============================
-export const imagenSx = {
-  maxWidth: "85%",
-  maxHeight: "85%",
-  objectFit: "contain",
-  transition: "transform 0.6s ease",
-  filter: "drop-shadow(0 6px 12px rgba(0,0,0,0.15))",
-
-  "&:hover": {
-    transform: "scale(1.08)",
-  },
 };
 
+// Imagen con efecto
+export const imagenSx = {
+  maxWidth: "100%",
+  maxHeight: "100%",
+  objectFit: "contain",
+  transition: "transform 0.5s ease",
+  "&:hover": { transform: "scale(1.08) rotate(1deg)" },
+};
 
-// =============================
-// CHIP NUEVO
-// =============================
+// Chip "Nuevo"
 export const chipNuevoSx = {
   position: "absolute",
   top: 14,
@@ -90,105 +58,72 @@ export const chipNuevoSx = {
   boxShadow: "0 3px 8px rgba(0,0,0,0.3)",
 };
 
-
-// =============================
-// CONTENIDO
-// =============================
+// Contenido
 export const contenidoSx = {
   p: 2.2,
   flexGrow: 1,
   display: "flex",
   flexDirection: "column",
-  gap: 1,
 };
 
-
-// =============================
-// TÍTULO
-// =============================
+// Título
 export const tituloSx = {
-  mb: 1.2,
+  mb: 1,
   fontWeight: 600,
-  fontSize: "1.05rem",
-  lineHeight: 1.4,
-  color: "text.primary",
-
+  fontSize: "1.1rem",
+  lineHeight: 1.35,
+  color: "text.primary", // ✅ adaptable
   overflow: "hidden",
-  display: "-webkit-box",
-  WebkitLineClamp: 2,
-  WebkitBoxOrient: "vertical",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
 };
 
-
-// =============================
-// PRECIO
-// =============================
+// Precio
 export const precioStackSx = {
   mb: 2,
-  fontSize: "1.3rem",
-  fontWeight: 700,
-  alignItems: "center",
+  fontSize: "1.25rem",
+  fontWeight: "bold",
+  color: "primary.main", // ✅ usa paleta
 };
 
+// Divider
+export const dividerSx = { my: 1.2 };
 
-// =============================
-// DIVIDER
-// =============================
-export const dividerSx = {
-  my: 1.2,
-};
-
-
-// =============================
-// BOTÓN AGREGAR
-// =============================
+// Botón agregar
 export const botonAgregarSx = (stock) => ({
   borderRadius: 2,
   textTransform: "none",
   py: 1.1,
   fontWeight: 600,
   fontSize: "0.95rem",
-
   background:
-    stock > 0
-      ? "linear-gradient(90deg, #1976d2, #42a5f5)"
-      : "grey.400",
-
+    stock > 0 ? "linear-gradient(90deg, #1976d2, #42a5f5)" : "grey.400",
   color: "white",
   transition: "all 0.3s ease",
-
   "&:hover": {
-    transform: stock > 0 ? "translateY(-2px)" : "none",
+    transform: stock > 0 ? "scale(1.05)" : "none",
     background:
       stock > 0
         ? "linear-gradient(90deg, #1565c0, #1e88e5)"
         : "grey.400",
-    boxShadow:
-      stock > 0
-        ? "0 10px 24px rgba(0,0,0,0.22)"
-        : "none",
+    boxShadow: stock > 0 ? "0 6px 18px rgba(0,0,0,0.18)" : "none",
   },
 });
 
-
-// =============================
-// BOTÓN DETALLES
-// =============================
-export const botonDetallesSx = (theme) => ({
+// Botón detalles
+export const botonDetallesSx = {
   borderRadius: 2,
   textTransform: "none",
   py: 0.9,
   fontWeight: 500,
   fontSize: "0.9rem",
-
-  border: `1px solid ${theme.palette.divider}`,
-  color: theme.palette.text.secondary,
-
+  border: "1px solid",
+  borderColor: "divider", // ✅ adaptable
+  color: "text.secondary", // ✅ se ajusta a light/dark
   transition: "all 0.3s ease",
-
   "&:hover": {
-    transform: "translateY(-2px)",
-    backgroundColor: theme.palette.action.hover,
-    boxShadow: "0 6px 16px rgba(0,0,0,0.08)",
+    transform: "scale(1.04)",
+    bgcolor: "action.hover", // ✅ dinámico
+    boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
   },
-});
+};
