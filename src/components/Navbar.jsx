@@ -30,13 +30,11 @@ import {
 } from "@mui/icons-material";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useTheme } from "@mui/material/styles";
 import styles from "./Navbar.styles";
 
 export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
   const { mode, toggleMode } = useThemeMode();
-  const theme = useTheme();
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
@@ -76,7 +74,7 @@ export default function Navbar() {
           <Button
             onClick={handleLogout}
             startIcon={<LogoutIcon />}
-            sx={styles.logoutBtn}
+            sx={(theme) => styles.logoutBtn(theme)}
           >
             Cerrar sesión
           </Button>
@@ -99,7 +97,7 @@ export default function Navbar() {
         <AppBar
           position="fixed"
           elevation={scrolled ? 6 : 2}
-          sx={styles.appBar(scrolled, theme)}
+          sx={(theme) => styles.appBar(theme, scrolled)}
         >
           <Toolbar sx={styles.toolbar}>
             <Typography
@@ -123,10 +121,8 @@ export default function Navbar() {
 
             {/* Mobile */}
             <IconButton
-              sx={styles.menuBtnMobile}
+              sx={(theme) => styles.menuBtnMobile(theme)}
               onClick={handleToggleMenu}
-              aria-label={open ? "Cerrar menú" : "Abrir menú"}
-              aria-expanded={open}
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -155,7 +151,9 @@ export default function Navbar() {
         open={open}
         onClose={handleCloseMenu}
         sx={{ display: { xs: "block", md: "none" } }}
-        PaperProps={{ sx: styles.drawerPaper(theme) }}
+        PaperProps={{
+          sx: (theme) => styles.drawerPaper(theme),
+        }}
       >
         <Stack sx={styles.drawerStack} spacing={3}>
           <UserSection showLogout={false} mobile />
@@ -168,14 +166,17 @@ export default function Navbar() {
             <Button
               onClick={handleLogout}
               startIcon={<LogoutIcon />}
-              sx={styles.logoutBtn}
+              sx={(theme) => styles.logoutBtn(theme)}
             >
               Cerrar sesión
             </Button>
           )}
 
           <Stack spacing={2} alignItems="center" sx={styles.drawerUtilStack}>
-            <IconButton onClick={toggleMode} sx={styles.toggleModeBtn}>
+            <IconButton
+              onClick={toggleMode}
+              sx={(theme) => styles.toggleModeBtn(theme)}
+            >
               {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
             </IconButton>
           </Stack>
