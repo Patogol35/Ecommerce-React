@@ -1,13 +1,13 @@
-
-import { createContext, useContext, useMemo, useState, useEffect } from "react";
+import { createContext, useContext, useMemo, useState } from "react";
 import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 
 const ThemeModeContext = createContext();
 
 export function ThemeModeProvider({ children }) {
-  // lee del localStorage si existe
-  const storedMode = localStorage.getItem("mode") || "light";
-  const [mode, setMode] = useState(storedMode);
+  // ✅ Mejor inicialización (evita re-render innecesario)
+  const [mode, setMode] = useState(() => {
+    return localStorage.getItem("mode") || "light";
+  });
 
   const toggleMode = () => {
     setMode((prev) => {
@@ -17,22 +17,23 @@ export function ThemeModeProvider({ children }) {
     });
   };
 
+  // ✅ Theme 100% adaptable
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
           mode,
-          ...(mode === "light"
-            ? {
-                primary: { main: "#1976d2" },
-                background: { default: "#f4f6f8", paper: "#fff" },
-              }
-            : {
-                primary: { main: "#90caf9" },
-                background: { default: "#121212", paper: "#1e1e1e" },
-              }),
+          primary: {
+            main: mode === "light" ? "#1976d2" : "#90caf9",
+          },
+          background: {
+            default: mode === "light" ? "#f4f6f8" : "#121212",
+            paper: mode === "light" ? "#ffffff" : "#1e1e1e",
+          },
         },
-        shape: { borderRadius: 12 },
+        shape: {
+          borderRadius: 12,
+        },
       }),
     [mode]
   );
