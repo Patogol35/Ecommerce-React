@@ -1,35 +1,43 @@
 // =============================
 // TARJETA PRINCIPAL
 // =============================
-export const cardSx = (theme) => ({
-  width: 320,
-  height: 480,
-  borderRadius: 4,
-  bgcolor: "background.paper",
+export const cardSx = (theme) => {
+  const isDark = theme.palette.mode === "dark";
 
-  border: `1px solid ${theme.palette.divider}`,
+  return {
+    width: 320,
+    height: 480,
+    borderRadius: 4,
+    bgcolor: "background.paper",
 
-  boxShadow:
-    theme.palette.mode === "dark"
-      ? "0 8px 28px rgba(0,0,0,0.7)"
-      : "0 10px 30px rgba(0,0,0,0.08)",
+    // 🔥 BORDE REAL VISIBLE
+    border: isDark
+      ? "1px solid rgba(255,255,255,0.08)"
+      : "1px solid rgba(0,0,0,0.12)",
 
-  overflow: "hidden",
-  display: "flex",
-  flexDirection: "column",
-  position: "relative",
+    boxShadow: isDark
+      ? "0 8px 28px rgba(0,0,0,0.75)"
+      : "0 12px 32px rgba(0,0,0,0.08)",
 
-  transition: "all 0.35s cubic-bezier(.4,0,.2,1)",
+    overflow: "hidden",
+    display: "flex",
+    flexDirection: "column",
+    position: "relative",
 
-  "&:hover": {
-    transform: "translateY(-8px)",
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "0 14px 38px rgba(0,0,0,0.9)"
-        : "0 18px 45px rgba(0,0,0,0.14)",
-    borderColor: theme.palette.primary.main,
-  },
-});
+    transition: "all 0.35s cubic-bezier(.4,0,.2,1)",
+
+    "&:hover": {
+      transform: "translateY(-8px)",
+
+      // 🔥 BORDE ACTIVO MÁS FUERTE
+      border: `1px solid ${theme.palette.primary.main}`,
+
+      boxShadow: isDark
+        ? "0 18px 40px rgba(0,0,0,0.9)"
+        : "0 22px 55px rgba(0,0,0,0.18)",
+    },
+  };
+};
 
 
 // =============================
