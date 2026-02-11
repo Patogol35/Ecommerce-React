@@ -5,16 +5,13 @@ export const cardSx = (theme) => ({
   borderRadius: 3,
   bgcolor: "background.paper",
 
-  border: "1.5px solid",
+  border: "2px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "rgba(255,255,255,0.15)"   // visible en dark
-      : "rgba(0,0,0,0.12)",       // visible en light
+      ? "rgba(255,255,255,0.25)"
+      : "rgba(0,0,0,0.15)",
 
-  boxShadow:
-    theme.palette.mode === "dark"
-      ? "0 6px 18px rgba(0,0,0,0.6)"
-      : "0 8px 24px rgba(0,0,0,0.06)",
+  boxShadow: "none", // 👈 importante si quitamos elevation
 
   overflow: "hidden",
   display: "flex",
@@ -22,8 +19,7 @@ export const cardSx = (theme) => ({
   transition: "all 0.3s ease",
 
   "&:hover": {
-    transform: "translateY(-6px)",
-    borderColor: "primary.main", // 🔥 resalta al pasar mouse
+    borderColor: "primary.main",
   },
 });
 
