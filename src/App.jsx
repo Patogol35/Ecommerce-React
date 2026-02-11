@@ -10,10 +10,10 @@ import ProductoDetalle from "./pages/ProductoDetalle";
 
 import { AuthProvider } from "./context/AuthContext";
 import { CarritoProvider } from "./context/CarritoContext";
+import { ThemeModeProvider } from "./context/ThemeContext";
+
 import ProtectedRoute from "./components/ProtectedRoute";
 import Layout from "./components/Layout";
-
-import { ThemeModeProvider } from "./context/ThemeContext";
 
 function App() {
   return (
