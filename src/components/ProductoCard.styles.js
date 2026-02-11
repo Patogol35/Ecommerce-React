@@ -4,37 +4,38 @@
 export const cardSx = (theme) => ({
   width: 320,
   height: 480,
-  borderRadius: 4,
+  borderRadius: 3,
   bgcolor: "background.paper",
 
-  border: "1px solid",
-  borderColor: "divider",
+  border: "2px solid",
+  borderColor:
+    theme.palette.mode === "dark"
+      ? "rgba(255,255,255,0.25)"
+      : "rgba(0,0,0,0.25)",
 
   boxShadow:
     theme.palette.mode === "dark"
-      ? "0 8px 24px rgba(0,0,0,0.4)"
-      : "0 8px 24px rgba(0,0,0,0.08)",
+      ? "0 6px 18px rgba(0,0,0,0.45)"
+      : "0 6px 18px rgba(0,0,0,0.08)",
 
   overflow: "hidden",
   display: "flex",
   flexDirection: "column",
-  position: "relative",
-
-  transition: "all 0.35s cubic-bezier(0.4, 0, 0.2, 1)",
+  transition: "all 0.3s ease",
 
   "&:hover": {
-    transform: "translateY(-6px)",
-    borderColor: "primary.main",
+    borderColor: theme.palette.primary.main,
+    transform: "translateY(-4px)",
     boxShadow:
       theme.palette.mode === "dark"
-        ? "0 14px 35px rgba(0,0,0,0.6)"
-        : "0 14px 35px rgba(0,0,0,0.15)",
+        ? "0 12px 28px rgba(0,0,0,0.65)"
+        : "0 12px 28px rgba(0,0,0,0.15)",
   },
 });
 
 
 // ================================
-// 🖼 CONTENEDOR DE IMAGEN
+// 🖼 CONTENEDOR IMAGEN
 // ================================
 export const imagenBoxSx = {
   position: "relative",
@@ -54,9 +55,9 @@ export const imagenSx = {
   maxWidth: "100%",
   maxHeight: "100%",
   objectFit: "contain",
-  transition: "transform 0.6s cubic-bezier(0.4, 0, 0.2, 1)",
+  transition: "transform 0.4s ease",
   "&:hover": {
-    transform: "scale(1.12)",
+    transform: "scale(1.06)",
   },
 };
 
@@ -68,14 +69,15 @@ export const chipNuevoSx = {
   position: "absolute",
   top: 14,
   left: 14,
-  fontWeight: "bold",
-  background: "linear-gradient(135deg, #FF6B6B, #FF8E53)",
+  fontWeight: 600,
+  background: "linear-gradient(135deg, #ff6b6b, #ff8e53)",
   color: "#fff",
-  borderRadius: "14px",
+  borderRadius: "16px",
   px: 1.5,
-  py: 0.5,
-  fontSize: "0.75rem",
-  boxShadow: "0 4px 12px rgba(0,0,0,0.3)",
+  py: 0.4,
+  fontSize: "0.72rem",
+  letterSpacing: "0.5px",
+  boxShadow: "0 4px 10px rgba(0,0,0,0.25)",
 };
 
 
@@ -110,10 +112,10 @@ export const tituloSx = {
 // ================================
 export const precioStackSx = {
   mb: 2,
-  fontSize: "1.35rem",
+  fontSize: "1.3rem",
   fontWeight: 700,
   color: "primary.main",
-  letterSpacing: "0.5px",
+  letterSpacing: "0.3px",
 };
 
 
@@ -129,9 +131,9 @@ export const dividerSx = {
 // 🛒 BOTÓN AGREGAR
 // ================================
 export const botonAgregarSx = (stock) => ({
-  borderRadius: 3,
+  borderRadius: 2.5,
   textTransform: "none",
-  py: 1.2,
+  py: 1.1,
   fontWeight: 600,
   fontSize: "0.95rem",
 
@@ -141,18 +143,17 @@ export const botonAgregarSx = (stock) => ({
       : "grey.400",
 
   color: "white",
-
-  transition: "all 0.3s ease",
+  transition: "all 0.25s ease",
 
   "&:hover": {
-    transform: stock > 0 ? "translateY(-2px)" : "none",
+    transform: stock > 0 ? "scale(1.03)" : "none",
     background:
       stock > 0
         ? "linear-gradient(135deg, #1565c0, #1e88e5)"
         : "grey.400",
     boxShadow:
       stock > 0
-        ? "0 6px 20px rgba(25,118,210,0.35)"
+        ? "0 6px 16px rgba(25,118,210,0.25)"
         : "none",
   },
 });
@@ -162,20 +163,18 @@ export const botonAgregarSx = (stock) => ({
 // 🔎 BOTÓN DETALLES
 // ================================
 export const botonDetallesSx = {
-  borderRadius: 3,
+  borderRadius: 2.5,
   textTransform: "none",
-  py: 1,
+  py: 0.9,
   fontWeight: 500,
   fontSize: "0.9rem",
-
-  border: "1px solid",
+  border: "1.5px solid",
   borderColor: "divider",
   color: "text.secondary",
-
-  transition: "all 0.3s ease",
+  transition: "all 0.25s ease",
 
   "&:hover": {
-    transform: "translateY(-2px)",
+    transform: "scale(1.03)",
     bgcolor: "action.hover",
     borderColor: "primary.main",
   },
