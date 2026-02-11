@@ -4,7 +4,6 @@ import { ThemeProvider, createTheme, CssBaseline } from "@mui/material";
 const ThemeModeContext = createContext();
 
 export function ThemeModeProvider({ children }) {
-  // ✅ Mejor inicialización (evita re-render innecesario)
   const [mode, setMode] = useState(() => {
     return localStorage.getItem("mode") || "light";
   });
@@ -17,22 +16,51 @@ export function ThemeModeProvider({ children }) {
     });
   };
 
-  // ✅ Theme 100% adaptable
   const theme = useMemo(
     () =>
       createTheme({
         palette: {
           mode,
+
           primary: {
-            main: mode === "light" ? "#1976d2" : "#90caf9",
+            main: "#4f46e5",
           },
+          secondary: {
+            main: "#f43f5e",
+          },
+
           background: {
-            default: mode === "light" ? "#f4f6f8" : "#121212",
-            paper: mode === "light" ? "#ffffff" : "#1e1e1e",
+            default: mode === "dark" ? "#141414" : "#f8f9fa",
+            paper: mode === "dark" ? "#1e1e1e" : "#ffffff",
           },
         },
-        shape: {
-          borderRadius: 12,
+
+        typography: {
+          fontFamily: "Inter, Roboto, Arial, sans-serif",
+          h4: { fontWeight: 700 },
+          h5: { fontWeight: 600 },
+        },
+
+        shape: { borderRadius: 12 },
+
+        components: {
+          MuiCard: {
+            styleOverrides: {
+              root: {
+                borderRadius: 16,
+                transition: "0.3s",
+              },
+            },
+          },
+          MuiButton: {
+            styleOverrides: {
+              root: {
+                borderRadius: 12,
+                textTransform: "none",
+                fontWeight: 600,
+              },
+            },
+          },
         },
       }),
     [mode]
