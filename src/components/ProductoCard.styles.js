@@ -1,118 +1,129 @@
-/* ========================= */
-/* VARIABLES MODO CLARO */
-/* ========================= */
+// Tarjeta principal
+export const cardSx = (theme) => ({
+  width: 320,
+  height: 480,
+  borderRadius: 3,
+  bgcolor: "background.paper",
+  border: "1px solid",
+  borderColor: "divider", // ✅ línea sutil que separa del fondo
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "0 6px 18px rgba(0,0,0,0.6)"   // sombra más fuerte en dark
+      : "0 8px 24px rgba(0,0,0,0.06)",
+  overflow: "hidden",
+  display: "flex",
+  flexDirection: "column",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-6px)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 8px 24px rgba(0,0,0,0.9)"
+        : "0 12px 32px rgba(0,0,0,0.12)",
+  },
+});
 
-:root {
-  --product-card-border: #d0d0d0;
-  --product-card-bg: #ffffff;
-}
+// Imagen contenedor
+export const imagenBoxSx = {
+  position: "relative",
+  height: 240,
+  display: "flex",
+  alignItems: "center",
+  justifyContent: "center",
+  bgcolor: "background.default", // ✅ adaptable
+  overflow: "hidden",
+};
 
-/* ========================= */
-/* VARIABLES MODO OSCURO */
-/* ========================= */
+// Imagen con efecto
+export const imagenSx = {
+  maxWidth: "100%",
+  maxHeight: "100%",
+  objectFit: "contain",
+  transition: "transform 0.5s ease",
+  "&:hover": { transform: "scale(1.08) rotate(1deg)" },
+};
 
-body.dark {
-  --product-card-border: #555555;
-  --product-card-bg: #1e1e1e;
-}
+// Chip "Nuevo"
+export const chipNuevoSx = {
+  position: "absolute",
+  top: 14,
+  left: 14,
+  fontWeight: "bold",
+  background: "linear-gradient(90deg, #FF6B6B, #FF8E53)",
+  color: "#fff",
+  borderRadius: "12px",
+  px: 1.5,
+  py: 0.5,
+  fontSize: "0.75rem",
+  boxShadow: "0 3px 8px rgba(0,0,0,0.3)",
+};
 
-/* ========================= */
-/* CARD */
-/* ========================= */
+// Contenido
+export const contenidoSx = {
+  p: 2.2,
+  flexGrow: 1,
+  display: "flex",
+  flexDirection: "column",
+};
 
-.product-card {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  width: 100%;
-  max-width: 300px;
-  height: 100%;
+// Título
+export const tituloSx = {
+  mb: 1,
+  fontWeight: 600,
+  fontSize: "1.1rem",
+  lineHeight: 1.35,
+  color: "text.primary", // ✅ adaptable
+  overflow: "hidden",
+  textOverflow: "ellipsis",
+  whiteSpace: "nowrap",
+};
 
-  border-radius: 20px;
-  overflow: hidden;
+// Precio
+export const precioStackSx = {
+  mb: 2,
+  fontSize: "1.25rem",
+  fontWeight: "bold",
+  color: "primary.main", // ✅ usa paleta
+};
 
-  background: var(--product-card-bg);
+// Divider
+export const dividerSx = { my: 1.2 };
 
-  border: 2px solid var(--product-card-border);
+// Botón agregar
+export const botonAgregarSx = (stock) => ({
+  borderRadius: 2,
+  textTransform: "none",
+  py: 1.1,
+  fontWeight: 600,
+  fontSize: "0.95rem",
+  background:
+    stock > 0 ? "linear-gradient(90deg, #1976d2, #42a5f5)" : "grey.400",
+  color: "white",
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: stock > 0 ? "scale(1.05)" : "none",
+    background:
+      stock > 0
+        ? "linear-gradient(90deg, #1565c0, #1e88e5)"
+        : "grey.400",
+    boxShadow: stock > 0 ? "0 6px 18px rgba(0,0,0,0.18)" : "none",
+  },
+});
 
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-}
-
-.product-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
-}
-
-/* ========================= */
-/* IMAGEN */
-/* ========================= */
-
-.product-image-container {
-  position: relative;
-  width: 100%;
-  height: 220px;
-  background: #f5f5f5;
-  overflow: hidden;
-}
-
-.product-image-container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  transition: transform 0.4s ease;
-}
-
-.product-image-container:hover img {
-  transform: scale(1.1);
-}
-
-/* ========================= */
-/* OVERLAY */
-/* ========================= */
-
-.overlay {
-  position: absolute;
-  inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  opacity: 0;
-  transition: opacity 0.3s ease;
-  color: #fff;
-  padding: 1rem;
-  text-align: center;
-}
-
-.product-image-container:hover .overlay {
-  opacity: 1;
-}
-
-/* ========================= */
-/* INFO */
-/* ========================= */
-
-.product-info {
-  padding: 16px;
-  flex-grow: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.product-title {
-  font-size: 1rem;
-  font-weight: bold;
-  margin-bottom: 8px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-}
-
-.product-price {
-  font-size: 1.1rem;
-  color: #1976d2;
-  font-weight: bold;
-}
+// Botón detalles
+export const botonDetallesSx = {
+  borderRadius: 2,
+  textTransform: "none",
+  py: 0.9,
+  fontWeight: 500,
+  fontSize: "0.9rem",
+  border: "1px solid",
+  borderColor: "divider", // ✅ adaptable
+  color: "text.secondary", // ✅ se ajusta a light/dark
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "scale(1.04)",
+    bgcolor: "action.hover", // ✅ dinámico
+    boxShadow: "0 4px 14px rgba(0,0,0,0.08)",
+  },
+};
