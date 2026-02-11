@@ -6,7 +6,7 @@ export const cardSx = (theme) => ({
   height: 480,
   borderRadius: 3,
 
-  bgcolor: "background.paper", // ✅ Fondo correcto (como el diseño anterior)
+  bgcolor: "background.paper", // ✅ Fondo correcto para surfaces
 
   border: "2px solid",
   borderColor:
@@ -33,18 +33,22 @@ export const cardSx = (theme) => ({
   "&:active": { outline: "none" },
 });
 
+
 // ================================
 // CONTENEDOR IMAGEN
 // ================================
-export const imagenBoxSx = {
+export const imagenBoxSx = (theme) => ({
   position: "relative",
   height: 240,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
-  bgcolor: "background.default",
+
+  // ✅ Mismo fondo que la card (evita doble fondo visual)
+  bgcolor: "background.paper",
+
   overflow: "hidden",
-};
+});
 
 
 // ================================
@@ -106,7 +110,7 @@ export const tituloSx = {
 
 
 // ================================
-// PRECIO (AZUL PROFESIONAL)
+// PRECIO
 // ================================
 export const precioStackSx = (theme) => ({
   mb: 2,
@@ -114,8 +118,8 @@ export const precioStackSx = (theme) => ({
   fontWeight: 700,
   color:
     theme.palette.mode === "dark"
-      ? "#4dabf5"   // azul claro elegante en dark
-      : "#1976d2",  // azul profesional en light
+      ? "#4dabf5"
+      : "#1976d2",
 });
 
 
