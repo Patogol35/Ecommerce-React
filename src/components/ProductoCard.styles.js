@@ -3,33 +3,28 @@ export const cardSx = (theme) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
+
   width: "100%",
-  maxWidth: 300,
-  height: "100%",
-  borderRadius: 3,
+  maxWidth: "300px",   
+  height: "100%",    
+
+  borderRadius: "20px", 
   overflow: "hidden",
-  transition: "all 0.3s ease",
+
   backgroundColor: theme.palette.background.paper,
 
-  // 🔥 BORDE BIEN MARCADO
   border: `2px solid ${
-    theme.palette.mode === "dark"
-      ? "#555"     // más claro en oscuro
-      : "#bdbdbd"  // más oscuro en claro
+    theme.palette.mode === "dark" ? "#555" : "#bdbdbd"
   }`,
 
-  // 🔥 sombra adicional para que se vea mejor
-  boxShadow:
-    theme.palette.mode === "dark"
-      ? "0 0 0 1px rgba(255,255,255,0.05)"
-      : "0 0 0 1px rgba(0,0,0,0.05)",
+  transition: "transform 0.3s ease, box-shadow 0.3s ease",
 
   "&:hover": {
-    transform: "translateY(-6px)",
+    transform: "translateY(-8px)",
     boxShadow:
       theme.palette.mode === "dark"
-        ? "0 8px 25px rgba(0,0,0,0.6)"
-        : "0 8px 25px rgba(0,0,0,0.2)",
+        ? "0 8px 20px rgba(0,0,0,0.6)"
+        : "0 8px 20px rgba(0,0,0,0.2)",
   },
 });
 
