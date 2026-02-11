@@ -21,24 +21,35 @@ export function ThemeModeProvider({ children }) {
       createTheme({
         palette: {
           mode,
-
           primary: {
-            main: "#4f46e5",
+            main: mode === "dark" ? "#42a5f5" : "#1565c0",
+            light: mode === "dark" ? "#64b5f6" : "#1976d2",
+            dark: mode === "dark" ? "#1e88e5" : "#0d47a1",
+            contrastText: "#ffffff",
           },
+
           secondary: {
-            main: "#f43f5e",
+            main: mode === "dark" ? "#f48fb1" : "#d81b60",
           },
 
           background: {
-            default: mode === "dark" ? "#141414" : "#f8f9fa",
+            default: mode === "dark" ? "#121212" : "#f4f6f8",
             paper: mode === "dark" ? "#1e1e1e" : "#ffffff",
           },
+
+          text: {
+            primary: mode === "dark" ? "#ffffff" : "#111111",
+            secondary: mode === "dark" ? "#b0b0b0" : "#555555",
+          },
+
+          divider: mode === "dark" ? "#2c2c2c" : "#e0e0e0",
         },
 
         typography: {
           fontFamily: "Inter, Roboto, Arial, sans-serif",
           h4: { fontWeight: 700 },
           h5: { fontWeight: 600 },
+          button: { fontWeight: 600 },
         },
 
         shape: { borderRadius: 12 },
@@ -52,12 +63,21 @@ export function ThemeModeProvider({ children }) {
               },
             },
           },
+
           MuiButton: {
             styleOverrides: {
               root: {
                 borderRadius: 12,
                 textTransform: "none",
                 fontWeight: 600,
+              },
+            },
+          },
+
+          MuiCssBaseline: {
+            styleOverrides: {
+              body: {
+                transition: "background-color 0.3s ease",
               },
             },
           },
@@ -78,4 +98,4 @@ export function ThemeModeProvider({ children }) {
 
 export function useThemeMode() {
   return useContext(ThemeModeContext);
-}
+            }
