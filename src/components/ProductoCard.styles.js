@@ -4,22 +4,26 @@ export const cardSx = (theme) => ({
   height: 480,
   borderRadius: 3,
   bgcolor: "background.paper",
-  border: "3px solid",
-  borderColor: "divider", // ✅ línea sutil que separa del fondo
+
+  border: "1.5px solid",
+  borderColor:
+    theme.palette.mode === "dark"
+      ? "rgba(255,255,255,0.15)"   // visible en dark
+      : "rgba(0,0,0,0.12)",       // visible en light
+
   boxShadow:
     theme.palette.mode === "dark"
-      ? "0 6px 18px rgba(0,0,0,0.6)"   // sombra más fuerte en dark
+      ? "0 6px 18px rgba(0,0,0,0.6)"
       : "0 8px 24px rgba(0,0,0,0.06)",
+
   overflow: "hidden",
   display: "flex",
   flexDirection: "column",
   transition: "all 0.3s ease",
+
   "&:hover": {
     transform: "translateY(-6px)",
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "0 8px 24px rgba(0,0,0,0.9)"
-        : "0 12px 32px rgba(0,0,0,0.12)",
+    borderColor: "primary.main", // 🔥 resalta al pasar mouse
   },
 });
 
