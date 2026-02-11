@@ -5,14 +5,18 @@ export const cardSx = (theme) => ({
   width: 320,
   height: 480,
   borderRadius: 3,
-  bgcolor: "background.paper",
 
-  // 🔥 Borde fuerte y visible
+  // 🔥 Fondo más elegante en dark (menos negro puro)
+  bgcolor:
+    theme.palette.mode === "dark"
+      ? "#1e1e1e"   // gris oscuro elegante
+      : "background.paper",
+
   border: "2px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "#ffffff"   // blanco en oscuro
-      : "#000000",  // negro en claro
+      ? "#ffffff"
+      : "#000000",
 
   boxShadow:
     theme.palette.mode === "dark"
@@ -46,7 +50,7 @@ export const imagenBoxSx = {
 
 
 // ================================
-// 🖼 IMAGEN
+// IMAGEN
 // ================================
 export const imagenSx = {
   maxWidth: "100%",
@@ -60,7 +64,7 @@ export const imagenSx = {
 
 
 // ================================
-// 🏷 CHIP "NUEVO"
+// CHIP 
 // ================================
 export const chipNuevoSx = {
   position: "absolute",
@@ -78,7 +82,7 @@ export const chipNuevoSx = {
 
 
 // ================================
-// 📦 CONTENIDO
+// CONTENIDO
 // ================================
 export const contenidoSx = {
   p: 2.2,
@@ -89,7 +93,7 @@ export const contenidoSx = {
 
 
 // ================================
-// 📝 TÍTULO
+//  TÍTULO
 // ================================
 export const tituloSx = {
   mb: 1,
@@ -104,7 +108,7 @@ export const tituloSx = {
 
 
 // ================================
-// 💰 PRECIO
+//  PRECIO
 // ================================
 export const precioStackSx = {
   mb: 2,
@@ -115,7 +119,7 @@ export const precioStackSx = {
 
 
 // ================================
-// ➖ DIVIDER
+// DIVIDER
 // ================================
 export const dividerSx = {
   my: 1.2,
@@ -123,7 +127,7 @@ export const dividerSx = {
 
 
 // ================================
-// 🛒 BOTÓN AGREGAR
+//  BOTÓN AGREGAR
 // ================================
 export const botonAgregarSx = (stock) => ({
   borderRadius: 2,
@@ -151,7 +155,7 @@ export const botonAgregarSx = (stock) => ({
 
 
 // ================================
-// 🔎 BOTÓN DETALLES (Borde bien visible)
+//  BOTÓN DETALLES (Borde bien visible)
 // ================================
 export const botonDetallesSx = (theme) => ({
   borderRadius: 2,
