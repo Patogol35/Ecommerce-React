@@ -1,25 +1,35 @@
 // Tarjeta principal
 export const cardSx = (theme) => ({
-  width: 320,
-  height: 480,
-  borderRadius: 3,
-  bgcolor: "background.paper",
-  border: "1px solid",
-  borderColor: "divider",
-  boxShadow:
-    theme.palette.mode === "dark"
-      ? "0 6px 18px rgba(0,0,0,0.6)"
-      : "0 8px 24px rgba(0,0,0,0.06)",
-  overflow: "hidden",
   display: "flex",
   flexDirection: "column",
+  justifyContent: "space-between",
+  width: "100%",
+  maxWidth: 300,
+  height: "100%",
+  borderRadius: 3,
+  overflow: "hidden",
   transition: "all 0.3s ease",
+  backgroundColor: theme.palette.background.paper,
+
+  // 🔥 BORDE BIEN MARCADO
+  border: `2px solid ${
+    theme.palette.mode === "dark"
+      ? "#555"     // más claro en oscuro
+      : "#bdbdbd"  // más oscuro en claro
+  }`,
+
+  // 🔥 sombra adicional para que se vea mejor
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "0 0 0 1px rgba(255,255,255,0.05)"
+      : "0 0 0 1px rgba(0,0,0,0.05)",
+
   "&:hover": {
     transform: "translateY(-6px)",
     boxShadow:
       theme.palette.mode === "dark"
-        ? "0 8px 24px rgba(0,0,0,0.9)"
-        : "0 12px 32px rgba(0,0,0,0.12)",
+        ? "0 8px 25px rgba(0,0,0,0.6)"
+        : "0 8px 25px rgba(0,0,0,0.2)",
   },
 });
 
