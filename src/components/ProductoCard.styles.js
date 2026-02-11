@@ -3,13 +3,17 @@ export const cardSx = (theme) => ({
   width: 320,
   height: 480,
   borderRadius: 3,
-  bgcolor: "background.paper",
+
+  bgcolor:
+    theme.palette.mode === "dark"
+      ? "rgba(255,255,255,0.04)"  // 🔥 un poco más claro que el fondo
+      : "background.paper",
 
   border: "2px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "#ffffff"   // blanco en oscuro
-      : "#000000",  // negro en claro
+      ? "#ffffff"
+      : "#000000",
 
   boxShadow: "none",
 
@@ -17,10 +21,6 @@ export const cardSx = (theme) => ({
   display: "flex",
   flexDirection: "column",
   transition: "all 0.3s ease",
-
-  "&:hover": {
-    borderColor: "primary.main",
-  },
 });
 // Imagen contenedor
 export const imagenBoxSx = {
