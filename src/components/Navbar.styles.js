@@ -1,6 +1,5 @@
-// styles.js
 const styles = {
-  appBar: (theme, scrolled) => ({
+  appBar: (scrolled, theme) => ({
     backgroundColor:
       theme.palette.mode === "dark"
         ? theme.palette.background.paper
@@ -37,20 +36,15 @@ const styles = {
     alignItems: "center",
   },
 
-  // ☰ botón hamburguesa (3 rayas)
-  menuBtnMobile: (theme) => ({
+  menuBtnMobile: {
     display: { xs: "block", lg: "none" },
-    color:
-      theme.palette.mode === "dark"
-        ? theme.palette.text.primary
-        : "#fff",
-  }),
+    color: "#fff",
+  },
 
   menuIconWrapper: {
     display: "flex",
   },
 
-  // Drawer
   drawerPaper: (theme) => ({
     width: 280,
     background:
@@ -74,37 +68,30 @@ const styles = {
     mt: isMobile ? 12 : 0,
   }),
 
-  logoutBtn: (theme) => ({
+  logoutBtn: {
     fontWeight: 600,
     color: "#fff",
-    background:
-      theme.palette.mode === "dark"
-        ? "linear-gradient(135deg, #b71c1c, #d32f2f)"
-        : "linear-gradient(135deg, #d32f2f, #f44336)",
+    background: "linear-gradient(135deg, #d32f2f, #f44336)",
     borderRadius: "12px",
     px: 2.5,
     py: 1,
-  }),
+  },
 
   drawerUtilStack: {
     mt: 3,
     pb: 2,
   },
 
-  // 🌙 botón modo oscuro
   toggleModeBtn: (theme) => ({
-    color:
-      theme.palette.mode === "dark"
-        ? theme.palette.text.primary
-        : "#fff",
+    color: "#fff",
     background:
       theme.palette.mode === "dark"
-        ? "rgba(255,255,255,0.1)"
+        ? "rgba(255,255,255,0.15)"
         : "rgba(0,0,0,0.4)",
     "&:hover": {
       background:
         theme.palette.mode === "dark"
-          ? "rgba(255,255,255,0.2)"
+          ? "rgba(255,255,255,0.25)"
           : "rgba(0,0,0,0.7)",
     },
     width: 48,
