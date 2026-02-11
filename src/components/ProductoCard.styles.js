@@ -5,13 +5,10 @@ export const cardSx = (theme) => ({
   borderRadius: 3,
   bgcolor: "background.paper",
 
-  border: "2px solid",
-  borderColor:
-    theme.palette.mode === "dark"
-      ? "rgba(255,255,255,0.25)"
-      : "rgba(0,0,0,0.15)",
+  border: 1,
+  borderColor: "divider",
 
-  boxShadow: "none", // 👈 importante si quitamos elevation
+  boxShadow: theme.shadows[1], // sombra sutil profesional
 
   overflow: "hidden",
   display: "flex",
@@ -19,10 +16,10 @@ export const cardSx = (theme) => ({
   transition: "all 0.3s ease",
 
   "&:hover": {
+    boxShadow: theme.shadows[4],
     borderColor: "primary.main",
   },
 });
-
 // Imagen contenedor
 export const imagenBoxSx = {
   position: "relative",
