@@ -55,7 +55,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   };
 
   return (
-    <Card sx={cardSx}>
+    <Card sx={(theme) => cardSx(theme)}>
       {/* Imagen */}
       <Box sx={imagenBoxSx}>
         <Box
