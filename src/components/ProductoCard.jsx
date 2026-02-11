@@ -16,19 +16,6 @@ import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
-import {
-  cardSx,
-  imagenBoxSx,
-  imagenSx,
-  chipNuevoSx,
-  contenidoSx,
-  tituloSx,
-  precioStackSx,
-  dividerSx,
-  botonAgregarSx,
-  botonDetallesSx,
-} from "./ProductoCard.styles";
-
 export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { isAuthenticated } = useAuth();
   const { agregarAlCarrito } = useCarrito();
@@ -55,15 +42,9 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   };
 
   return (
-    <Card sx={(theme) => cardSx(theme)}>
-      {/* Imagen */}
-      <Box sx={imagenBoxSx}>
-        <Box
-          component="img"
-          src={producto.imagen}
-          alt={producto.nombre}
-          sx={imagenSx}
-        />
+    <Card className="product-card">
+      <Box className="product-image-container">
+        <img src={producto.imagen} alt={producto.nombre} />
 
         {producto.nuevo && (
           <Chip
@@ -71,41 +52,31 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
             label="Nuevo"
             color="secondary"
             size="small"
-            sx={chipNuevoSx}
+            style={{ position: "absolute", top: 10, left: 10 }}
           />
         )}
       </Box>
 
-      {/* Contenido */}
-      <Box sx={contenidoSx}>
-        <Typography variant="h6" fontWeight="bold" sx={tituloSx}>
+      <Box className="product-info">
+        <Typography variant="h6" fontWeight="bold" className="product-title">
           {producto.nombre}
         </Typography>
 
-        {/* Precio */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={0.5}
-          sx={precioStackSx}
-        >
+        <Stack direction="row" alignItems="center" spacing={0.5}>
           <MonetizationOnIcon color="primary" />
           <Typography variant="h6" color="primary" fontWeight="bold">
             {producto.precio}
           </Typography>
         </Stack>
 
-        {/* Divider CORRECTO */}
-        <Divider sx={(theme) => dividerSx(theme)} />
+        <Divider style={{ margin: "8px 0" }} />
 
-        {/* Botones */}
         <Stack spacing={1}>
           <Button
             variant="contained"
             color="primary"
             fullWidth
             startIcon={<AddShoppingCartIcon />}
-            sx={botonAgregarSx(producto.stock)}
             onClick={onAdd}
             disabled={producto.stock === 0}
           >
@@ -114,10 +85,8 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
           <Button
             variant="outlined"
-            color="inherit"
             fullWidth
             startIcon={<InfoIcon />}
-            sx={(theme) => botonDetallesSx(theme)}
             onClick={() =>
               onVerDetalle
                 ? onVerDetalle()
