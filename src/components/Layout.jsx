@@ -72,14 +72,20 @@ export default function Layout() {
         sx={{
           textAlign: "center",
           py: 3,
+          mt: "auto",
+
           color: "text.secondary",
+
           borderTop: "1px solid",
           borderColor: "divider",
+
           backgroundColor: "background.paper",
+
+          transition: "background-color 0.3s ease",
         }}
       >
         © 2026 · Mi tienda
       </Box>
     </Box>
   );
-          }
+      }
