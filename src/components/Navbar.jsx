@@ -1,4 +1,4 @@
-  import { useState, useCallback, useMemo } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useThemeMode } from "../context/ThemeContext";
@@ -57,8 +57,7 @@ export default function Navbar() {
     handleCloseMenu();
   }, [logout, navigate, handleCloseMenu]);
 
-  const textColor = (theme) =>
-    theme.palette.mode === "dark" ? "#e0e0e0" : "#fff";
+  const textColor = () => "#fff"; // 🔥 mismo color en claro y oscuro
 
   const UserSection = ({ showLogout = true, mobile = false }) =>
     isAuthenticated && (
@@ -68,12 +67,9 @@ export default function Navbar() {
         alignItems="center"
         sx={styles.userSection(mobile)}
       >
-        <AccountCircleIcon sx={(theme) => ({ color: textColor(theme) })} />
+        <AccountCircleIcon sx={{ color: textColor() }} />
 
-        <Typography sx={(theme) => ({
-          color: textColor(theme),
-          fontWeight: 600,
-        })}>
+        <Typography sx={{ color: textColor(), fontWeight: 600 }}>
           {user?.username}
         </Typography>
 
@@ -111,10 +107,7 @@ export default function Navbar() {
               variant="h6"
               component={Link}
               to="/"
-              sx={(theme) => ({
-                ...styles.logo,
-                color: textColor(theme),
-              })}
+              sx={{ ...styles.logo, color: textColor() }}
             >
               <ShoppingBagIcon sx={styles.logoIcon} />
               E-commerce Jorge Patricio
@@ -124,7 +117,7 @@ export default function Navbar() {
             <Box sx={styles.desktopMenu}>
               <MenuList />
 
-              <IconButton onClick={toggleMode} sx={(theme) => ({ color: textColor(theme) })}>
+              <IconButton onClick={toggleMode} sx={styles.toggleIcon}>
                 {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
 
@@ -133,10 +126,7 @@ export default function Navbar() {
 
             {/* Mobile button */}
             <IconButton
-              sx={(theme) => ({
-                ...styles.menuBtnMobile,
-                color: textColor(theme),
-              })}
+              sx={{ ...styles.menuBtnMobile, color: textColor() }}
               onClick={handleToggleMenu}
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -146,8 +136,13 @@ export default function Navbar() {
                   animate={{ rotate: 0, opacity: 1, scale: 1 }}
                   exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.25 }}
+                  style={styles.iconCenter} // 🔥 centrado real
                 >
-                  {open ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
+                  {open ? (
+                    <CloseIcon fontSize="large" />
+                  ) : (
+                    <MenuIcon fontSize="large" />
+                  )}
                 </motion.div>
               </AnimatePresence>
             </IconButton>
@@ -155,7 +150,7 @@ export default function Navbar() {
         </AppBar>
       </motion.div>
 
-      {/* Drawer mobile */}
+      {/* Drawer */}
       <Drawer
         anchor="right"
         open={open}
@@ -183,7 +178,7 @@ export default function Navbar() {
           )}
 
           <Stack spacing={2} alignItems="center" sx={styles.drawerUtilStack}>
-            <IconButton onClick={toggleMode} sx={(theme) => styles.toggleModeBtn(theme)}>
+            <IconButton onClick={toggleMode} sx={styles.toggleIcon}>
               {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
             </IconButton>
           </Stack>
