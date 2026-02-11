@@ -74,7 +74,7 @@ export default function Navbar() {
           <Button
             onClick={handleLogout}
             startIcon={<LogoutIcon />}
-            sx={(theme) => styles.logoutBtn(theme)}
+            sx={styles.logoutBtn}
           >
             Cerrar sesión
           </Button>
@@ -97,7 +97,7 @@ export default function Navbar() {
         <AppBar
           position="fixed"
           elevation={scrolled ? 6 : 2}
-          sx={(theme) => styles.appBar(theme, scrolled)}
+          sx={(theme) => styles.appBar(scrolled, theme)}
         >
           <Toolbar sx={styles.toolbar}>
             <Typography
@@ -119,10 +119,12 @@ export default function Navbar() {
               <UserSection />
             </Box>
 
-            {/* Mobile */}
+            {/* Mobile button */}
             <IconButton
-              sx={(theme) => styles.menuBtnMobile(theme)}
+              sx={styles.menuBtnMobile}
               onClick={handleToggleMenu}
+              aria-label={open ? "Cerrar menú" : "Abrir menú"}
+              aria-expanded={open}
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -133,11 +135,7 @@ export default function Navbar() {
                   transition={{ duration: 0.25 }}
                   style={styles.menuIconWrapper}
                 >
-                  {open ? (
-                    <CloseIcon fontSize="large" />
-                  ) : (
-                    <MenuIcon fontSize="large" />
-                  )}
+                  {open ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
                 </motion.div>
               </AnimatePresence>
             </IconButton>
@@ -145,7 +143,7 @@ export default function Navbar() {
         </AppBar>
       </motion.div>
 
-      {/* Drawer */}
+      {/* Drawer mobile */}
       <Drawer
         anchor="right"
         open={open}
@@ -166,7 +164,7 @@ export default function Navbar() {
             <Button
               onClick={handleLogout}
               startIcon={<LogoutIcon />}
-              sx={(theme) => styles.logoutBtn(theme)}
+              sx={styles.logoutBtn}
             >
               Cerrar sesión
             </Button>
@@ -184,4 +182,4 @@ export default function Navbar() {
       </Drawer>
     </>
   );
-        }
+}
