@@ -1,9 +1,6 @@
 const styles = {
-  appBar: (scrolled, theme) => ({
-    backgroundColor:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.paper
-        : "#1976d2",
+  appBar: (scrolled) => ({
+    backgroundColor: "#1976d2",
     boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.3)" : "none",
     zIndex: 1400,
   }),
@@ -45,17 +42,14 @@ const styles = {
     display: "flex",
   },
 
-  drawerPaper: (theme) => ({
+  drawerPaper: {
     width: 280,
-    background:
-      theme.palette.mode === "dark"
-        ? theme.palette.background.default
-        : "#1976d2",
+    background: "#1976d2",
     borderRadius: "16px 0 0 16px",
-    padding: 16,
+    p: 2,
     display: "flex",
     flexDirection: "column",
-  }),
+  },
 
   drawerStack: {
     flex: 1,
@@ -82,21 +76,13 @@ const styles = {
     pb: 2,
   },
 
-  toggleModeBtn: (theme) => ({
+  toggleModeBtn: {
     color: "#fff",
-    background:
-      theme.palette.mode === "dark"
-        ? "rgba(255,255,255,0.15)"
-        : "rgba(0,0,0,0.4)",
-    "&:hover": {
-      background:
-        theme.palette.mode === "dark"
-          ? "rgba(255,255,255,0.25)"
-          : "rgba(0,0,0,0.7)",
-    },
+    background: "rgba(0,0,0,0.4)",
+    "&:hover": { background: "rgba(0,0,0,0.7)" },
     width: 48,
     height: 48,
-  }),
+  },
 };
 
 export default styles;
