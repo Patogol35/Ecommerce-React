@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from "react";
+  import { useState, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useThemeMode } from "../context/ThemeContext";
@@ -57,6 +57,9 @@ export default function Navbar() {
     handleCloseMenu();
   }, [logout, navigate, handleCloseMenu]);
 
+  const textColor = (theme) =>
+    theme.palette.mode === "dark" ? "#e0e0e0" : "#fff";
+
   const UserSection = ({ showLogout = true, mobile = false }) =>
     isAuthenticated && (
       <Stack
@@ -65,9 +68,12 @@ export default function Navbar() {
         alignItems="center"
         sx={styles.userSection(mobile)}
       >
-        <AccountCircleIcon sx={{ color: "text.primary" }} />
+        <AccountCircleIcon sx={(theme) => ({ color: textColor(theme) })} />
 
-        <Typography sx={{ color: "text.primary", fontWeight: 600 }}>
+        <Typography sx={(theme) => ({
+          color: textColor(theme),
+          fontWeight: 600,
+        })}>
           {user?.username}
         </Typography>
 
@@ -105,7 +111,10 @@ export default function Navbar() {
               variant="h6"
               component={Link}
               to="/"
-              sx={styles.logo}
+              sx={(theme) => ({
+                ...styles.logo,
+                color: textColor(theme),
+              })}
             >
               <ShoppingBagIcon sx={styles.logoIcon} />
               E-commerce Jorge Patricio
@@ -115,7 +124,7 @@ export default function Navbar() {
             <Box sx={styles.desktopMenu}>
               <MenuList />
 
-              <IconButton onClick={toggleMode} sx={{ color: "text.primary" }}>
+              <IconButton onClick={toggleMode} sx={(theme) => ({ color: textColor(theme) })}>
                 {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
 
@@ -124,10 +133,11 @@ export default function Navbar() {
 
             {/* Mobile button */}
             <IconButton
-              sx={styles.menuBtnMobile}
+              sx={(theme) => ({
+                ...styles.menuBtnMobile,
+                color: textColor(theme),
+              })}
               onClick={handleToggleMenu}
-              aria-label={open ? "Cerrar menú" : "Abrir menú"}
-              aria-expanded={open}
             >
               <AnimatePresence mode="wait" initial={false}>
                 <motion.div
@@ -136,13 +146,8 @@ export default function Navbar() {
                   animate={{ rotate: 0, opacity: 1, scale: 1 }}
                   exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.25 }}
-                  style={styles.menuIconWrapper}
                 >
-                  {open ? (
-                    <CloseIcon fontSize="large" />
-                  ) : (
-                    <MenuIcon fontSize="large" />
-                  )}
+                  {open ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
                 </motion.div>
               </AnimatePresence>
             </IconButton>
@@ -163,7 +168,7 @@ export default function Navbar() {
         <Stack sx={styles.drawerStack} spacing={3}>
           <UserSection showLogout={false} mobile />
 
-          <Divider sx={{ opacity: 0.2 }} />
+          <Divider sx={{ opacity: 0.25 }} />
 
           <MenuList onClick={handleCloseMenu} />
 
@@ -186,4 +191,4 @@ export default function Navbar() {
       </Drawer>
     </>
   );
-              }
+}
