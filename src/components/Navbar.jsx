@@ -57,8 +57,6 @@ export default function Navbar() {
     handleCloseMenu();
   }, [logout, navigate, handleCloseMenu]);
 
-  const textColor = () => "#fff"; // 🔥 mismo color en claro y oscuro
-
   const UserSection = ({ showLogout = true, mobile = false }) =>
     isAuthenticated && (
       <Stack
@@ -67,9 +65,9 @@ export default function Navbar() {
         alignItems="center"
         sx={styles.userSection(mobile)}
       >
-        <AccountCircleIcon sx={{ color: textColor() }} />
+        <AccountCircleIcon />
 
-        <Typography sx={{ color: textColor(), fontWeight: 600 }}>
+        <Typography fontWeight={600}>
           {user?.username}
         </Typography>
 
@@ -77,7 +75,7 @@ export default function Navbar() {
           <Button
             onClick={handleLogout}
             startIcon={<LogoutIcon />}
-            sx={styles.logoutBtn}
+            sx={(theme) => styles.logoutBtn(theme)}
           >
             Cerrar sesión
           </Button>
@@ -99,15 +97,16 @@ export default function Navbar() {
       >
         <AppBar
           position="fixed"
-          elevation={scrolled ? 6 : 2}
+          elevation={scrolled ? 6 : 0}
           sx={(theme) => styles.appBar(theme, scrolled)}
         >
           <Toolbar sx={styles.toolbar}>
+            {/* LOGO */}
             <Typography
               variant="h6"
               component={Link}
               to="/"
-              sx={{ ...styles.logo, color: textColor() }}
+              sx={{ ...styles.logo, color: "inherit" }}
             >
               <ShoppingBagIcon sx={styles.logoIcon} />
               E-commerce Jorge Patricio
@@ -126,7 +125,7 @@ export default function Navbar() {
 
             {/* Mobile button */}
             <IconButton
-              sx={{ ...styles.menuBtnMobile, color: textColor() }}
+              sx={styles.menuBtnMobile}
               onClick={handleToggleMenu}
             >
               <AnimatePresence mode="wait" initial={false}>
@@ -136,7 +135,7 @@ export default function Navbar() {
                   animate={{ rotate: 0, opacity: 1, scale: 1 }}
                   exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
                   transition={{ duration: 0.25 }}
-                  style={styles.iconCenter} // 🔥 centrado real
+                  style={styles.iconCenter}
                 >
                   {open ? (
                     <CloseIcon fontSize="large" />
@@ -150,7 +149,7 @@ export default function Navbar() {
         </AppBar>
       </motion.div>
 
-      {/* Drawer */}
+      {/* Drawer Mobile */}
       <Drawer
         anchor="right"
         open={open}
@@ -163,7 +162,7 @@ export default function Navbar() {
         <Stack sx={styles.drawerStack} spacing={3}>
           <UserSection showLogout={false} mobile />
 
-          <Divider sx={{ opacity: 0.25 }} />
+          <Divider />
 
           <MenuList onClick={handleCloseMenu} />
 
@@ -171,7 +170,7 @@ export default function Navbar() {
             <Button
               onClick={handleLogout}
               startIcon={<LogoutIcon />}
-              sx={styles.logoutBtn}
+              sx={(theme) => styles.logoutBtn(theme)}
             >
               Cerrar sesión
             </Button>
@@ -186,4 +185,4 @@ export default function Navbar() {
       </Drawer>
     </>
   );
-}
+                   }
