@@ -1,30 +1,24 @@
-// Tarjeta principal
 export const cardSx = (theme) => ({
   display: "flex",
   flexDirection: "column",
   justifyContent: "space-between",
 
   width: "100%",
-  maxWidth: "300px",   
-  height: "100%",    
+  height: "100%", // 👈 clave
+  maxWidth: 300,
 
-  borderRadius: "20px", 
+  borderRadius: "20px",
   overflow: "hidden",
-
   backgroundColor: theme.palette.background.paper,
 
   border: `2px solid ${
-    theme.palette.mode === "dark" ? "#555" : "#bdbdbd"
+    theme.palette.mode === "dark" ? "#555" : "#d0d0d0"
   }`,
 
-  transition: "transform 0.3s ease, box-shadow 0.3s ease",
+  transition: "all 0.3s ease",
 
   "&:hover": {
-    transform: "translateY(-8px)",
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "0 8px 20px rgba(0,0,0,0.6)"
-        : "0 8px 20px rgba(0,0,0,0.2)",
+    transform: "translateY(-6px)",
   },
 });
 
