@@ -55,7 +55,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   };
 
   return (
-    <Card sx={cardSx} elevation={0}>
+    <Card sx={cardSx}>
       {/* Imagen */}
       <Box sx={imagenBoxSx}>
         <Box
