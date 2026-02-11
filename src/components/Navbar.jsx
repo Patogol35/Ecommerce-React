@@ -165,13 +165,19 @@ E-commerce Jorge Patricio
       <MenuList onClick={handleCloseMenu} />  
 
       {isAuthenticated && (  
-        <Button  
-          onClick={handleLogout}  
-          startIcon={<LogoutIcon />}  
-          sx={styles.logoutBtn}  
-        >  
-          Cerrar sesión  
-        </Button>  
+        <motion.div whileHover={{ y: -2, scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+  <Button
+    onClick={handleLogout}
+    startIcon={<LogoutIcon />}
+    sx={(theme) =>
+      ({
+        ...styles.logoutBtn(theme),
+      })
+    }
+  >
+    Cerrar sesión
+  </Button>
+</motion.div> 
       )}  
 
       <Stack spacing={2} alignItems="center" sx={styles.drawerUtilStack}>  
