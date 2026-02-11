@@ -74,15 +74,13 @@ export function ThemeModeProvider({ children }) {
             },
           },
 
-        MuiCssBaseline: {
-  styleOverrides: (theme) => ({
-    body: {
-      backgroundColor: theme.palette.background.default,
-      color: theme.palette.text.primary,
-      transition: "background-color 0.3s ease, color 0.3s ease",
-    },
-  }),
-},
+          MuiCssBaseline: {
+            styleOverrides: {
+              body: {
+                transition: "background-color 0.3s ease",
+              },
+            },
+          },
         },
       }),
     [mode]
@@ -100,4 +98,4 @@ export function ThemeModeProvider({ children }) {
 
 export function useThemeMode() {
   return useContext(ThemeModeContext);
-            }
+}
