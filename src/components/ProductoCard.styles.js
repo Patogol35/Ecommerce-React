@@ -1,119 +1,118 @@
-export const cardSx = (theme) => ({
-  display: "flex",
-  flexDirection: "column",
-  justifyContent: "space-between",
+/* ========================= */
+/* VARIABLES MODO CLARO */
+/* ========================= */
 
-  width: "100%",
-  height: "100%", // 👈 clave
-  maxWidth: 300,
+:root {
+  --product-card-border: #d0d0d0;
+  --product-card-bg: #ffffff;
+}
 
-  borderRadius: "20px",
-  overflow: "hidden",
-  backgroundColor: theme.palette.background.paper,
+/* ========================= */
+/* VARIABLES MODO OSCURO */
+/* ========================= */
 
-  border: `2px solid ${
-    theme.palette.mode === "dark" ? "#555" : "#d0d0d0"
-  }`,
+body.dark {
+  --product-card-border: #555555;
+  --product-card-bg: #1e1e1e;
+}
 
-  transition: "all 0.3s ease",
+/* ========================= */
+/* CARD */
+/* ========================= */
 
-  "&:hover": {
-    transform: "translateY(-6px)",
-  },
-});
+.product-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 300px;
+  height: 100%;
 
-// Imagen contenedor
-export const imagenBoxSx = {
-  position: "relative",
-  height: 240,
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  bgcolor: "background.default",
-  overflow: "hidden",
-};
+  border-radius: 20px;
+  overflow: hidden;
 
-export const imagenSx = {
-  maxWidth: "100%",
-  maxHeight: "100%",
-  objectFit: "contain",
-  transition: "transform 0.5s ease",
-  "&:hover": { transform: "scale(1.08) rotate(1deg)" },
-};
+  background: var(--product-card-bg);
 
-export const chipNuevoSx = {
-  position: "absolute",
-  top: 14,
-  left: 14,
-  fontWeight: "bold",
-  borderRadius: "12px",
-  px: 1.5,
-  py: 0.5,
-  fontSize: "0.75rem",
-};
+  border: 2px solid var(--product-card-border);
 
-export const contenidoSx = {
-  p: 2.2,
-  flexGrow: 1,
-  display: "flex",
-  flexDirection: "column",
-};
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
 
-export const tituloSx = {
-  mb: 1,
-  fontWeight: 600,
-  fontSize: "1.1rem",
-  lineHeight: 1.35,
-  color: "text.primary",
-  overflow: "hidden",
-  textOverflow: "ellipsis",
-  whiteSpace: "nowrap",
-};
+.product-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+}
 
-export const precioStackSx = {
-  mb: 2,
-  fontSize: "1.25rem",
-  fontWeight: "bold",
-  color: "primary.main",
-};
+/* ========================= */
+/* IMAGEN */
+/* ========================= */
 
-export const dividerSx = { my: 1.2 };
+.product-image-container {
+  position: relative;
+  width: 100%;
+  height: 220px;
+  background: #f5f5f5;
+  overflow: hidden;
+}
 
-// 🔥 Botón 100% dinámico con theme
-export const botonAgregarSx = (stock) => (theme) => ({
-  borderRadius: 2,
-  textTransform: "none",
-  py: 1.1,
-  fontWeight: 600,
-  fontSize: "0.95rem",
-  background:
-    stock > 0
-      ? `linear-gradient(90deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`
-      : theme.palette.grey[400],
-  color: theme.palette.primary.contrastText,
-  transition: "all 0.3s ease",
-  "&:hover": {
-    transform: stock > 0 ? "scale(1.05)" : "none",
-    background:
-      stock > 0
-        ? `linear-gradient(90deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`
-        : theme.palette.grey[400],
-    boxShadow: stock > 0 ? "0 6px 18px rgba(0,0,0,0.18)" : "none",
-  },
-});
+.product-image-container img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
 
-export const botonDetallesSx = {
-  borderRadius: 2,
-  textTransform: "none",
-  py: 0.9,
-  fontWeight: 500,
-  fontSize: "0.9rem",
-  border: "1px solid",
-  borderColor: "divider",
-  color: "text.secondary",
-  transition: "all 0.3s ease",
-  "&:hover": {
-    transform: "scale(1.04)",
-    bgcolor: "action.hover",
-  },
-};
+.product-image-container:hover img {
+  transform: scale(1.1);
+}
+
+/* ========================= */
+/* OVERLAY */
+/* ========================= */
+
+.overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+  color: #fff;
+  padding: 1rem;
+  text-align: center;
+}
+
+.product-image-container:hover .overlay {
+  opacity: 1;
+}
+
+/* ========================= */
+/* INFO */
+/* ========================= */
+
+.product-info {
+  padding: 16px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-title {
+  font-size: 1rem;
+  font-weight: bold;
+  margin-bottom: 8px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.product-price {
+  font-size: 1.1rem;
+  color: #1976d2;
+  font-weight: bold;
+}
