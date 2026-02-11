@@ -5,18 +5,22 @@ export const cardSx = (theme) => ({
   width: 320,
   height: 480,
   borderRadius: 3,
+
+  // 🔥 MISMO COLOR QUE EL CONTENEDOR DE FILTROS
   bgcolor: "background.paper",
 
-  border: "2px solid",
+  // 🔥 BORDE SUTIL ELEGANTE
+  border: "1px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "#ffffff"
-      : "#000000",
+      ? "rgba(255,255,255,0.08)"
+      : "rgba(0,0,0,0.06)",
 
+  // 🔥 SOMBRA MÁS ARMÓNICA
   boxShadow:
     theme.palette.mode === "dark"
-      ? "0 8px 22px rgba(0,0,0,0.6)"
-      : "0 8px 22px rgba(0,0,0,0.12)",
+      ? "0 6px 18px rgba(0,0,0,0.5)"
+      : "0 6px 18px rgba(0,0,0,0.08)",
 
   overflow: "hidden",
   display: "flex",
@@ -24,15 +28,16 @@ export const cardSx = (theme) => ({
   transition: "all 0.25s ease",
 
   "&:hover": {
-    transform: "translateY(-4px)",
+    transform: "translateY(-6px)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 10px 26px rgba(0,0,0,0.6)"
+        : "0 10px 26px rgba(0,0,0,0.12)",
   },
 
-  // ❌ eliminar focus violeta
   "&:focus": { outline: "none" },
   "&:focus-visible": { outline: "none" },
-  "&:active": { outline: "none" },
 });
-
 
 // ================================
 // CONTENEDOR IMAGEN
