@@ -1,9 +1,11 @@
 const styles = {
   appBar: (theme, scrolled) => ({
-    backgroundColor:
-      theme.palette.mode === "dark" ? "#121212" : "#1976d2",
+    backgroundColor: theme.palette.primary.main,
+    color: theme.palette.primary.contrastText,
     boxShadow: scrolled
-      ? "0 4px 20px rgba(0,0,0,0.35)"
+      ? theme.palette.mode === "dark"
+        ? "0 4px 20px rgba(0,0,0,0.6)"
+        : "0 4px 20px rgba(0,0,0,0.25)"
       : "none",
     transition: "background-color .3s ease, box-shadow .3s ease",
     zIndex: 1400,
@@ -38,6 +40,7 @@ const styles = {
 
   menuBtnMobile: {
     display: { xs: "block", lg: "none" },
+    color: "inherit",
   },
 
   iconCenter: {
@@ -50,9 +53,8 @@ const styles = {
 
   drawerPaper: (theme) => ({
     width: 280,
-    backgroundColor:
-      theme.palette.mode === "dark" ? "#1e1e1e" : "#1976d2",
-    color: "#fff",
+    backgroundColor: theme.palette.background.paper,
+    color: theme.palette.text.primary,
     borderRadius: "16px 0 0 16px",
     p: 2,
   }),
@@ -68,15 +70,17 @@ const styles = {
     mt: isMobile ? 12 : 0,
   }),
 
-  logoutBtn: {
+  logoutBtn: (theme) => ({
     fontWeight: 600,
-    color: "#fff",
-    background: "linear-gradient(135deg, #d32f2f, #f44336)",
+    color: theme.palette.error.contrastText,
+    backgroundColor: theme.palette.error.main,
     borderRadius: "12px",
     px: 2.5,
     py: 1,
-    "&:hover": { opacity: 0.9 },
-  },
+    "&:hover": {
+      backgroundColor: theme.palette.error.dark,
+    },
+  }),
 
   drawerUtilStack: {
     mt: 3,
@@ -84,7 +88,7 @@ const styles = {
   },
 
   toggleIcon: {
-    color: "#fff",
+    color: "inherit",
     width: 48,
     height: 48,
   },
