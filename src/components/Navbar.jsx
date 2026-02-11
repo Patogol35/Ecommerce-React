@@ -65,8 +65,9 @@ export default function Navbar() {
         alignItems="center"
         sx={styles.userSection(mobile)}
       >
-        <AccountCircleIcon sx={{ color: "#fff" }} />
-        <Typography sx={{ color: "#fff", fontWeight: 600 }}>
+        <AccountCircleIcon sx={{ color: "text.primary" }} />
+
+        <Typography sx={{ color: "text.primary", fontWeight: 600 }}>
           {user?.username}
         </Typography>
 
@@ -97,7 +98,7 @@ export default function Navbar() {
         <AppBar
           position="fixed"
           elevation={scrolled ? 6 : 2}
-          sx={(theme) => styles.appBar(scrolled, theme)}
+          sx={(theme) => styles.appBar(theme, scrolled)}
         >
           <Toolbar sx={styles.toolbar}>
             <Typography
@@ -113,9 +114,11 @@ export default function Navbar() {
             {/* Desktop */}
             <Box sx={styles.desktopMenu}>
               <MenuList />
-              <IconButton onClick={toggleMode} sx={{ color: "#fff" }}>
+
+              <IconButton onClick={toggleMode} sx={{ color: "text.primary" }}>
                 {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
               </IconButton>
+
               <UserSection />
             </Box>
 
@@ -135,7 +138,11 @@ export default function Navbar() {
                   transition={{ duration: 0.25 }}
                   style={styles.menuIconWrapper}
                 >
-                  {open ? <CloseIcon fontSize="large" /> : <MenuIcon fontSize="large" />}
+                  {open ? (
+                    <CloseIcon fontSize="large" />
+                  ) : (
+                    <MenuIcon fontSize="large" />
+                  )}
                 </motion.div>
               </AnimatePresence>
             </IconButton>
@@ -156,7 +163,7 @@ export default function Navbar() {
         <Stack sx={styles.drawerStack} spacing={3}>
           <UserSection showLogout={false} mobile />
 
-          <Divider sx={{ bgcolor: "rgba(255,255,255,0.3)", my: 2 }} />
+          <Divider sx={{ opacity: 0.2 }} />
 
           <MenuList onClick={handleCloseMenu} />
 
@@ -171,10 +178,7 @@ export default function Navbar() {
           )}
 
           <Stack spacing={2} alignItems="center" sx={styles.drawerUtilStack}>
-            <IconButton
-              onClick={toggleMode}
-              sx={(theme) => styles.toggleModeBtn(theme)}
-            >
+            <IconButton onClick={toggleMode} sx={(theme) => styles.toggleModeBtn(theme)}>
               {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
             </IconButton>
           </Stack>
@@ -182,4 +186,4 @@ export default function Navbar() {
       </Drawer>
     </>
   );
-}
+              }
