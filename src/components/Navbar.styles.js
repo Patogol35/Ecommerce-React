@@ -1,7 +1,15 @@
-const styles = {
-  appBar: (scrolled) => ({
-    backgroundColor: "#1976d2",
-    boxShadow: scrolled ? "0 4px 20px rgba(0,0,0,0.3)" : "none",
+    const styles = {
+  appBar: (theme, scrolled) => ({
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? "#121212"
+        : "#1976d2",
+
+    boxShadow: scrolled
+      ? "0 4px 20px rgba(0,0,0,0.35)"
+      : "none",
+
+    transition: "background-color .3s ease, box-shadow .3s ease",
     zIndex: 1400,
   }),
 
@@ -16,7 +24,7 @@ const styles = {
     alignItems: "center",
     gap: 1,
     fontWeight: "bold",
-    color: "#fff",
+    color: "text.primary",
     textDecoration: "none",
   },
 
@@ -35,21 +43,28 @@ const styles = {
 
   menuBtnMobile: {
     display: { xs: "block", lg: "none" },
-    color: "#fff",
+    color: "text.primary",
   },
 
   menuIconWrapper: {
     display: "flex",
   },
 
-  drawerPaper: {
+  drawerPaper: (theme) => ({
     width: 280,
-    background: "#1976d2",
+
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? "#1e1e1e"
+        : "#1976d2",
+
+    color: theme.palette.text.primary,
+
     borderRadius: "16px 0 0 16px",
     p: 2,
     display: "flex",
     flexDirection: "column",
-  },
+  }),
 
   drawerStack: {
     flex: 1,
@@ -69,6 +84,9 @@ const styles = {
     borderRadius: "12px",
     px: 2.5,
     py: 1,
+    "&:hover": {
+      opacity: 0.9,
+    },
   },
 
   drawerUtilStack: {
@@ -76,13 +94,15 @@ const styles = {
     pb: 2,
   },
 
-  toggleModeBtn: {
-    color: "#fff",
-    background: "rgba(0,0,0,0.4)",
-    "&:hover": { background: "rgba(0,0,0,0.7)" },
+  toggleModeBtn: (theme) => ({
+    color: theme.palette.text.primary,
+    backgroundColor: theme.palette.action.hover,
+    "&:hover": {
+      backgroundColor: theme.palette.action.selected,
+    },
     width: 48,
     height: 48,
-  },
+  }),
 };
 
 export default styles;
