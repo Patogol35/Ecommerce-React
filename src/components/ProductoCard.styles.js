@@ -7,12 +7,11 @@ export const cardSx = (theme) => ({
   borderRadius: 3,
   bgcolor: "background.paper",
 
-  // 🔥 Borde fuerte y visible
   border: "2px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "#ffffff"   // blanco en oscuro
-      : "#000000",  // negro en claro
+      ? "#ffffff"
+      : "#000000",
 
   boxShadow:
     theme.palette.mode === "dark"
@@ -22,12 +21,16 @@ export const cardSx = (theme) => ({
   overflow: "hidden",
   display: "flex",
   flexDirection: "column",
-  transition: "all 0.3s ease",
+  transition: "all 0.25s ease",
 
   "&:hover": {
     transform: "translateY(-4px)",
-    borderColor: theme.palette.primary.main,
   },
+
+  // ❌ eliminar focus violeta
+  "&:focus": { outline: "none" },
+  "&:focus-visible": { outline: "none" },
+  "&:active": { outline: "none" },
 });
 
 
@@ -60,7 +63,7 @@ export const imagenSx = {
 
 
 // ================================
-// CHIP 
+// CHIP
 // ================================
 export const chipNuevoSx = {
   position: "absolute",
@@ -104,14 +107,17 @@ export const tituloSx = {
 
 
 // ================================
-//  PRECIO
+// PRECIO (AZUL PROFESIONAL)
 // ================================
-export const precioStackSx = {
+export const precioStackSx = (theme) => ({
   mb: 2,
   fontSize: "1.3rem",
   fontWeight: 700,
-  color: "primary.main",
-};
+  color:
+    theme.palette.mode === "dark"
+      ? "#4dabf5"   // azul claro elegante en dark
+      : "#1976d2",  // azul profesional en light
+});
 
 
 // ================================
@@ -135,7 +141,7 @@ export const botonAgregarSx = (stock) => ({
   background:
     stock > 0
       ? "linear-gradient(135deg, #1976d2, #42a5f5)"
-      : "grey.400",
+      : "#bdbdbd",
 
   color: "white",
   transition: "all 0.25s ease",
@@ -145,13 +151,16 @@ export const botonAgregarSx = (stock) => ({
     background:
       stock > 0
         ? "linear-gradient(135deg, #1565c0, #1e88e5)"
-        : "grey.400",
+        : "#bdbdbd",
   },
+
+  "&:focus": { outline: "none" },
+  "&:focus-visible": { outline: "none" },
 });
 
 
 // ================================
-//  BOTÓN DETALLES
+// BOTÓN DETALLES
 // ================================
 export const botonDetallesSx = (theme) => ({
   borderRadius: 2,
@@ -180,7 +189,8 @@ export const botonDetallesSx = (theme) => ({
         ? "rgba(255,255,255,0.08)"
         : "rgba(0,0,0,0.05)",
     transform: "scale(1.03)",
-    borderColor: theme.palette.primary.main,
-    color: theme.palette.primary.main,
   },
+
+  "&:focus": { outline: "none" },
+  "&:focus-visible": { outline: "none" },
 });
