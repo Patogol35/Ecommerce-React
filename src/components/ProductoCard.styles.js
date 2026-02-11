@@ -9,36 +9,33 @@ export const cardSx = (theme) => {
     height: 480,
     borderRadius: 4,
     bgcolor: "background.paper",
+    outline: isDark
+      ? "1px solid rgba(255,255,255,0.12)"
+      : "1px solid rgba(0,0,0,0.15)",
 
-    // 🔥 BORDE REAL VISIBLE
-    border: isDark
-      ? "1px solid rgba(255,255,255,0.08)"
-      : "1px solid rgba(0,0,0,0.12)",
+    outlineOffset: "-1px",
 
     boxShadow: isDark
-      ? "0 8px 28px rgba(0,0,0,0.75)"
-      : "0 12px 32px rgba(0,0,0,0.08)",
+      ? "0 10px 30px rgba(0,0,0,0.8)"
+      : "0 15px 35px rgba(0,0,0,0.1)",
 
     overflow: "hidden",
     display: "flex",
     flexDirection: "column",
-    position: "relative",
 
-    transition: "all 0.35s cubic-bezier(.4,0,.2,1)",
+    transition: "all 0.3s ease",
 
     "&:hover": {
-      transform: "translateY(-8px)",
+      transform: "translateY(-10px)",
 
-      // 🔥 BORDE ACTIVO MÁS FUERTE
-      border: `1px solid ${theme.palette.primary.main}`,
+      outline: `2px solid ${theme.palette.primary.main}`,
 
       boxShadow: isDark
-        ? "0 18px 40px rgba(0,0,0,0.9)"
-        : "0 22px 55px rgba(0,0,0,0.18)",
+        ? "0 20px 45px rgba(0,0,0,0.9)"
+        : "0 25px 60px rgba(0,0,0,0.18)",
     },
   };
 };
-
 
 // =============================
 // CONTENEDOR IMAGEN
