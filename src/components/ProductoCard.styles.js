@@ -6,8 +6,8 @@ export const cardSx = (theme) => ({
 
   bgcolor:
     theme.palette.mode === "dark"
-      ? "rgba(255,255,255,0.04)"  // 🔥 un poco más claro que el fondo
-      : "background.paper",
+      ? "#1e1e1e"
+      : "#ffffff",
 
   border: "2px solid",
   borderColor:
