@@ -14,18 +14,14 @@ export default function Layout() {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-
-        backgroundColor:
-          theme.palette.mode === "dark"
-            ? "#0f172a"
-            : "#f8fafc",
-
-        transition: "background-color .3s ease",
+        backgroundColor: "background.default",
+        transition: "background-color 0.3s ease",
       }}
     >
+      {/* NAVBAR */}
       <Navbar />
 
-      {/* CONTENIDO */}
+      {/* CONTENIDO PRINCIPAL */}
       <Container
         maxWidth="lg"
         sx={{
@@ -51,19 +47,19 @@ export default function Layout() {
           height: 56,
           borderRadius: "50%",
 
-          backgroundColor: "primary.main",
-          color: "primary.contrastText",
+          background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+          color: theme.palette.primary.contrastText,
 
           boxShadow:
             theme.palette.mode === "dark"
               ? "0 12px 30px rgba(0,0,0,0.6)"
-              : "0 10px 25px rgba(0,0,0,0.35)",
+              : "0 10px 25px rgba(0,0,0,0.25)",
 
-          transition: "all .25s ease",
+          transition: "all 0.25s ease",
 
           "&:hover": {
-            backgroundColor: "primary.dark",
-            transform: "translateY(-2px)",
+            transform: "translateY(-3px) scale(1.05)",
+            background: `linear-gradient(135deg, ${theme.palette.primary.dark}, ${theme.palette.primary.main})`,
           },
         }}
       >
@@ -76,12 +72,14 @@ export default function Layout() {
         sx={{
           textAlign: "center",
           py: 3,
-          opacity: 0.6,
           color: "text.secondary",
+          borderTop: "1px solid",
+          borderColor: "divider",
+          backgroundColor: "background.paper",
         }}
       >
         © 2026 · Mi tienda
       </Box>
     </Box>
   );
-}
+          }
