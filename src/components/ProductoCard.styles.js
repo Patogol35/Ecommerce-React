@@ -7,16 +7,17 @@ export const cardSx = (theme) => ({
   borderRadius: 3,
   bgcolor: "background.paper",
 
+  // 🔥 Borde fuerte y visible
   border: "2px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "rgba(255,255,255,0.25)"
-      : "rgba(0,0,0,0.25)",
+      ? "#ffffff"   // blanco en oscuro
+      : "#000000",  // negro en claro
 
   boxShadow:
     theme.palette.mode === "dark"
-      ? "0 6px 18px rgba(0,0,0,0.45)"
-      : "0 6px 18px rgba(0,0,0,0.08)",
+      ? "0 8px 22px rgba(0,0,0,0.6)"
+      : "0 8px 22px rgba(0,0,0,0.12)",
 
   overflow: "hidden",
   display: "flex",
@@ -24,12 +25,8 @@ export const cardSx = (theme) => ({
   transition: "all 0.3s ease",
 
   "&:hover": {
-    borderColor: theme.palette.primary.main,
     transform: "translateY(-4px)",
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "0 12px 28px rgba(0,0,0,0.65)"
-        : "0 12px 28px rgba(0,0,0,0.15)",
+    borderColor: theme.palette.primary.main,
   },
 });
 
@@ -72,11 +69,10 @@ export const chipNuevoSx = {
   fontWeight: 600,
   background: "linear-gradient(135deg, #ff6b6b, #ff8e53)",
   color: "#fff",
-  borderRadius: "16px",
+  borderRadius: "14px",
   px: 1.5,
   py: 0.4,
-  fontSize: "0.72rem",
-  letterSpacing: "0.5px",
+  fontSize: "0.75rem",
   boxShadow: "0 4px 10px rgba(0,0,0,0.25)",
 };
 
@@ -115,7 +111,6 @@ export const precioStackSx = {
   fontSize: "1.3rem",
   fontWeight: 700,
   color: "primary.main",
-  letterSpacing: "0.3px",
 };
 
 
@@ -131,7 +126,7 @@ export const dividerSx = {
 // 🛒 BOTÓN AGREGAR
 // ================================
 export const botonAgregarSx = (stock) => ({
-  borderRadius: 2.5,
+  borderRadius: 2,
   textTransform: "none",
   py: 1.1,
   fontWeight: 600,
@@ -151,31 +146,41 @@ export const botonAgregarSx = (stock) => ({
       stock > 0
         ? "linear-gradient(135deg, #1565c0, #1e88e5)"
         : "grey.400",
-    boxShadow:
-      stock > 0
-        ? "0 6px 16px rgba(25,118,210,0.25)"
-        : "none",
   },
 });
 
 
 // ================================
-// 🔎 BOTÓN DETALLES
+// 🔎 BOTÓN DETALLES (Borde bien visible)
 // ================================
-export const botonDetallesSx = {
-  borderRadius: 2.5,
+export const botonDetallesSx = (theme) => ({
+  borderRadius: 2,
   textTransform: "none",
   py: 0.9,
   fontWeight: 500,
   fontSize: "0.9rem",
-  border: "1.5px solid",
-  borderColor: "divider",
-  color: "text.secondary",
+
+  border: "2px solid",
+  borderColor:
+    theme.palette.mode === "dark"
+      ? "#ffffff"
+      : "#000000",
+
+  color:
+    theme.palette.mode === "dark"
+      ? "#ffffff"
+      : "#000000",
+
+  backgroundColor: "transparent",
   transition: "all 0.25s ease",
 
   "&:hover": {
+    backgroundColor:
+      theme.palette.mode === "dark"
+        ? "rgba(255,255,255,0.08)"
+        : "rgba(0,0,0,0.05)",
     transform: "scale(1.03)",
-    bgcolor: "action.hover",
-    borderColor: "primary.main",
+    borderColor: theme.palette.primary.main,
+    color: theme.palette.primary.main,
   },
-};
+});
