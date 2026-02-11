@@ -1,22 +1,18 @@
 // ================================
-// 🎴 TARJETA PRINCIPAL
+// TARJETA PRINCIPAL
 // ================================
 export const cardSx = (theme) => ({
   width: 320,
   height: 480,
   borderRadius: 3,
+  bgcolor: "background.paper",
 
-  // 🔥 Fondo más elegante en dark (menos negro puro)
-  bgcolor:
-    theme.palette.mode === "dark"
-      ? "#1e1e1e"   // gris oscuro elegante
-      : "background.paper",
-
+  // 🔥 Borde fuerte y visible
   border: "2px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "#ffffff"
-      : "#000000",
+      ? "#ffffff"   // blanco en oscuro
+      : "#000000",  // negro en claro
 
   boxShadow:
     theme.palette.mode === "dark"
@@ -36,7 +32,7 @@ export const cardSx = (theme) => ({
 
 
 // ================================
-// 🖼 CONTENEDOR IMAGEN
+// CONTENEDOR IMAGEN
 // ================================
 export const imagenBoxSx = {
   position: "relative",
@@ -93,7 +89,7 @@ export const contenidoSx = {
 
 
 // ================================
-//  TÍTULO
+// TÍTULO
 // ================================
 export const tituloSx = {
   mb: 1,
@@ -127,7 +123,7 @@ export const dividerSx = {
 
 
 // ================================
-//  BOTÓN AGREGAR
+// BOTÓN AGREGAR
 // ================================
 export const botonAgregarSx = (stock) => ({
   borderRadius: 2,
@@ -155,7 +151,7 @@ export const botonAgregarSx = (stock) => ({
 
 
 // ================================
-//  BOTÓN DETALLES (Borde bien visible)
+//  BOTÓN DETALLES
 // ================================
 export const botonDetallesSx = (theme) => ({
   borderRadius: 2,
