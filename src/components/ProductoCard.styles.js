@@ -6,21 +6,18 @@ export const cardSx = (theme) => ({
   height: 480,
   borderRadius: 3,
 
-  // 🔥 MISMO COLOR QUE EL CONTENEDOR DE FILTROS
-  bgcolor: "background.paper",
+  bgcolor: "background.default", // 👈 SOLO CAMBIAMOS ESTO
 
-  // 🔥 BORDE SUTIL ELEGANTE
-  border: "1px solid",
+  border: "2px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "rgba(255,255,255,0.08)"
-      : "rgba(0,0,0,0.06)",
+      ? "#ffffff"
+      : "#000000",
 
-  // 🔥 SOMBRA MÁS ARMÓNICA
   boxShadow:
     theme.palette.mode === "dark"
-      ? "0 6px 18px rgba(0,0,0,0.5)"
-      : "0 6px 18px rgba(0,0,0,0.08)",
+      ? "0 8px 22px rgba(0,0,0,0.6)"
+      : "0 8px 22px rgba(0,0,0,0.12)",
 
   overflow: "hidden",
   display: "flex",
@@ -28,15 +25,12 @@ export const cardSx = (theme) => ({
   transition: "all 0.25s ease",
 
   "&:hover": {
-    transform: "translateY(-6px)",
-    boxShadow:
-      theme.palette.mode === "dark"
-        ? "0 10px 26px rgba(0,0,0,0.6)"
-        : "0 10px 26px rgba(0,0,0,0.12)",
+    transform: "translateY(-4px)",
   },
 
   "&:focus": { outline: "none" },
   "&:focus-visible": { outline: "none" },
+  "&:active": { outline: "none" },
 });
 
 // ================================
