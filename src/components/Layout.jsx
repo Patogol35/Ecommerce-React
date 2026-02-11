@@ -1,19 +1,21 @@
 import { Box, Container, IconButton } from "@mui/material";
 import { useTheme } from "@mui/material/styles";
-import Navbar from "./Navbar";
 import { Outlet, useNavigate } from "react-router-dom";
+import Navbar from "./Navbar";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 
 export default function Layout() {
   const theme = useTheme();
-  const isDark = theme.palette.mode === "dark";
   const navigate = useNavigate();
 
   return (
     <Box
       sx={{
         minHeight: "100vh",
-        backgroundColor: isDark ? "#0f172a" : "#f8fafc",
+        backgroundColor:
+          theme.palette.mode === "dark"
+            ? "#0f172a"
+            : "#f8fafc",
         transition: "background-color .3s ease",
       }}
     >
@@ -38,16 +40,24 @@ export default function Layout() {
           bottom: 24,
           right: 24,
           zIndex: 1300,
+
           width: 56,
           height: 56,
           borderRadius: "50%",
-          bgcolor: "primary.main",
+
+          backgroundColor: "primary.main",
           color: "primary.contrastText",
-          boxShadow: isDark
-            ? "0 12px 30px rgba(0,0,0,0.55)"
-            : "0 10px 25px rgba(0,0,0,0.35)",
+
+          boxShadow:
+            theme.palette.mode === "dark"
+              ? "0 12px 30px rgba(0,0,0,0.6)"
+              : "0 10px 25px rgba(0,0,0,0.35)",
+
+          transition: "all .25s ease",
+
           "&:hover": {
-            bgcolor: "primary.dark",
+            backgroundColor: "primary.dark",
+            transform: "translateY(-2px)",
           },
         }}
       >
@@ -55,9 +65,16 @@ export default function Layout() {
       </IconButton>
 
       {/* Footer */}
-      <Box sx={{ textAlign: "center", py: 3, opacity: 0.6 }}>
+      <Box
+        sx={{
+          textAlign: "center",
+          py: 3,
+          opacity: 0.6,
+          color: "text.secondary",
+        }}
+      >
         © 2026 · Mi tienda
       </Box>
     </Box>
   );
-      }
+}
