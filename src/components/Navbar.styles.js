@@ -68,15 +68,34 @@ textAlign: "center",
 mt: isMobile ? 12 : 0,
 }),
 
-logoutBtn: {
-fontWeight: 600,
-color: "#fff",
-background: "linear-gradient(135deg, #d32f2f, #f44336)",
-borderRadius: "12px",
-px: 2.5,
-py: 1,
-"&:hover": { opacity: 0.9 },
-},
+logoutBtn: (theme) => ({
+  fontSize: "1.05rem",
+  fontWeight: 600,
+  color: "#fff",
+  borderRadius: "12px",
+  textTransform: "none",
+  width: "100%",
+  py: 1.2,
+  transition: "all 0.25s ease",
+
+  background: {
+    xs: "#d32f2f",
+    md: "transparent",
+  },
+
+  "& .MuiButton-startIcon": { color: "#fff" },
+
+  "&:hover": {
+    boxShadow: "0 0 12px rgba(0,0,0,0.25)",
+    filter: "brightness(1.1)",
+  },
+
+  ...(theme.palette.mode === "dark" && {
+    "&:hover": {
+      filter: "brightness(1.2)",
+    },
+  }),
+}),
 
 drawerUtilStack: {
 mt: 3,
