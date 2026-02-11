@@ -6,7 +6,7 @@ export const cardSx = (theme) => ({
   height: 480,
   borderRadius: 3,
 
-  bgcolor: "background.default", // 👈 SOLO CAMBIAMOS ESTO
+  bgcolor: "background.paper", // ✅ Fondo correcto (como el diseño anterior)
 
   border: "2px solid",
   borderColor:
