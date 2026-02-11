@@ -5,10 +5,13 @@ export const cardSx = (theme) => ({
   borderRadius: 3,
   bgcolor: "background.paper",
 
-  border: 1,
-  borderColor: "divider",
+  border: "2px solid",
+  borderColor:
+    theme.palette.mode === "dark"
+      ? "#ffffff"   // blanco en oscuro
+      : "#000000",  // negro en claro
 
-  boxShadow: theme.shadows[1], // sombra sutil profesional
+  boxShadow: "none",
 
   overflow: "hidden",
   display: "flex",
@@ -16,7 +19,6 @@ export const cardSx = (theme) => ({
   transition: "all 0.3s ease",
 
   "&:hover": {
-    boxShadow: theme.shadows[4],
     borderColor: "primary.main",
   },
 });
