@@ -14,7 +14,7 @@ export default function Layout() {
         minHeight: "100vh",
         display: "flex",
         flexDirection: "column",
-        backgroundColor: "background.default",
+        backgroundColor: "red",
         transition: "background-color 0.3s ease",
       }}
     >
