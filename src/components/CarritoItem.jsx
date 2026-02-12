@@ -27,7 +27,7 @@ export default function CarritoItem({
   const stock = it.producto?.stock ?? 0;
 
   return (
-    <Card sx={carritoItemStyles.card}>
+    <Card sx={(theme) => carritoItemStyles.card(theme)}>
       {/* Imagen producto */}
       <CardMedia
         component="img"
