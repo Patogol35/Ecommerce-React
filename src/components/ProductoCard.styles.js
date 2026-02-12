@@ -6,17 +6,21 @@ export const cardSx = (theme) => ({
   height: 480,
   borderRadius: 3,
 
-  bgcolor: "background.paper", // ✅ Fondo correcto para surfaces
+  // 🔥 Fondo menos oscuro en dark
+  bgcolor:
+    theme.palette.mode === "dark"
+      ? "#1e1e1e"   // gris elegante (no negro puro)
+      : "background.paper",
 
   border: "2px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "#ffffff"
+      ? "#2c2c2c"
       : "#000000",
 
   boxShadow:
     theme.palette.mode === "dark"
-      ? "0 8px 22px rgba(0,0,0,0.6)"
+      ? "0 8px 24px rgba(0,0,0,0.5)"
       : "0 8px 22px rgba(0,0,0,0.12)",
 
   overflow: "hidden",
@@ -30,7 +34,6 @@ export const cardSx = (theme) => ({
 
   "&:focus": { outline: "none" },
   "&:focus-visible": { outline: "none" },
-  "&:active": { outline: "none" },
 });
 
 
@@ -44,8 +47,11 @@ export const imagenBoxSx = (theme) => ({
   alignItems: "center",
   justifyContent: "center",
 
-  // ✅ Mismo fondo que la card (evita doble fondo visual)
-  bgcolor: "background.paper",
+  // 🔥 Fondo ligeramente más claro que la card
+  bgcolor:
+    theme.palette.mode === "dark"
+      ? "#262626"   // un tono más claro
+      : "#f8f9fa",  // gris muy suave en light
 
   overflow: "hidden",
 });
