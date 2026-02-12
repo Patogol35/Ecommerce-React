@@ -85,7 +85,9 @@ export default function Carrito() {
       {loading && <Typography>Cargando carrito...</Typography>}
 
       {!loading && items.length === 0 && (
-        <Typography align="center">Tu carrito está vacío.</Typography>
+        <Typography align="center">
+          Tu carrito está vacío.
+        </Typography>
       )}
 
       {!loading &&
@@ -101,38 +103,43 @@ export default function Carrito() {
           />
         ))}
 
-      {/* 🔥 TOTAL Y BOTÓN — ya no es footer */}
+      {/* 🔥 Total y botón integrados en flujo normal */}
       {!loading && items.length > 0 && (
         <Box sx={{ mt: 5 }}>
-          <Divider sx={{ mb: 3 }} />
+          <Divider sx={styles.divider} />
 
-          <Typography
-            variant="h6"
+          <Box
             sx={{
               display: "flex",
-              alignItems: "center",
-              gap: 1,
-              fontWeight: "bold",
+              justifyContent: "center",
+              mb: 3,
             }}
           >
-            Total:
-            <MonetizationOnIcon fontSize="small" color="success" />
-            {total.toFixed(2)}
-          </Typography>
+            <Typography variant="h6" sx={styles.total}>
+              Total:
+              <MonetizationOnIcon fontSize="small" />
+              {total.toFixed(2)}
+            </Typography>
+          </Box>
 
-          <Button
-            fullWidth
-            variant="contained"
-            color="primary"
-            size="large"
-            startIcon={<ShoppingCartCheckoutIcon />}
-            sx={{ mt: 3, py: 1.5 }}
-            onClick={comprar}
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "center",
+            }}
           >
-            Finalizar compra
-          </Button>
+            <Button
+              variant="contained"
+              size="large"
+              startIcon={<ShoppingCartCheckoutIcon />}
+              sx={styles.button}
+              onClick={comprar}
+            >
+              Finalizar compra
+            </Button>
+          </Box>
         </Box>
       )}
     </Box>
   );
-    }
+}
