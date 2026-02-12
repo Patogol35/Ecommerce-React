@@ -170,13 +170,13 @@ export const botonAgregarSx = (stock) => ({
 // BOTÓN DETALLES
 // ================================
 export const botonDetallesSx = (theme) => ({
-  borderRadius: 1,
+  borderRadius: 2,
   textTransform: "none",
   py: 0.9,
   fontWeight: 500,
   fontSize: "0.9rem",
 
-  border: "2px solid",
+  border: "1px solid",
   borderColor:
     theme.palette.mode === "dark"
       ? "#ffffff"
