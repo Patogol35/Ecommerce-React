@@ -6,16 +6,16 @@ export const cardSx = (theme) => ({
   height: 480,
   borderRadius: 3,
 
-  // 🔥 Fondo principal
+  // 🎨 Fondo principal diferenciado
   bgcolor:
     theme.palette.mode === "dark"
-      ? "#1f1f1f"
+      ? "#1f1f1f"   // gris oscuro elegante
       : "#ffffff",
 
   border: "2px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "#333333"
+      ? "#ffffff"   // ✅ borde blanco restaurado
       : "#000000",
 
   boxShadow:
@@ -47,11 +47,11 @@ export const imagenBoxSx = (theme) => ({
   alignItems: "center",
   justifyContent: "center",
 
-  // 🔥 Fondo claramente diferenciado
+  // 🎨 Fondo claramente diferente al principal
   bgcolor:
     theme.palette.mode === "dark"
-      ? "#2c2c2c"
-      : "#f2f4f7",
+      ? "#2c2c2c"   // más claro que la card
+      : "#f2f4f7",  // gris suave visible en light
 
   overflow: "hidden",
 });
