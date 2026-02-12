@@ -4,15 +4,16 @@ import { useAuth } from "../context/AuthContext";
 import { crearPedido } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+
 import {
   Typography,
   Box,
   Divider,
   Button,
-  useTheme,
 } from "@mui/material";
 
 import CarritoItem from "../components/CarritoItem";
@@ -20,7 +21,6 @@ import { calcularSubtotal } from "../utils/carritoUtils";
 import styles from "./Carrito.styles";
 
 export default function Carrito() {
-  const theme = useTheme();
   const {
     items,
     cargarCarrito,
@@ -29,12 +29,13 @@ export default function Carrito() {
     setCantidad,
     eliminarItem,
   } = useCarrito();
+
   const { access } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     cargarCarrito();
-  }, []);
+  }, [cargarCarrito]);
 
   const total = useMemo(
     () => items.reduce((acc, it) => acc + calcularSubtotal(it), 0),
@@ -56,17 +57,29 @@ export default function Carrito() {
     }
   };
 
-  const incrementar = (it) => {
+  // 🔹 FUNCIÓN ÚNICA PARA VALIDAR CANTIDAD
+  const actualizarCantidad = (it, nuevaCantidad) => {
     const stock = it.producto?.stock ?? 0;
-    if (it.cantidad < stock) {
-      setCantidad(it.id, it.cantidad + 1);
-    } else {
-      toast.warning(`Solo hay ${stock} unidades disponibles`);
+
+    if (nuevaCantidad < 1) {
+      setCantidad(it.id, 1);
+      return;
     }
+
+    if (nuevaCantidad > stock) {
+      toast.warning(`No puedes pedir más de ${stock} unidades`);
+      setCantidad(it.id, stock);
+      return;
+    }
+
+    setCantidad(it.id, nuevaCantidad);
   };
 
+  const incrementar = (it) =>
+    actualizarCantidad(it, it.cantidad + 1);
+
   const decrementar = (it) =>
-    it.cantidad > 1 && setCantidad(it.id, it.cantidad - 1);
+    actualizarCantidad(it, it.cantidad - 1);
 
   return (
     <Box sx={styles.root}>
@@ -82,6 +95,7 @@ export default function Carrito() {
       </Typography>
 
       {loading && <Typography>Cargando carrito...</Typography>}
+
       {!loading && items.length === 0 && (
         <Typography>Tu carrito está vacío.</Typography>
       )}
@@ -91,19 +105,19 @@ export default function Carrito() {
           <CarritoItem
             key={it.id}
             it={it}
-            theme={theme}
+            subtotal={calcularSubtotal(it)}
             incrementar={incrementar}
             decrementar={decrementar}
-            setCantidad={setCantidad}
+            actualizarCantidad={actualizarCantidad}
             eliminarItem={eliminarItem}
           />
         ))}
 
       {!loading && items.length > 0 && (
-        <Box sx={styles.footerBox(theme)}>
+        <Box sx={styles.footerBox()}>
           <Divider sx={styles.divider} />
 
-          <Typography variant="h6" sx={styles.total(theme)}>
+          <Typography variant="h6" sx={styles.total}>
             <MonetizationOnIcon fontSize="small" />
             Total: {total.toFixed(2)}
           </Typography>
@@ -111,7 +125,7 @@ export default function Carrito() {
           <Button
             variant="contained"
             startIcon={<ShoppingCartCheckoutIcon />}
-            sx={styles.button(theme)}
+            sx={styles.button}
             onClick={comprar}
           >
             Finalizar compra
@@ -120,4 +134,4 @@ export default function Carrito() {
       )}
     </Box>
   );
-}
+  }
