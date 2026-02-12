@@ -139,7 +139,7 @@ export const dividerSx = {
 // BOTÓN AGREGAR
 // ================================
 export const botonAgregarSx = (stock) => ({
-  borderRadius: 2,
+  borderRadius: 1,
   textTransform: "none",
   py: 1.1,
   fontWeight: 600,
