@@ -1,22 +1,34 @@
 const carritoItemStyles = {
 card: (theme) => ({
-display: "flex",
-flexDirection: { xs: "column", sm: "row" },
-mb: 3,
-mx: { xs: 2, sm: 0 },
-borderRadius: 4,
-border: "1px solid",
-borderColor: theme.palette.divider,
-overflow: "hidden",
-backgroundColor: theme.palette.background.paper,
-boxShadow: "0 4px 12px rgba(0,0,0,0.08)",
-transition: "all 0.3s ease",
-"&:hover": {
-boxShadow: "0 8px 24px rgba(0,0,0,0.18)",
-transform: "translateY(-2px)",
-},
-}),
+  display: "flex",
+  flexDirection: { xs: "column", sm: "row" },
+  mb: 3,
+  mx: { xs: 2, sm: 0 },
+  borderRadius: 4,
 
+  border: "1px solid",
+  borderColor:
+    theme.palette.mode === "dark"
+      ? "#ffffff"
+      : "#000000",
+
+  overflow: "hidden",
+  backgroundColor: theme.palette.background.paper,
+
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "0 4px 14px rgba(0,0,0,0.6)"
+      : "0 4px 12px rgba(0,0,0,0.12)",
+
+  transition: "all 0.3s ease",
+  "&:hover": {
+    transform: "translateY(-2px)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 8px 24px rgba(0,0,0,0.8)"
+        : "0 8px 24px rgba(0,0,0,0.2)",
+  },
+}),
 media: (theme) => ({
 width: { xs: "100%", sm: 180 },
 height: { xs: 200, sm: 180 },
