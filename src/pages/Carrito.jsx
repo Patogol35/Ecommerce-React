@@ -5,6 +5,8 @@ import { crearPedido } from "../api/api";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
+import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
+import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import {
   Typography,
   Box,
@@ -12,13 +14,10 @@ import {
   Button,
   useTheme,
 } from "@mui/material";
-import ShoppingCartCheckoutIcon from "@mui/icons-material/ShoppingCartCheckout";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 
 import CarritoItem from "../components/CarritoItem";
 import { calcularSubtotal } from "../utils/carritoUtils";
-
-import styles from "./Carrito.styles"; // 👈 importamos estilos externos
+import styles from "./Carrito.styles";
 
 export default function Carrito() {
   const theme = useTheme();
@@ -101,17 +100,18 @@ export default function Carrito() {
         ))}
 
       {!loading && items.length > 0 && (
-        <Box sx={styles.footerBox(theme)} mt={3}>
+        <Box sx={styles.footerBox(theme)}>
           <Divider sx={styles.divider} />
-          <Typography variant="h6" gutterBottom sx={styles.total}>
-  Total: <MonetizationOnIcon fontSize="small" /> {total.toFixed(2)}
-</Typography>
+
+          <Typography variant="h6" sx={styles.total(theme)}>
+            <MonetizationOnIcon fontSize="small" />
+            Total: {total.toFixed(2)}
+          </Typography>
+
           <Button
             variant="contained"
-            color="primary"
-            size="large"
             startIcon={<ShoppingCartCheckoutIcon />}
-            sx={styles.button}
+            sx={styles.button(theme)}
             onClick={comprar}
           >
             Finalizar compra
