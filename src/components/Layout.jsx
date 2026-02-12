@@ -25,7 +25,7 @@ export default function Layout() {
         sx={{
           flex: 1,
           pt: `calc(${theme.mixins.toolbar.minHeight}px + 24px)`,
-          pb: 6,
+          pb: 4,
         }}
       >
         <Outlet />
