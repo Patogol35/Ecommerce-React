@@ -1,6 +1,6 @@
 const styles = {
   root: {
-    pb: { xs: 14, sm: 6 },
+    pb: { xs: 10, sm: 4 },
   },
 
   header: {
