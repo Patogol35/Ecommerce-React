@@ -69,7 +69,7 @@ export default function Carrito() {
     it.cantidad > 1 && setCantidad(it.id, it.cantidad - 1);
 
   return (
-    <Box sx={styles.root}>
+    <Box sx={(theme) => styles.root(theme)}>
       <Typography
         variant="h4"
         gutterBottom
