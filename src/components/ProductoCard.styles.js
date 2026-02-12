@@ -6,16 +6,16 @@ export const cardSx = (theme) => ({
   height: 480,
   borderRadius: 3,
 
-  // 🎨 Fondo principal diferenciado
+  // Fondo principal 
   bgcolor:
     theme.palette.mode === "dark"
       ? "#1f1f1f"   // gris oscuro elegante
       : "#ffffff",
 
-  border: "2px solid",
+  border: "1px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "#ffffff"   // ✅ borde blanco restaurado
+      ? "#ffffff"   
       : "#000000",
 
   boxShadow:
@@ -47,7 +47,6 @@ export const imagenBoxSx = (theme) => ({
   alignItems: "center",
   justifyContent: "center",
 
-  // 🎨 Fondo claramente diferente al principal
   bgcolor:
     theme.palette.mode === "dark"
       ? "#2c2c2c"   // más claro que la card
@@ -135,7 +134,6 @@ export const precioStackSx = (theme) => ({
 export const dividerSx = {
   my: 1.2,
 };
-
 
 // ================================
 // BOTÓN AGREGAR
