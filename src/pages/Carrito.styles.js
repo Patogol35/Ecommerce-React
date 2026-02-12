@@ -1,12 +1,7 @@
-const styles = {
-  /* =========================
-     ROOT – FONDO + ESPACIADO
-  ========================= */
+  const styles = {
   root: (theme) => ({
     minHeight: "100vh",
-
-    // 🔑 padding ajustado (sin hueco abajo)
-    pb: { xs: 11, sm: 4 },
+    pb: { xs: 18, sm: 6 },
     px: { xs: 1, sm: 2 },
 
     background:
@@ -15,9 +10,6 @@ const styles = {
         : "linear-gradient(180deg, #f5f6f8 0%, #ffffff 100%)",
   }),
 
-  /* =========================
-     HEADER
-  ========================= */
   header: {
     display: "flex",
     justifyContent: "center",
@@ -32,20 +24,15 @@ const styles = {
     fontSize: 34,
   },
 
-  /* =========================
-     FOOTER (TOTAL + BOTÓN)
-     👉 diseño original intacto
-  ========================= */
   footerBox: (theme) => ({
-    position: { xs: "fixed", sm: "static" },
-    bottom: { xs: 12, sm: "auto" },
-    left: { xs: "50%", sm: "auto" },
-    transform: { xs: "translateX(-50%)", sm: "none" },
+    position: { xs: "fixed", sm: "sticky" },
+    bottom: { xs: 16, sm: 20 },
 
     width: { xs: "92%", sm: "100%" },
-    maxWidth: 420,
+    maxWidth: 480,
+    mx: "auto",
 
-    p: 1.8, // 👈 compacto, sin aire extra
+    p: 2.5,
     borderRadius: 4,
 
     background:
@@ -67,7 +54,7 @@ const styles = {
     display: "flex",
     flexDirection: "column",
     alignItems: "center",
-    gap: 1.2,
+    gap: 1.5,
 
     zIndex: 1200,
   }),
@@ -76,22 +63,19 @@ const styles = {
     display: "none",
   },
 
-  /* =========================
-     TOTAL (ORIGINAL)
-  ========================= */
   total: (theme) => ({
     display: "flex",
     alignItems: "center",
     gap: 1.2,
 
     fontWeight: 700,
-    fontSize: "0.9rem",
+    fontSize: "0.95rem",
 
     color: "#fff",
 
-    borderRadius: 20,
-    px: 2.2,
-    py: 0.7,
+    borderRadius: 99,
+    px: 2.5,
+    py: 0.8,
 
     background:
       theme.palette.mode === "dark"
@@ -100,35 +84,31 @@ const styles = {
 
     boxShadow:
       theme.palette.mode === "dark"
-        ? "0 4px 12px rgba(0,0,0,0.6)"
-        : "0 4px 12px rgba(0,0,0,0.2)",
+        ? "0 4px 14px rgba(0,0,0,0.7)"
+        : "0 4px 14px rgba(0,0,0,0.25)",
   }),
 
-  /* =========================
-     BOTÓN (ORIGINAL)
-  ========================= */
   button: (theme) => ({
-    py: 0.9,
-    px: 3,
+    py: 1,
+    px: 3.5,
     fontWeight: 600,
     fontSize: "0.85rem",
-    borderRadius: 20,
+    borderRadius: 99,
 
     background: theme.palette.primary.main,
 
     boxShadow:
       theme.palette.mode === "dark"
-        ? "0 4px 14px rgba(0,0,0,0.6)"
-        : "0 4px 14px rgba(0,0,0,0.15)",
+        ? "0 6px 18px rgba(0,0,0,0.8)"
+        : "0 6px 18px rgba(0,0,0,0.25)",
 
     transition: "all 0.2s ease",
-
     "&:hover": {
       transform: "translateY(-2px)",
       boxShadow:
         theme.palette.mode === "dark"
-          ? "0 6px 18px rgba(0,0,0,0.7)"
-          : "0 6px 18px rgba(0,0,0,0.25)",
+          ? "0 10px 24px rgba(0,0,0,0.9)"
+          : "0 10px 24px rgba(0,0,0,0.35)",
     },
   }),
 };
