@@ -69,7 +69,7 @@ export default function Layout() {
           transition: "background-color 0.3s ease",
         })}
       >
-        © 2026 · Mi tienda
+        © 2026 · E-commerce Jorge Patricio
       </Box>
     </Box>
   );
