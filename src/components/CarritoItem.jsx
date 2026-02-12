@@ -18,6 +18,7 @@ import carritoItemStyles from "./CarritoItem.styles";
 
 export default function CarritoItem({
   it,
+  theme,
   incrementar,
   decrementar,
   setCantidad,
@@ -26,7 +27,7 @@ export default function CarritoItem({
   const stock = it.producto?.stock ?? 0;
 
   return (
-    <Card sx={(theme) => carritoItemStyles.card(theme)}>
+    <Card sx={carritoItemStyles.card}>
       {/* Imagen producto */}
       <CardMedia
         component="img"
@@ -41,7 +42,6 @@ export default function CarritoItem({
           <Typography variant="h6" fontWeight="bold" gutterBottom>
             {it.producto?.nombre}
           </Typography>
-
           <Typography
             variant="body2"
             color="text.secondary"
@@ -59,7 +59,6 @@ export default function CarritoItem({
             color="success"
             sx={carritoItemStyles.chipSubtotal}
           />
-
           <Chip
             label={`Stock: ${stock} unidades`}
             color={stock > 0 ? "info" : "default"}
@@ -69,13 +68,13 @@ export default function CarritoItem({
       </CardContent>
 
       {/* Controles cantidad + eliminar */}
-      <Box sx={(theme) => carritoItemStyles.controlesWrapper(theme)}>
-        <Box sx={(theme) => carritoItemStyles.cantidadWrapper(theme)}>
+      <Box sx={carritoItemStyles.controlesWrapper}>
+        <Box sx={carritoItemStyles.cantidadWrapper}>
           {/* Botón restar */}
           <IconButton
             onClick={() => decrementar(it)}
             disabled={it.cantidad <= 1}
-            sx={(theme) => carritoItemStyles.botonCantidad(theme)}
+            sx={carritoItemStyles.botonCantidad}
           >
             <RemoveIcon />
           </IconButton>
@@ -89,6 +88,7 @@ export default function CarritoItem({
             onChange={(e) => {
               const value = e.target.value;
 
+              // Si está vacío → resetear a 1
               if (value === "") {
                 setCantidad(it.id, 1);
                 return;
@@ -102,6 +102,7 @@ export default function CarritoItem({
                 toast.warning(`No puedes pedir más de ${stock} unidades`);
                 setCantidad(it.id, stock);
               } else {
+                // Si es menor a 1
                 setCantidad(it.id, 1);
               }
             }}
@@ -112,7 +113,7 @@ export default function CarritoItem({
           <IconButton
             onClick={() => incrementar(it)}
             disabled={it.cantidad >= stock}
-            sx={(theme) => carritoItemStyles.botonCantidad(theme)}
+            sx={carritoItemStyles.botonCantidad}
           >
             <AddIcon />
           </IconButton>
@@ -128,4 +129,4 @@ export default function CarritoItem({
       </Box>
     </Card>
   );
-      }
+            }
