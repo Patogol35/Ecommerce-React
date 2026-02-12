@@ -27,7 +27,7 @@ export default function CarritoItem({
   const stock = it.producto?.stock ?? 0;
 
   return (
-    <Card sx={(theme) => carritoItemStyles.card(theme)}>
+    <Card sx={carritoItemStyles.card}>
       {/* Imagen producto */}
       <CardMedia
         component="img"
@@ -129,4 +129,4 @@ export default function CarritoItem({
       </Box>
     </Card>
   );
-            }
+}
