@@ -35,7 +35,7 @@ const styles = {
     display: { xs: "none", sm: "block" },
   },
   button: {
-  width: { xs: "75%", sm: "auto" },
+  width: { xs: "100%", sm: "auto" },
   py: 1.2,
   px: 3.5,
   fontWeight: 700,
