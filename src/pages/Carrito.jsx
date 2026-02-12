@@ -18,7 +18,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import CarritoItem from "../components/CarritoItem";
 import { calcularSubtotal } from "../utils/carritoUtils";
 
-import styles from "./Carrito.styles"; // 👈 importamos estilos externos
+import styles from "./Carrito.styles";
 
 export default function Carrito() {
   const theme = useTheme();
@@ -83,8 +83,9 @@ export default function Carrito() {
       </Typography>
 
       {loading && <Typography>Cargando carrito...</Typography>}
+
       {!loading && items.length === 0 && (
-        <Typography>Tu carrito está vacío.</Typography>
+        <Typography align="center">Tu carrito está vacío.</Typography>
       )}
 
       {!loading &&
@@ -100,18 +101,32 @@ export default function Carrito() {
           />
         ))}
 
+      {/* 🔥 TOTAL Y BOTÓN — ya no es footer */}
       {!loading && items.length > 0 && (
-        <Box sx={styles.footerBox(theme)} mt={3}>
-          <Divider sx={styles.divider} />
-          <Typography variant="h6" gutterBottom sx={styles.total}>
-  Total: <MonetizationOnIcon fontSize="small" /> {total.toFixed(2)}
-</Typography>
+        <Box sx={{ mt: 5 }}>
+          <Divider sx={{ mb: 3 }} />
+
+          <Typography
+            variant="h6"
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              gap: 1,
+              fontWeight: "bold",
+            }}
+          >
+            Total:
+            <MonetizationOnIcon fontSize="small" color="success" />
+            {total.toFixed(2)}
+          </Typography>
+
           <Button
+            fullWidth
             variant="contained"
             color="primary"
             size="large"
             startIcon={<ShoppingCartCheckoutIcon />}
-            sx={styles.button}
+            sx={{ mt: 3, py: 1.5 }}
             onClick={comprar}
           >
             Finalizar compra
@@ -120,4 +135,4 @@ export default function Carrito() {
       )}
     </Box>
   );
-}
+    }
