@@ -1,6 +1,6 @@
 const styles = {
   root: {
-    pb: { xs: 16, sm: 6 }, // espacio para el botón flotante
+    pb: { xs: 14, sm: 6 }, // espacio para el flotante
   },
 
   header: {
@@ -14,42 +14,25 @@ const styles = {
   },
 
   headerIcon: {
-    fontSize: 36,
+    fontSize: 34,
   },
 
-  footerBox: (theme) => ({
+  footerBox: () => ({
     position: { xs: "fixed", sm: "static" },
     bottom: { xs: 20, sm: "auto" },
     left: { xs: "50%", sm: "auto" },
     transform: { xs: "translateX(-50%)", sm: "none" },
 
-    width: { xs: "92%", sm: "100%" },
-    maxWidth: { xs: 500, sm: "none" },
+    width: { xs: "90%", sm: "100%" },
+    maxWidth: { xs: 420, sm: "none" },
 
-    backdropFilter: { xs: "blur(14px)", sm: "none" },
-
-    backgroundColor: {
-      xs:
-        theme.palette.mode === "dark"
-          ? "rgba(20,20,20,0.75)"
-          : "rgba(255,255,255,0.75)",
-      sm: "transparent",
-    },
-
-    borderRadius: { xs: 4, sm: 0 },
-
-    boxShadow: {
-      xs:
-        theme.palette.mode === "dark"
-          ? "0 8px 25px rgba(0,0,0,0.6)"
-          : "0 8px 25px rgba(0,0,0,0.15)",
-      sm: "none",
-    },
-
-    padding: { xs: 2.5, sm: 0 },
+    // ❌ sin fondo
+    backgroundColor: "transparent",
+    backdropFilter: "none",
+    boxShadow: "none",
 
     display: "flex",
-    flexDirection: { xs: "column", sm: "row" },
+    flexDirection: { xs: "row", sm: "row" },
     alignItems: "center",
     justifyContent: "space-between",
     gap: 2,
@@ -58,54 +41,44 @@ const styles = {
   }),
 
   divider: {
-    display: { xs: "none", sm: "block" },
-    mb: 2,
+    display: "none",
   },
 
   total: (theme) => ({
     display: "flex",
     alignItems: "center",
-    gap: 1,
-    fontWeight: 800,
-    fontSize: "1.2rem",
+    gap: 0.5,
+    fontWeight: 700,
+    fontSize: "0.95rem",
 
     color:
       theme.palette.mode === "dark"
         ? theme.palette.primary.light
         : theme.palette.primary.main,
-
-    background:
-      theme.palette.mode === "dark"
-        ? "rgba(255,255,255,0.05)"
-        : "rgba(25,118,210,0.08)",
-
-    padding: "0.6rem 1rem",
-    borderRadius: 3,
   }),
 
   button: (theme) => ({
-    width: { xs: "100%", sm: "auto" },
-    py: 1.3,
-    px: 4,
-    fontWeight: 700,
-    fontSize: "1rem",
-    borderRadius: 3,
+    py: 0.9,
+    px: 2.5,
+    fontWeight: 600,
+    fontSize: "0.85rem",
+    borderRadius: 2,
 
-    background: `linear-gradient(135deg, ${theme.palette.primary.main}, ${theme.palette.primary.light})`,
+    background: theme.palette.primary.main,
 
     boxShadow:
       theme.palette.mode === "dark"
-        ? "0 6px 20px rgba(0,0,0,0.6)"
-        : "0 6px 20px rgba(0,0,0,0.15)",
+        ? "0 4px 12px rgba(0,0,0,0.6)"
+        : "0 4px 12px rgba(0,0,0,0.15)",
 
-    transition: "all 0.25s ease",
+    transition: "all 0.2s ease",
 
     "&:hover": {
-      transform: "translateY(-3px)",
+      transform: "translateY(-2px)",
       boxShadow:
         theme.palette.mode === "dark"
-          ? "0 10px 25px rgba(0,0,0,0.7)"
-          : "0 10px 25px rgba(0,0,0,0.25)",
+          ? "0 6px 16px rgba(0,0,0,0.7)"
+          : "0 6px 16px rgba(0,0,0,0.25)",
     },
   }),
 };
