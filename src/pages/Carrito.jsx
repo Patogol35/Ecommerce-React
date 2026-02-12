@@ -18,7 +18,7 @@ import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
 import CarritoItem from "../components/CarritoItem";
 import { calcularSubtotal } from "../utils/carritoUtils";
 
-import styles from "./Carrito.styles";
+import styles from "./Carrito.styles"; // 👈 importamos estilos externos
 
 export default function Carrito() {
   const theme = useTheme();
@@ -83,11 +83,8 @@ export default function Carrito() {
       </Typography>
 
       {loading && <Typography>Cargando carrito...</Typography>}
-
       {!loading && items.length === 0 && (
-        <Typography align="center">
-          Tu carrito está vacío.
-        </Typography>
+        <Typography>Tu carrito está vacío.</Typography>
       )}
 
       {!loading &&
@@ -103,41 +100,22 @@ export default function Carrito() {
           />
         ))}
 
-      {/* 🔥 Total y botón integrados en flujo normal */}
       {!loading && items.length > 0 && (
-        <Box sx={{ mt: 5 }}>
+        <Box sx={styles.footerBox(theme)} mt={3}>
           <Divider sx={styles.divider} />
-
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-              mb: 3,
-            }}
+          <Typography variant="h6" gutterBottom sx={styles.total}>
+  Total: <MonetizationOnIcon fontSize="small" /> {total.toFixed(2)}
+</Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            size="large"
+            startIcon={<ShoppingCartCheckoutIcon />}
+            sx={styles.button}
+            onClick={comprar}
           >
-            <Typography variant="h6" sx={styles.total}>
-              Total:
-              <MonetizationOnIcon fontSize="small" />
-              {total.toFixed(2)}
-            </Typography>
-          </Box>
-
-          <Box
-            sx={{
-              display: "flex",
-              justifyContent: "center",
-            }}
-          >
-            <Button
-              variant="contained"
-              size="large"
-              startIcon={<ShoppingCartCheckoutIcon />}
-              sx={styles.button}
-              onClick={comprar}
-            >
-              Finalizar compra
-            </Button>
-          </Box>
+            Finalizar compra
+          </Button>
         </Box>
       )}
     </Box>
