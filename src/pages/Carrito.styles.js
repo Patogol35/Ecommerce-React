@@ -43,29 +43,29 @@ const styles = {
   },
 
   total: (theme) => ({
-    fontWeight: 700,
-    fontSize: "0.85rem",
+  display: "flex",
+  alignItems: "center",
+  gap: 1.2, 
 
-    color:
-      theme.palette.mode === "dark"
-        ? theme.palette.primary.light
-        : theme.palette.primary.main,
+  fontWeight: 700,
+  fontSize: "0.9rem",
 
-    borderRadius: 20,
-    px: 2,
-    py: 0.6,
+  color: "#fff",
 
-    background:
-      theme.palette.mode === "dark"
-        ? "rgba(255,255,255,0.08)"
-        : "rgba(25,118,210,0.08)",
+  borderRadius: 20,
+  px: 2.2,
+  py: 0.7,
 
-    border: `1px solid ${
-      theme.palette.mode === "dark"
-        ? "rgba(255,255,255,0.15)"
-        : "rgba(25,118,210,0.2)"
-    }`,
-  }),
+  background:
+    theme.palette.mode === "dark"
+      ? theme.palette.primary.dark
+      : theme.palette.primary.main,
+
+  boxShadow:
+    theme.palette.mode === "dark"
+      ? "0 4px 12px rgba(0,0,0,0.6)"
+      : "0 4px 12px rgba(0,0,0,0.2)",
+}),
 
   button: (theme) => ({
     py: 0.9,
