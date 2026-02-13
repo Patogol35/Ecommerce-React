@@ -1,5 +1,5 @@
 import { useMemo, useCallback } from "react";
-import { useCarrito } from "../../context/CarritoContext";
+import { useCarrito } from "../context/CarritoContext";
 import {
   Container,
   Typography,
