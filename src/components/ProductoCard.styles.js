@@ -4,32 +4,35 @@
 export const cardSx = (theme) => ({
   width: 320,
   height: 480,
-  borderRadius: 3,
+  borderRadius: 4,
 
-  // Fondo principal 
   bgcolor:
     theme.palette.mode === "dark"
-      ? "#1f1f1f"   // gris oscuro elegante
+      ? "#1b1b1b"
       : "#ffffff",
 
   border: "1px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "#ffffff"   
-      : "#000000",
+      ? "rgba(255,255,255,0.06)"
+      : "rgba(0,0,0,0.06)",
 
   boxShadow:
     theme.palette.mode === "dark"
-      ? "0 8px 24px rgba(0,0,0,0.45)"
-      : "0 8px 22px rgba(0,0,0,0.12)",
+      ? "0 10px 28px rgba(0,0,0,0.55)"
+      : "0 8px 24px rgba(0,0,0,0.10)",
 
   overflow: "hidden",
   display: "flex",
   flexDirection: "column",
-  transition: "all 0.25s ease",
+  transition: "all 0.3s cubic-bezier(.4,0,.2,1)",
 
   "&:hover": {
-    transform: "translateY(-4px)",
+    transform: "translateY(-6px)",
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 18px 40px rgba(0,0,0,0.7)"
+        : "0 18px 40px rgba(0,0,0,0.15)",
   },
 
   "&:focus": { outline: "none" },
@@ -47,10 +50,10 @@ export const imagenBoxSx = (theme) => ({
   alignItems: "center",
   justifyContent: "center",
 
-  bgcolor:
+  background:
     theme.palette.mode === "dark"
-      ? "#2c2c2c"   // más claro que la card
-      : "#f2f4f7",  // gris suave visible en light
+      ? "linear-gradient(180deg, #252525, #1b1b1b)"
+      : "linear-gradient(180deg, #f8f9fa, #eef1f4)",
 
   overflow: "hidden",
 });
@@ -65,26 +68,26 @@ export const imagenSx = {
   objectFit: "contain",
   transition: "transform 0.4s ease",
   "&:hover": {
-    transform: "scale(1.06)",
+    transform: "scale(1.08)",
   },
 };
 
 
 // ================================
-// CHIP
+// CHIP NUEVO
 // ================================
 export const chipNuevoSx = {
   position: "absolute",
   top: 14,
   left: 14,
   fontWeight: 600,
-  background: "linear-gradient(135deg, #ff6b6b, #ff8e53)",
+  background: "#111",
   color: "#fff",
-  borderRadius: "14px",
+  borderRadius: "20px",
   px: 1.5,
   py: 0.4,
-  fontSize: "0.75rem",
-  boxShadow: "0 4px 10px rgba(0,0,0,0.25)",
+  fontSize: "0.7rem",
+  letterSpacing: "0.5px",
 };
 
 
@@ -92,7 +95,7 @@ export const chipNuevoSx = {
 // CONTENIDO
 // ================================
 export const contenidoSx = {
-  p: 2.2,
+  p: 2.5,
   flexGrow: 1,
   display: "flex",
   flexDirection: "column",
@@ -119,8 +122,9 @@ export const tituloSx = {
 // ================================
 export const precioStackSx = (theme) => ({
   mb: 2,
-  fontSize: "1.3rem",
+  fontSize: "1.5rem",
   fontWeight: 700,
+  letterSpacing: "0.5px",
   color:
     theme.palette.mode === "dark"
       ? "#4dabf5"
@@ -133,13 +137,15 @@ export const precioStackSx = (theme) => ({
 // ================================
 export const dividerSx = {
   my: 1.2,
+  opacity: 0.4,
 };
+
 
 // ================================
 // BOTÓN AGREGAR
 // ================================
 export const botonAgregarSx = (stock) => ({
-  borderRadius: 2,
+  borderRadius: 3,
   textTransform: "none",
   py: 1.1,
   fontWeight: 600,
@@ -148,17 +154,23 @@ export const botonAgregarSx = (stock) => ({
   background:
     stock > 0
       ? "linear-gradient(135deg, #1976d2, #42a5f5)"
-      : "#bdbdbd",
+      : "#9e9e9e",
 
   color: "white",
-  transition: "all 0.25s ease",
+
+  boxShadow:
+    stock > 0
+      ? "0 6px 14px rgba(25,118,210,0.35)"
+      : "none",
+
+  transition: "all 0.3s cubic-bezier(.4,0,.2,1)",
 
   "&:hover": {
-    transform: stock > 0 ? "scale(1.03)" : "none",
+    transform: stock > 0 ? "scale(1.04)" : "none",
     background:
       stock > 0
         ? "linear-gradient(135deg, #1565c0, #1e88e5)"
-        : "#bdbdbd",
+        : "#9e9e9e",
   },
 
   "&:focus": { outline: "none" },
@@ -170,7 +182,7 @@ export const botonAgregarSx = (stock) => ({
 // BOTÓN DETALLES
 // ================================
 export const botonDetallesSx = (theme) => ({
-  borderRadius: 2,
+  borderRadius: 3,
   textTransform: "none",
   py: 0.9,
   fontWeight: 500,
@@ -179,25 +191,17 @@ export const botonDetallesSx = (theme) => ({
   border: "1px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "#ffffff"
-      : "#000000",
+      ? "rgba(255,255,255,0.2)"
+      : "rgba(0,0,0,0.2)",
 
-  color:
-    theme.palette.mode === "dark"
-      ? "#ffffff"
-      : "#000000",
+  color: "text.primary",
 
   backgroundColor: "transparent",
-  transition: "all 0.25s ease",
+  transition: "all 0.3s cubic-bezier(.4,0,.2,1)",
 
   "&:hover": {
     backgroundColor:
       theme.palette.mode === "dark"
-        ? "rgba(255,255,255,0.08)"
-        : "rgba(0,0,0,0.05)",
-    transform: "scale(1.03)",
-  },
-
-  "&:focus": { outline: "none" },
-  "&:focus-visible": { outline: "none" },
-});
+        ? "rgba(255,255,255,0.06)"
+        : "rgba(0,0,0,0.04)",
+    transform: "scale(
