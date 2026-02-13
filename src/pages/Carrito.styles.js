@@ -1,4 +1,3 @@
-Carritostyle
 const styles = {
   root: {
     pb: { xs: 3, sm: 1 },
