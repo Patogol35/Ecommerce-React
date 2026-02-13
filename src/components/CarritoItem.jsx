@@ -1,4 +1,3 @@
-Carritoitem
 import {
   Card,
   CardMedia,
