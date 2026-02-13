@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useCallback } from "react";
+import { useEffect, useMemo } from "react";
 import { useCarrito } from "../context/CarritoContext";
 import { useAuth } from "../context/AuthContext";
 import { crearPedido } from "../api/api";
@@ -34,7 +34,7 @@ export default function Carrito() {
 
   useEffect(() => {
     cargarCarrito();
-  }, [cargarCarrito]);
+  }, []);
 
   const total = useMemo(
     () => items.reduce((acc, it) => acc + calcularSubtotal(it), 0),
@@ -56,26 +56,17 @@ export default function Carrito() {
     }
   };
 
-  const incrementar = useCallback(
-    (it) => {
-      const stock = it.producto?.stock ?? 0;
-      if (it.cantidad < stock) {
-        setCantidad(it.id, it.cantidad + 1);
-      } else {
-        toast.warning(`Solo hay ${stock} unidades disponibles`);
-      }
-    },
-    [setCantidad]
-  );
+  const incrementar = (it) => {
+    const stock = it.producto?.stock ?? 0;
+    if (it.cantidad < stock) {
+      setCantidad(it.id, it.cantidad + 1);
+    } else {
+      toast.warning(`Solo hay ${stock} unidades disponibles`);
+    }
+  };
 
-  const decrementar = useCallback(
-    (it) => {
-      if (it.cantidad > 1) {
-        setCantidad(it.id, it.cantidad - 1);
-      }
-    },
-    [setCantidad]
-  );
+  const decrementar = (it) =>
+    it.cantidad > 1 && setCantidad(it.id, it.cantidad - 1);
 
   return (
     <Box sx={styles.root}>
@@ -100,6 +91,7 @@ export default function Carrito() {
           <CarritoItem
             key={it.id}
             it={it}
+            theme={theme}
             incrementar={incrementar}
             decrementar={decrementar}
             setCantidad={setCantidad}
@@ -128,4 +120,4 @@ export default function Carrito() {
       )}
     </Box>
   );
-}
+            }
