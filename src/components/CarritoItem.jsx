@@ -1,132 +1,64 @@
 import {
   Card,
-  CardMedia,
   CardContent,
-  Box,
+  CardMedia,
   Typography,
-  Chip,
-  TextField,
+  Box,
   IconButton,
+  Button,
 } from "@mui/material";
-import RemoveIcon from "@mui/icons-material/Remove";
-import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from "@mui/icons-material/Delete";
-import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import { toast } from "react-toastify";
-import { calcularSubtotal } from "../utils/carritoUtils";
-import carritoItemStyles from "./CarritoItem.styles";
+import { Add, Remove, Delete } from "@mui/icons-material";
+import { useCarrito } from "../../context/CarritoContext";
+import { carritoItemStyles } from "./Carrito.styles";
 
 export default function CarritoItem({
   it,
-  theme,
   incrementar,
   decrementar,
-  setCantidad,
-  eliminarItem,
+  calcularSubtotal,
 }) {
-  const stock = it.producto?.stock ?? 0;
+  const { eliminarItem } = useCarrito();
+  const producto = it.producto;
 
   return (
     <Card sx={carritoItemStyles.card}>
-      {/* Imagen producto */}
       <CardMedia
         component="img"
-        image={it.producto?.imagen || undefined}
-        alt={it.producto?.nombre}
+        image={producto?.imagen}
+        alt={producto?.nombre}
         sx={(theme) => carritoItemStyles.media(theme)}
       />
 
-      {/* Info producto */}
       <CardContent sx={carritoItemStyles.content}>
-        <Box>
-          <Typography variant="h6" fontWeight="bold" gutterBottom>
-            {it.producto?.nombre}
-          </Typography>
-          <Typography
-            variant="body2"
-            color="text.secondary"
-            sx={carritoItemStyles.descripcion}
-          >
-            {it.producto?.descripcion}
-          </Typography>
-        </Box>
+        <Typography variant="h6">{producto?.nombre}</Typography>
+        <Typography color="text.secondary">
+          ${producto?.precio?.toLocaleString()}
+        </Typography>
 
-        {/* Precio + Stock */}
-        <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
-          <Chip
-            icon={<MonetizationOnIcon />}
-            label={calcularSubtotal(it).toFixed(2)}
-            color="success"
-            sx={carritoItemStyles.chipSubtotal}
-          />
-          <Chip
-            label={`Stock: ${stock} unidades`}
-            color={stock > 0 ? "info" : "default"}
-            sx={carritoItemStyles.chipStock}
-          />
-        </Box>
-      </CardContent>
-
-      {/* Controles cantidad + eliminar */}
-      <Box sx={carritoItemStyles.controlesWrapper}>
-        <Box sx={carritoItemStyles.cantidadWrapper}>
-          {/* Botón restar */}
-          <IconButton
-            onClick={() => decrementar(it)}
-            disabled={it.cantidad <= 1}
-            sx={carritoItemStyles.botonCantidad}
-          >
-            <RemoveIcon />
+        <Box sx={carritoItemStyles.controls}>
+          <IconButton onClick={() => decrementar(it)}>
+            <Remove />
           </IconButton>
 
-          {/* Input cantidad */}
-          <TextField
-            type="number"
-            size="small"
-            value={it.cantidad}
-            inputProps={{ min: 1, max: stock }}
-            onChange={(e) => {
-              const value = e.target.value;
+          <Typography>{it.cantidad}</Typography>
 
-              // Si está vacío → resetear a 1
-              if (value === "") {
-                setCantidad(it.id, 1);
-                return;
-              }
-
-              const nuevaCantidad = Number(value);
-
-              if (nuevaCantidad >= 1 && nuevaCantidad <= stock) {
-                setCantidad(it.id, nuevaCantidad);
-              } else if (nuevaCantidad > stock) {
-                toast.warning(`No puedes pedir más de ${stock} unidades`);
-                setCantidad(it.id, stock);
-              } else {
-                // Si es menor a 1
-                setCantidad(it.id, 1);
-              }
-            }}
-            sx={carritoItemStyles.cantidadInput}
-          />
-
-          {/* Botón sumar */}
-          <IconButton
-            onClick={() => incrementar(it)}
-            disabled={it.cantidad >= stock}
-            sx={carritoItemStyles.botonCantidad}
-          >
-            <AddIcon />
+          <IconButton onClick={() => incrementar(it)}>
+            <Add />
           </IconButton>
         </Box>
 
-        {/* Botón eliminar */}
-        <IconButton
+        <Typography sx={carritoItemStyles.subtotal}>
+          Subtotal: ${calcularSubtotal(it).toLocaleString()}
+        </Typography>
+
+        <Button
+          color="error"
+          startIcon={<Delete />}
           onClick={() => eliminarItem(it.id)}
-          sx={carritoItemStyles.botonEliminar}
         >
-          <DeleteIcon />
-        </IconButton>
-      </Box>
+          Eliminar
+        </Button>
+      </CardContent>
     </Card>
   );
 }
