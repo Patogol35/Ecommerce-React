@@ -1,4 +1,4 @@
-const styles = {
+  const styles = {
   root: {
     pb: { xs: 3, sm: 1 },
   },
@@ -17,7 +17,7 @@ const styles = {
     fontSize: 34,
   },
 
-  footerBox: () => ({
+  footerBox: (theme) => ({
     position: { xs: "fixed", sm: "static" },
     bottom: { xs: 20, sm: "auto" },
     left: { xs: "50%", sm: "auto" },
@@ -43,46 +43,37 @@ const styles = {
   },
 
   total: (theme) => ({
-  display: "flex",
-  alignItems: "center",
-  gap: 1.2, 
-
-  fontWeight: 700,
-  fontSize: "0.9rem",
-
-  color: "#fff",
-
-  borderRadius: 20,
-  px: 2.2,
-  py: 0.7,
-
-  background:
-    theme.palette.mode === "dark"
-      ? theme.palette.primary.dark
-      : theme.palette.primary.main,
-
-  boxShadow:
-    theme.palette.mode === "dark"
-      ? "0 4px 12px rgba(0,0,0,0.6)"
-      : "0 4px 12px rgba(0,0,0,0.2)",
-}),
+    display: "flex",
+    alignItems: "center",
+    gap: 1.2,
+    fontWeight: 700,
+    fontSize: "0.9rem",
+    color: "#fff",
+    borderRadius: 20,
+    px: 2.2,
+    py: 0.7,
+    background:
+      theme.palette.mode === "dark"
+        ? theme.palette.primary.dark
+        : theme.palette.primary.main,
+    boxShadow:
+      theme.palette.mode === "dark"
+        ? "0 4px 12px rgba(0,0,0,0.6)"
+        : "0 4px 12px rgba(0,0,0,0.2)",
+  }),
 
   button: (theme) => ({
     py: 0.9,
     px: 3,
     fontWeight: 600,
     fontSize: "0.85rem",
-    borderRadius: 20, // pill shape elegante
-
+    borderRadius: 20,
     background: theme.palette.primary.main,
-
     boxShadow:
       theme.palette.mode === "dark"
         ? "0 4px 14px rgba(0,0,0,0.6)"
         : "0 4px 14px rgba(0,0,0,0.15)",
-
     transition: "all 0.2s ease",
-
     "&:hover": {
       transform: "translateY(-2px)",
       boxShadow:
