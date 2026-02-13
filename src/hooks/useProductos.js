@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { getProductos } from "../api/api";
 
 export function useProductos({ categoria, search, sort, itemsPerPage }) {
@@ -13,12 +13,14 @@ export function useProductos({ categoria, search, sort, itemsPerPage }) {
       setDebouncedSearch(search.toLowerCase());
       setPage(1);
     }, 400);
+
     return () => clearTimeout(timer);
   }, [search]);
 
   // 🔹 Fetch productos
   useEffect(() => {
     setLoading(true);
+
     getProductos(categoria ? { categoria } : {})
       .then((data) => {
         const lista = Array.isArray(data)
@@ -26,6 +28,7 @@ export function useProductos({ categoria, search, sort, itemsPerPage }) {
           : Array.isArray(data?.results)
           ? data.results
           : [];
+
         setProductos(lista);
         setPage(1);
       })
@@ -33,22 +36,26 @@ export function useProductos({ categoria, search, sort, itemsPerPage }) {
       .finally(() => setLoading(false));
   }, [categoria]);
 
-  // 🔹 Filtrar y ordenar
-  const filtered = (productos || [])
-    .filter((p) =>
-      debouncedSearch === ""
-        ? true
-        : p.nombre?.toLowerCase().includes(debouncedSearch)
-    )
-    .sort((a, b) =>
-      sort === "asc" ? a.precio - b.precio : b.precio - a.precio
-    );
+  // 🔹 Filtrar y ordenar (memorizado)
+  const filtered = useMemo(() => {
+    return (productos || [])
+      .filter((p) =>
+        debouncedSearch === ""
+          ? true
+          : p.nombre?.toLowerCase().includes(debouncedSearch)
+      )
+      .sort((a, b) =>
+        sort === "asc" ? a.precio - b.precio : b.precio - a.precio
+      );
+  }, [productos, debouncedSearch, sort]);
 
-  // 🔹 Paginación
-  const paginated = filtered.slice(
-    (page - 1) * itemsPerPage,
-    page * itemsPerPage
-  );
+  // 🔹 Paginación (único lugar donde se calcula)
+  const paginated = useMemo(() => {
+    return filtered.slice(
+      (page - 1) * itemsPerPage,
+      page * itemsPerPage
+    );
+  }, [filtered, page, itemsPerPage]);
 
   return { loading, filtered, paginated, page, setPage };
 }
