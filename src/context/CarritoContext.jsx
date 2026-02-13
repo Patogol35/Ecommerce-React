@@ -1,4 +1,4 @@
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useState, useMemo } from "react";
 import {
   agregarAlCarrito as apiAgregar,
   getCarrito as apiGetCarrito,
@@ -20,6 +20,7 @@ export function CarritoProvider({ children }) {
       setCarrito({ items: [] });
       return;
     }
+
     setLoading(true);
     try {
       const data = await apiGetCarrito(access);
@@ -34,10 +35,8 @@ export function CarritoProvider({ children }) {
 
   useEffect(() => {
     cargarCarrito();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [access]);
 
-  // ✅ Actualiza cantidad de un item
   const setCantidad = async (itemId, cantidad) => {
     if (!access) throw new Error("Debes iniciar sesión.");
     if (cantidad < 1) return;
@@ -66,11 +65,11 @@ export function CarritoProvider({ children }) {
     }
   };
 
-  // ✅ Optimizado: agrega producto y actualiza localmente
   const agregarAlCarrito = async (producto_id, cantidad = 1) => {
     if (!access) throw new Error("Debes iniciar sesión.");
     try {
       const nuevoItem = await apiAgregar(producto_id, cantidad, access);
+
       setCarrito((prev) => {
         const items = prev.items.filter((it) => it.id !== nuevoItem.id);
         return { ...prev, items: [...items, nuevoItem] };
@@ -83,15 +82,16 @@ export function CarritoProvider({ children }) {
     }
   };
 
-  // ✅ Optimizado: elimina localmente
   const eliminarItem = async (itemId) => {
     if (!access) throw new Error("Debes iniciar sesión.");
     try {
       await apiEliminar(itemId, access);
+
       setCarrito((prev) => ({
         ...prev,
         items: prev.items.filter((it) => it.id !== itemId),
       }));
+
       toast.warn("Producto eliminado 🗑️");
     } catch (e) {
       console.error(e);
@@ -103,19 +103,22 @@ export function CarritoProvider({ children }) {
 
   const limpiarLocal = () => setCarrito({ items: [] });
 
+  const value = useMemo(
+    () => ({
+      carrito,
+      items: carrito.items || [],
+      loading,
+      cargarCarrito,
+      agregarAlCarrito,
+      setCantidad,
+      eliminarItem,
+      limpiarLocal,
+    }),
+    [carrito, loading]
+  );
+
   return (
-    <CarritoContext.Provider
-      value={{
-        carrito,
-        items: carrito.items || [],
-        loading,
-        cargarCarrito,
-        agregarAlCarrito,
-        setCantidad,
-        eliminarItem,
-        limpiarLocal,
-      }}
-    >
+    <CarritoContext.Provider value={value}>
       {children}
     </CarritoContext.Provider>
   );
