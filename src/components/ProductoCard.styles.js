@@ -14,8 +14,8 @@ export const cardSx = (theme) => ({
   border: "1px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "rgba(255,255,255,0.06)"
-      : "rgba(0,0,0,0.06)",
+      ? "rgba(255,255,255,0.08)"
+      : "rgba(0,0,0,0.08)",
 
   boxShadow:
     theme.palette.mode === "dark"
@@ -81,13 +81,14 @@ export const chipNuevoSx = {
   top: 14,
   left: 14,
   fontWeight: 600,
-  background: "#111",
+  background: "linear-gradient(135deg, #ff6b6b, #ff8e53)",
   color: "#fff",
   borderRadius: "20px",
   px: 1.5,
   py: 0.4,
   fontSize: "0.7rem",
   letterSpacing: "0.5px",
+  boxShadow: "0 4px 12px rgba(0,0,0,0.25)",
 };
 
 
@@ -204,4 +205,9 @@ export const botonDetallesSx = (theme) => ({
       theme.palette.mode === "dark"
         ? "rgba(255,255,255,0.06)"
         : "rgba(0,0,0,0.04)",
-    transform: "scale(
+    transform: "scale(1.04)",
+  },
+
+  "&:focus": { outline: "none" },
+  "&:focus-visible": { outline: "none" },
+});
