@@ -1,4 +1,4 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import {
   Box,
   Typography,
@@ -7,14 +7,12 @@ import {
   MenuItem,
   Grid,
   Pagination,
-  IconButton,
   CircularProgress,
   Paper,
 } from "@mui/material";
 import { motion } from "framer-motion";
 import SearchIcon from "@mui/icons-material/Search";
 import HomeIcon from "@mui/icons-material/Home";
-import ShoppingCartIcon from "@mui/icons-material/ShoppingCart";
 import SortIcon from "@mui/icons-material/Sort";
 import CategoryIcon from "@mui/icons-material/Category";
 
@@ -25,7 +23,7 @@ import { useCarritoHandler } from "../hooks/useCarritoHandler";
 import DetalleModal from "../components/DetalleModal";
 import LightboxModal from "../components/LightboxModal";
 
-import styles from "./Home.styles"; // 👈 Importamos estilos externos
+import styles from "./Home.styles";
 
 const ITEMS_PER_PAGE = 8;
 
@@ -37,21 +35,18 @@ export default function Home() {
   const [lightbox, setLightbox] = useState(null);
 
   const categorias = useCategorias();
-  const { loading, filtered, page, setPage } = useProductos({
+
+  const { loading, filtered, paginated, page, setPage } = useProductos({
     categoria,
     search,
     sort,
     itemsPerPage: ITEMS_PER_PAGE,
   });
-  const { handleAdd, handleCarritoClick } = useCarritoHandler();
+
+  const { handleAdd } = useCarritoHandler();
 
   const handleVerDetalle = (producto) => setProductoSeleccionado(producto);
   const handleCerrarDetalle = () => setProductoSeleccionado(null);
-
-  const productosPag = useMemo(() => {
-    const start = (page - 1) * ITEMS_PER_PAGE;
-    return filtered.slice(start, start + ITEMS_PER_PAGE);
-  }, [filtered, page]);
 
   if (loading) {
     return (
@@ -63,7 +58,7 @@ export default function Home() {
 
   return (
     <>
-      {/* ================== ENCABEZADO ================== */}
+      {/* ENCABEZADO */}
       <Box sx={styles.header}>
         <Typography variant="h4" sx={styles.headerTitle}>
           <HomeIcon sx={{ fontSize: 32, mr: 1 }} />
@@ -71,9 +66,8 @@ export default function Home() {
         </Typography>
       </Box>
 
-      {/* ================== FILTROS ================== */}
+      {/* FILTROS */}
       <Paper elevation={4} sx={styles.filtersContainer}>
-        {/* Buscar */}
         <TextField
           label="Buscar producto"
           size="small"
@@ -90,7 +84,6 @@ export default function Home() {
           sx={styles.searchField}
         />
 
-        {/* Categoría */}
         <TextField
           select
           label="Categoría"
@@ -115,7 +108,6 @@ export default function Home() {
           ))}
         </TextField>
 
-        {/* Ordenar */}
         <TextField
           select
           label="Ordenar por"
@@ -137,9 +129,9 @@ export default function Home() {
         </TextField>
       </Paper>
 
-      {/* ================== PRODUCTOS ================== */}
+      {/* PRODUCTOS */}
       <Grid container spacing={3} justifyContent="center">
-        {productosPag.map((prod) => (
+        {paginated.map((prod) => (
           <Grid item xs={12} sm={6} md={4} lg={3} key={prod.id}>
             <motion.div initial={{ opacity: 0 }} animate={{ opacity: 1 }}>
               <ProductoCard
@@ -152,7 +144,7 @@ export default function Home() {
         ))}
       </Grid>
 
-      {/* ================== PAGINACIÓN ================== */}
+      {/* PAGINACIÓN */}
       <Box sx={styles.paginationBox}>
         <Pagination
           count={Math.ceil(filtered.length / ITEMS_PER_PAGE)}
@@ -162,9 +154,6 @@ export default function Home() {
         />
       </Box>
 
-      
-
-      {/* ================== MODAL DETALLE ================== */}
       <DetalleModal
         producto={productoSeleccionado}
         open={Boolean(productoSeleccionado)}
@@ -173,7 +162,6 @@ export default function Home() {
         setLightbox={setLightbox}
       />
 
-      {/* ================== LIGHTBOX ================== */}
       <LightboxModal
         open={!!lightbox}
         onClose={() => setLightbox(null)}
@@ -181,4 +169,4 @@ export default function Home() {
       />
     </>
   );
-      }
+}
