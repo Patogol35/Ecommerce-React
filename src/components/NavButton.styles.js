@@ -1,54 +1,59 @@
 // NavButton.styles.js
 const navButtonStyles = (theme, isActive, item, alwaysColoredPaths) => {
-  const alwaysColored = alwaysColoredPaths.includes(item.path);
-  const activeOrForced = isActive || alwaysColored;
+  const active =
+    isActive || alwaysColoredPaths.includes(item.path);
 
   return {
-    fontSize: "1.05rem",
+    fontSize: "1rem",
     fontWeight: 600,
-    color: "#fff",
-    borderRadius: "12px",
+    borderRadius: "14px",
     textTransform: "none",
     width: "100%",
-    py: 1.2,
+    py: 1.3,
+    px: 2,
+    letterSpacing: "0.4px",
+    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
 
-    transition: "background-color 0.25s ease, box-shadow 0.25s ease, filter 0.2s ease",
+    color: active ? "#fff" : theme.palette.text.primary,
 
-    "& .MuiButton-startIcon": { color: "#fff" },
+    backdropFilter: active ? "blur(6px)" : "none",
 
-    // ===== Fondo dinámico (igual que tú pero correcto) =====
-    backgroundColor: {
-      xs: item.color, // móvil siempre con color
-      md: activeOrForced ? item.color : "transparent",
+    background: {
+      xs: `linear-gradient(135deg, ${item.color}, ${item.color}CC)`,
+      md: active
+        ? `linear-gradient(135deg, ${item.color}, ${item.color}CC)`
+        : "transparent",
     },
 
-    // ===== Activo =====
-    boxShadow: isActive
-      ? "0 0 18px rgba(255,255,255,0.45)" // brillo sección móvil
+    border: active
+      ? "1px solid rgba(255,255,255,0.2)"
+      : "1px solid transparent",
+
+    boxShadow: active
+      ? "0 8px 24px rgba(0,0,0,0.25)"
       : "none",
 
-    // ❌ quitamos crecimiento feo
-    transform: "scale(1)",
+    transform: active ? "translateY(-2px)" : "translateY(0)",
 
-    // ===== Hover DESKTOP pinta color =====
-    "&:hover": {
-      backgroundColor: {
-        md: item.color,   // ← esto hace que ahora SÍ se pinte
-      },
-
-      boxShadow: isActive
-        ? "0 0 18px rgba(0,0,0,0.35)"
-        : "0 0 10px rgba(0,0,0,0.25)",
-
-      filter: "brightness(1.08)",
+    "& .MuiButton-startIcon": {
+      color: active ? "#fff" : theme.palette.text.secondary,
+      transition: "all 0.3s ease",
     },
 
-    // ===== Dark mode =====
+    "&:hover": {
+      background:
+        active
+          ? `linear-gradient(135deg, ${item.color}, ${item.color})`
+          : theme.palette.mode === "dark"
+          ? "rgba(255,255,255,0.05)"
+          : "rgba(0,0,0,0.05)",
+
+      transform: "translateY(-3px)",
+      boxShadow: "0 10px 28px rgba(0,0,0,0.25)",
+    },
+
     ...(theme.palette.mode === "dark" && {
-      color: "#fff",
-      "&:hover": {
-        filter: "brightness(1.15)",
-      },
+      color: active ? "#fff" : "#ccc",
     }),
   };
 };
