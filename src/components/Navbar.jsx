@@ -70,7 +70,6 @@ export default function Navbar() {
         sx={styles.userSection(mobile)}
       >
         <AccountCircleIcon sx={{ color: textColor() }} />
-
         <Typography sx={{ color: textColor(), fontWeight: 600 }}>
           {user?.username}
         </Typography>
@@ -91,9 +90,13 @@ export default function Navbar() {
     menuItems.map((item, idx) => (
       <motion.div
         key={idx}
-        initial={{ opacity: 0, y: -15 }}
+        initial={{ opacity: 0, y: -10 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.2 + idx * 0.1 }}
+        transition={{
+          delay: 0.15 + idx * 0.08,
+          duration: 0.4,
+          ease: [0.22, 1, 0.36, 1],
+        }}
       >
         <NavButton item={item} onClick={onClick} />
       </motion.div>
@@ -105,29 +108,30 @@ export default function Navbar() {
         position="fixed"
         elevation={scrolled ? 8 : 0}
         sx={(theme) => styles.appBar(theme, scrolled)}
-        initial={{ y: -80, opacity: 0 }}
-        animate={{ y: 0, opacity: 1 }}
+        initial={{
+          opacity: 0,
+          transform: "translateY(-100%)",
+        }}
+        animate={{
+          opacity: 1,
+          transform: "translateY(0%)",
+        }}
         transition={{
           duration: 0.7,
-          ease: [0.16, 1, 0.3, 1],
+          ease: [0.22, 1, 0.36, 1],
         }}
+        style={{ willChange: "transform, opacity" }}
       >
         <Toolbar sx={styles.toolbar}>
-          <motion.div
-            initial={{ opacity: 0, x: -40 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ delay: 0.2, duration: 0.6 }}
+          <Typography
+            variant="h6"
+            component={Link}
+            to="/"
+            sx={{ ...styles.logo, color: textColor() }}
           >
-            <Typography
-              variant="h6"
-              component={Link}
-              to="/"
-              sx={{ ...styles.logo, color: textColor() }}
-            >
-              <ShoppingBagIcon sx={styles.logoIcon} />
-              E-commerce Jorge Patricio
-            </Typography>
-          </motion.div>
+            <ShoppingBagIcon sx={styles.logoIcon} />
+            E-commerce Jorge Patricio
+          </Typography>
 
           <Box sx={styles.desktopMenu}>
             <MenuList />
