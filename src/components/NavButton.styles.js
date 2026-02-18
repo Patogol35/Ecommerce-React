@@ -1,61 +1,42 @@
 // NavButton.styles.js
-const navButtonStyles = (theme, isActive, item, alwaysColoredPaths) => {
-  const active =
-    isActive || alwaysColoredPaths.includes(item.path);
+const navButtonStyles = (theme, isActive, item, alwaysColoredPaths) => ({
+  fontSize: "1.05rem",
+  fontWeight: 600,
+  color: "#fff",
+  borderRadius: "12px",
+  textTransform: "none",
+  width: "100%",
+  py: 1.2,
+  transition: "all 0.25s ease",
+  "& .MuiButton-startIcon": { color: "#fff" },
 
-  return {
-    fontSize: "1rem",
-    fontWeight: 600,
-    borderRadius: "14px",
-    textTransform: "none",
-    width: "100%",
-    py: 1.3,
-    px: 2,
-    letterSpacing: "0.4px",
-    transition: "all 0.3s cubic-bezier(0.4, 0, 0.2, 1)",
-
-    color: active ? "#fff" : theme.palette.text.primary,
-
-    backdropFilter: active ? "blur(6px)" : "none",
-
-    background: {
-      xs: `linear-gradient(135deg, ${item.color}, ${item.color}CC)`,
-      md: active
-        ? `linear-gradient(135deg, ${item.color}, ${item.color}CC)`
+  // Fondo dinámico
+  background: {
+    xs: item.color, // móvil siempre con color
+    md:
+      isActive || alwaysColoredPaths.includes(item.path)
+        ? item.color
         : "transparent",
-    },
+  },
 
-    border: active
-      ? "1px solid rgba(255,255,255,0.2)"
-      : "1px solid transparent",
+  // Sombras y efecto activo
+  boxShadow: isActive ? "0 0 20px rgba(255,255,255,0.5)" : "none",
+  transform: isActive ? "scale(1.04)" : "scale(1)",
 
-    boxShadow: active
-      ? "0 8px 24px rgba(0,0,0,0.25)"
-      : "none",
+  "&:hover": {
+    boxShadow: isActive
+      ? "0 0 20px rgba(0,0,0,0.4)"
+      : "0 0 12px rgba(0,0,0,0.25)",
+    filter: "brightness(1.1)",
+  },
 
-    transform: active ? "translateY(-2px)" : "translateY(0)",
-
-    "& .MuiButton-startIcon": {
-      color: active ? "#fff" : theme.palette.text.secondary,
-      transition: "all 0.3s ease",
-    },
-
+  // Ajuste dark mode
+  ...(theme.palette.mode === "dark" && {
+    color: "#fff",
     "&:hover": {
-      background:
-        active
-          ? `linear-gradient(135deg, ${item.color}, ${item.color})`
-          : theme.palette.mode === "dark"
-          ? "rgba(255,255,255,0.05)"
-          : "rgba(0,0,0,0.05)",
-
-      transform: "translateY(-3px)",
-      boxShadow: "0 10px 28px rgba(0,0,0,0.25)",
+      filter: "brightness(1.2)",
     },
-
-    ...(theme.palette.mode === "dark" && {
-      color: active ? "#fff" : "#ccc",
-    }),
-  };
-};
+  }),
+});
 
 export default navButtonStyles;
