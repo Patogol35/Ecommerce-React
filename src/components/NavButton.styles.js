@@ -1,7 +1,7 @@
 // NavButton.styles.js
 const navButtonStyles = (theme, isActive, item, alwaysColoredPaths) => {
   const alwaysColored = alwaysColoredPaths.includes(item.path);
-  const colored = isActive || alwaysColored;
+  const activeOrForced = isActive || alwaysColored;
 
   return {
     fontSize: "1.05rem",
@@ -12,34 +12,40 @@ const navButtonStyles = (theme, isActive, item, alwaysColoredPaths) => {
     width: "100%",
     py: 1.2,
 
-    transition: "background 0.25s ease, box-shadow 0.25s ease, filter 0.2s",
+    transition: "background-color 0.25s ease, box-shadow 0.25s ease, filter 0.2s ease",
 
     "& .MuiButton-startIcon": { color: "#fff" },
 
-    // ===== BACKGROUND =====
+    // ===== Fondo dinámico (igual que tú pero correcto) =====
     backgroundColor: {
-      xs: item.color,              // móvil siempre color
-      md: colored ? item.color : "transparent",
+      xs: item.color, // móvil siempre con color
+      md: activeOrForced ? item.color : "transparent",
     },
 
-    // ===== ACTIVO =====
+    // ===== Activo =====
     boxShadow: isActive
-      ? "0 0 18px rgba(255,255,255,0.45)"   // brillo móvil
+      ? "0 0 18px rgba(255,255,255,0.45)" // brillo sección móvil
       : "none",
 
-    transform: "scale(1)", // quitamos zoom grande
+    // ❌ quitamos crecimiento feo
+    transform: "scale(1)",
 
-    // ===== HOVER DESKTOP =====
+    // ===== Hover DESKTOP pinta color =====
     "&:hover": {
       backgroundColor: {
-        md: item.color,   // 🔥 AQUÍ está la clave
+        md: item.color,   // ← esto hace que ahora SÍ se pinte
       },
-      boxShadow: "0 0 12px rgba(0,0,0,0.25)",
+
+      boxShadow: isActive
+        ? "0 0 18px rgba(0,0,0,0.35)"
+        : "0 0 10px rgba(0,0,0,0.25)",
+
       filter: "brightness(1.08)",
     },
 
-    // ===== DARK MODE =====
+    // ===== Dark mode =====
     ...(theme.palette.mode === "dark" && {
+      color: "#fff",
       "&:hover": {
         filter: "brightness(1.15)",
       },
