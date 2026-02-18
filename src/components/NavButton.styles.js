@@ -1,55 +1,45 @@
 // NavButton.styles.js
 const navButtonStyles = (theme, isActive, item, alwaysColoredPaths) => {
-  const shouldBeColored =
-    isActive || alwaysColoredPaths.includes(item.path);
+  const alwaysColored = alwaysColoredPaths.includes(item.path);
+  const colored = isActive || alwaysColored;
 
   return {
-    fontSize: "1rem",
+    fontSize: "1.05rem",
     fontWeight: 600,
-    borderRadius: "14px",
+    color: "#fff",
+    borderRadius: "12px",
     textTransform: "none",
     width: "100%",
-    py: 1.1,
-    px: 1.6,
-    color: "#fff",
+    py: 1.2,
 
-    transition: "background 0.25s ease, box-shadow 0.25s ease, filter 0.2s ease",
+    transition: "background 0.25s ease, box-shadow 0.25s ease, filter 0.2s",
 
-    "& .MuiButton-startIcon": {
-      color: "#fff",
-      transition: "transform 0.2s ease",
+    "& .MuiButton-startIcon": { color: "#fff" },
+
+    // ===== BACKGROUND =====
+    backgroundColor: {
+      xs: item.color,              // móvil siempre color
+      md: colored ? item.color : "transparent",
     },
 
-    // ===== Fondo =====
-    background: {
-      xs: item.color, // móvil siempre con color
-      md: shouldBeColored ? item.color : "transparent",
-    },
-
-    // ===== Activo =====
-    boxShadow: shouldBeColored
-      ? "0 6px 18px rgba(0,0,0,0.25)"
+    // ===== ACTIVO =====
+    boxShadow: isActive
+      ? "0 0 18px rgba(255,255,255,0.45)"   // brillo móvil
       : "none",
 
-    // quitamos el scale grande
-    transform: "scale(1)",
+    transform: "scale(1)", // quitamos zoom grande
 
-    // ===== Hover escritorio =====
+    // ===== HOVER DESKTOP =====
     "&:hover": {
-      background: {
-        md: item.color, // se pinta al pasar mouse
+      backgroundColor: {
+        md: item.color,   // 🔥 AQUÍ está la clave
       },
-      boxShadow: "0 8px 20px rgba(0,0,0,0.28)",
+      boxShadow: "0 0 12px rgba(0,0,0,0.25)",
       filter: "brightness(1.08)",
-
-      "& .MuiButton-startIcon": {
-        transform: "translateX(2px)", // micro detalle elegante
-      },
     },
 
-    // ===== Dark mode refinado =====
+    // ===== DARK MODE =====
     ...(theme.palette.mode === "dark" && {
-      backdropFilter: "blur(6px)",
       "&:hover": {
         filter: "brightness(1.15)",
       },
