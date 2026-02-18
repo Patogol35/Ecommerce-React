@@ -33,7 +33,6 @@ import { motion, AnimatePresence } from "framer-motion";
 import styles from "./Navbar.styles";
 
 const MotionAppBar = motion(AppBar);
-const MotionBox = motion(Box);
 
 export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
@@ -61,48 +60,6 @@ export default function Navbar() {
   }, [logout, navigate, handleCloseMenu]);
 
   const textColor = () => "#fff";
-
-  /* =========================
-     ANIMACIONES PROFESIONALES
-  ========================== */
-
-  const appBarVariants = {
-    hidden: {
-      opacity: 0,
-      y: -40,
-      scale: 0.98,
-      filter: "blur(10px)",
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      scale: 1,
-      filter: "blur(0px)",
-      transition: {
-        duration: 0.7,
-        ease: [0.22, 1, 0.36, 1],
-        when: "beforeChildren",
-        staggerChildren: 0.08,
-      },
-    },
-  };
-
-  const itemVariants = {
-    hidden: {
-      opacity: 0,
-      y: -12,
-    },
-    visible: {
-      opacity: 1,
-      y: 0,
-      transition: {
-        duration: 0.5,
-        ease: [0.22, 1, 0.36, 1],
-      },
-    },
-  };
-
-  /* ========================= */
 
   const UserSection = ({ showLogout = true, mobile = false }) =>
     isAuthenticated && (
@@ -141,69 +98,64 @@ export default function Navbar() {
         position="fixed"
         elevation={scrolled ? 6 : 2}
         sx={(theme) => styles.appBar(theme, scrolled)}
-        variants={appBarVariants}
-        initial="hidden"
-        animate="visible"
+        initial={{
+          opacity: 0,
+          filter: "blur(8px)",
+        }}
+        animate={{
+          opacity: 1,
+          filter: "blur(0px)",
+        }}
+        transition={{
+          duration: 0.6,
+          ease: "easeOut",
+        }}
       >
         <Toolbar sx={styles.toolbar}>
-          {/* LOGO */}
-          <motion.div variants={itemVariants}>
-            <Typography
-              variant="h6"
-              component={Link}
-              to="/"
-              sx={{ ...styles.logo, color: textColor() }}
-            >
-              <ShoppingBagIcon sx={styles.logoIcon} />
-              E-commerce Jorge Patricio
-            </Typography>
-          </motion.div>
+          <Typography
+            variant="h6"
+            component={Link}
+            to="/"
+            sx={{ ...styles.logo, color: textColor() }}
+          >
+            <ShoppingBagIcon sx={styles.logoIcon} />
+            E-commerce Jorge Patricio
+          </Typography>
 
-          {/* DESKTOP MENU */}
           <Box sx={styles.desktopMenu}>
-            <motion.div variants={itemVariants}>
-              <MenuList />
-            </motion.div>
+            <MenuList />
 
-            <motion.div variants={itemVariants}>
-              <IconButton onClick={toggleMode} sx={styles.toggleIcon}>
-                {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
-              </IconButton>
-            </motion.div>
+            <IconButton onClick={toggleMode} sx={styles.toggleIcon}>
+              {mode === "light" ? <DarkModeIcon /> : <LightModeIcon />}
+            </IconButton>
 
-            <motion.div variants={itemVariants}>
-              <UserSection />
-            </motion.div>
+            <UserSection />
           </Box>
 
-          {/* MOBILE MENU BUTTON */}
-          <motion.div variants={itemVariants}>
-            <IconButton
-              sx={{ ...styles.menuBtnMobile, color: textColor() }}
-              onClick={handleToggleMenu}
-            >
-              <AnimatePresence mode="wait" initial={false}>
-                <motion.div
-                  key={open ? "close" : "menu"}
-                  initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
-                  animate={{ rotate: 0, opacity: 1, scale: 1 }}
-                  exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
-                  transition={{ duration: 0.25 }}
-                  style={styles.iconCenter}
-                >
-                  {open ? (
-                    <CloseIcon fontSize="large" />
-                  ) : (
-                    <MenuIcon fontSize="large" />
-                  )}
-                </motion.div>
-              </AnimatePresence>
-            </IconButton>
-          </motion.div>
+          <IconButton
+            sx={{ ...styles.menuBtnMobile, color: textColor() }}
+            onClick={handleToggleMenu}
+          >
+            <AnimatePresence mode="wait" initial={false}>
+              <motion.div
+                key={open ? "close" : "menu"}
+                initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
+                animate={{ rotate: 0, opacity: 1, scale: 1 }}
+                exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
+                transition={{ duration: 0.25 }}
+                style={styles.iconCenter}
+              >
+                {open ? (
+                  <CloseIcon fontSize="large" />
+                ) : (
+                  <MenuIcon fontSize="large" />
+                )}
+              </motion.div>
+            </AnimatePresence>
+          </IconButton>
         </Toolbar>
       </MotionAppBar>
 
-      {/* DRAWER MOBILE */}
       <Drawer
         anchor="right"
         open={open}
@@ -241,4 +193,4 @@ export default function Navbar() {
       </Drawer>
     </>
   );
-}
+      }
