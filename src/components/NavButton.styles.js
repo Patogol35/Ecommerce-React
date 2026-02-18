@@ -10,36 +10,31 @@ const navButtonStyles = (theme, isActive, item, alwaysColoredPaths) => ({
   transition: "all 0.25s ease",
   "& .MuiButton-startIcon": { color: "#fff" },
 
-  /* ===== FONDO ===== */
+  // Fondo dinámico
   background: {
-    xs: item.color, // 📱 móvil siempre con color
+    xs: item.color, // móvil siempre con color
     md:
       isActive || alwaysColoredPaths.includes(item.path)
         ? item.color
         : "transparent",
   },
 
-  /* ===== ACTIVO ===== */
-  boxShadow: isActive
-    ? "0 0 16px rgba(0,0,0,0.35)"
-    : "none",
+  // Sombras y efecto activo
+  boxShadow: isActive ? "0 0 20px rgba(255,255,255,0.5)" : "none",
+  transform: isActive ? "scale(1.04)" : "scale(1)",
 
-  transform: "scale(1)",
-
-  /* ===== HOVER DESKTOP ===== */
   "&:hover": {
-    backgroundColor: {
-      md: item.color, // 🎯 se pinta con su color
-    },
-    boxShadow: "0 6px 18px rgba(0,0,0,0.35)",
-    filter: "brightness(1.05)",
-    transform: "scale(1.01)", // 👈 crecimiento MUY sutil
+    boxShadow: isActive
+      ? "0 0 20px rgba(0,0,0,0.4)"
+      : "0 0 12px rgba(0,0,0,0.25)",
+    filter: "brightness(1.1)",
   },
 
-  /* ===== DARK MODE ===== */
+  // Ajuste dark mode
   ...(theme.palette.mode === "dark" && {
+    color: "#fff",
     "&:hover": {
-      filter: "brightness(1.15)",
+      filter: "brightness(1.2)",
     },
   }),
 });
