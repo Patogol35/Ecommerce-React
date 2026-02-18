@@ -89,38 +89,45 @@ export default function Navbar() {
 
   const MenuList = ({ onClick }) =>
     menuItems.map((item, idx) => (
-      <NavButton key={idx} item={item} onClick={onClick} />
+      <motion.div
+        key={idx}
+        initial={{ opacity: 0, y: -15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.2 + idx * 0.1 }}
+      >
+        <NavButton item={item} onClick={onClick} />
+      </motion.div>
     ));
 
   return (
     <>
       <MotionAppBar
         position="fixed"
-        elevation={scrolled ? 6 : 2}
+        elevation={scrolled ? 8 : 0}
         sx={(theme) => styles.appBar(theme, scrolled)}
-        initial={{
-          opacity: 0,
-          filter: "blur(8px)",
-        }}
-        animate={{
-          opacity: 1,
-          filter: "blur(0px)",
-        }}
+        initial={{ y: -80, opacity: 0 }}
+        animate={{ y: 0, opacity: 1 }}
         transition={{
-          duration: 0.6,
-          ease: "easeOut",
+          duration: 0.7,
+          ease: [0.16, 1, 0.3, 1],
         }}
       >
         <Toolbar sx={styles.toolbar}>
-          <Typography
-            variant="h6"
-            component={Link}
-            to="/"
-            sx={{ ...styles.logo, color: textColor() }}
+          <motion.div
+            initial={{ opacity: 0, x: -40 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2, duration: 0.6 }}
           >
-            <ShoppingBagIcon sx={styles.logoIcon} />
-            E-commerce Jorge Patricio
-          </Typography>
+            <Typography
+              variant="h6"
+              component={Link}
+              to="/"
+              sx={{ ...styles.logo, color: textColor() }}
+            >
+              <ShoppingBagIcon sx={styles.logoIcon} />
+              E-commerce Jorge Patricio
+            </Typography>
+          </motion.div>
 
           <Box sx={styles.desktopMenu}>
             <MenuList />
@@ -193,4 +200,4 @@ export default function Navbar() {
       </Drawer>
     </>
   );
-      }
+}
