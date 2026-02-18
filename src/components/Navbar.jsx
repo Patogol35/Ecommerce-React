@@ -148,15 +148,28 @@ E-commerce Jorge Patricio
     </AppBar>  
   </motion.div>  
 
-  <Drawer  
-    anchor="right"  
-    open={open}  
-    onClose={handleCloseMenu}  
-    sx={{ display: { xs: "block", md: "none" } }}  
-    PaperProps={{  
-      sx: (theme) => styles.drawerPaper(theme),  
-    }}  
-  >  
+<Drawer
+  anchor="right"
+  open={open}
+  onClose={handleCloseMenu}
+  transitionDuration={{
+    enter: 400,
+    exit: 300,
+  }}
+  ModalProps={{
+    keepMounted: true,
+  }}
+  SlideProps={{
+    easing: {
+      enter: "cubic-bezier(0.4, 0, 0.2, 1)",
+      exit: "cubic-bezier(0.4, 0, 0.2, 1)",
+    },
+  }}
+  sx={{ display: { xs: "block", md: "none" } }}
+  PaperProps={{
+    sx: (theme) => styles.drawerPaper(theme),
+  }}
+>
     <Stack sx={styles.drawerStack} spacing={3}>  
       <UserSection showLogout={false} mobile />  
 
