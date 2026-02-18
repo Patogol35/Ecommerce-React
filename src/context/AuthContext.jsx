@@ -6,54 +6,43 @@ const AuthContext = createContext();
 export function AuthProvider({ children }) {
   const [access, setAccess] = useState(null);
   const [refresh, setRefresh] = useState(null);
-  const [user, setUser] = useState(null);
+  const [user, setUser] = useState(null);   // ðŸ‘ˆ nuevo
   const [loading, setLoading] = useState(true);
 
-  // Inicialización controlada
+  // Recuperar tokens al cargar y obtener perfil
   useEffect(() => {
-    const initializeAuth = async () => {
-      try {
-        const savedAccess = localStorage.getItem("access");
-        const savedRefresh = localStorage.getItem("refresh");
-
-        if (savedAccess) {
-          setAccess(savedAccess);
-          setRefresh(savedRefresh);
-
-          // Obtener perfil solo si hay token
-          const data = await getUserProfile(savedAccess);
-          setUser(data);
-        }
-      } catch (err) {
-        console.error("Error inicializando auth:", err);
-        setUser(null);
-        setAccess(null);
-        setRefresh(null);
-        localStorage.removeItem("access");
-        localStorage.removeItem("refresh");
-      } finally {
-        setLoading(false); 
-      }
-    };
-
-    initializeAuth();
+    const savedAccess = localStorage.getItem("access");
+    const savedRefresh = localStorage.getItem("refresh");
+    if (savedAccess) setAccess(savedAccess);
+    if (savedRefresh) setRefresh(savedRefresh);
   }, []);
+
+  // Cada vez que tengamos access, pedimos el perfil
+  useEffect(() => {
+    const fetchProfile = async () => {
+      if (access) {
+        try {
+          const data = await getUserProfile(access);
+          setUser(data); // guarda username, email, id
+        } catch (err) {
+          console.error("Error obteniendo perfil:", err);
+          setUser(null);
+        }
+      } else {
+        setUser(null);
+      }
+      setLoading(false);
+    };
+    fetchProfile();
+  }, [access]);
 
   const isAuthenticated = !!access;
 
-  const login = async (accessToken, refreshToken) => {
+  const login = (accessToken, refreshToken) => {
     localStorage.setItem("access", accessToken);
     localStorage.setItem("refresh", refreshToken);
-
     setAccess(accessToken);
     setRefresh(refreshToken);
-
-    try {
-      const data = await getUserProfile(accessToken);
-      setUser(data);
-    } catch (err) {
-      console.error("Error obteniendo perfil después de login:", err);
-    }
   };
 
   const logout = () => {
@@ -65,23 +54,11 @@ export function AuthProvider({ children }) {
   };
 
   const value = useMemo(
-    () => ({
-      access,
-      refresh,
-      isAuthenticated,
-      user,
-      login,
-      logout,
-      loading,
-    }),
+    () => ({ access, refresh, isAuthenticated, user, login, logout, loading }),
     [access, refresh, isAuthenticated, user, loading]
   );
 
-  return (
-    <AuthContext.Provider value={value}>
-      {!loading ? children : null}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;
 }
 
 export const useAuth = () => useContext(AuthContext);
