@@ -2,13 +2,14 @@ const styles = {
   appBar: (theme, scrolled) => ({
     backgroundColor:
       theme.palette.mode === "dark"
-        ? "rgba(18,18,18,0.85)"
-        : "rgba(25,118,210,0.9)",
-    backdropFilter: "blur(8px)",
-    boxShadow: scrolled
-      ? "0 4px 20px rgba(0,0,0,0.35)"
-      : "0 2px 8px rgba(0,0,0,0.15)",
+        ? "#121212"
+        : scrolled
+        ? theme.palette.primary.dark
+        : theme.palette.primary.main,
     transition: "all .3s ease",
+    boxShadow: scrolled
+      ? "0 4px 16px rgba(0,0,0,0.25)"
+      : "none",
     zIndex: 1400,
   }),
 
@@ -47,53 +48,66 @@ const styles = {
     display: "flex",
     alignItems: "center",
     justifyContent: "center",
-    width: 40,
     height: 40,
+    width: 40,
   },
 
-  drawerPaper: (theme) => ({
-    width: 280,
-    backgroundColor:
-      theme.palette.mode === "dark" ? "#1e1e1e" : "#1976d2",
-    color: "#fff",
-    borderRadius: "16px 0 0 16px",
-    p: 2,
-  }),
+  overlay: {
+    position: "fixed",
+    inset: 0,
+    background: "rgba(0,0,0,0.45)",
+    zIndex: 1300,
+    display: "flex",
+    justifyContent: "flex-end",
+  },
 
-  drawerStack: {
-    flex: 1,
-    mt: 10,
+  drawerPanel: {
+    width: "280px",
+    borderRadius: "16px 0 0 16px",
+    padding: "2rem",
+    paddingTop: "5rem",
+    boxShadow: "0 6px 20px rgba(0,0,0,0.35)",
+    display: "flex",
+    flexDirection: "column",
+    maxHeight: "100vh",
+    overflowY: "auto",
+  },
+
+  drawerBottom: {
+    display: "flex",
+    justifyContent: "center",
+    marginTop: "2rem",
+  },
+
+  roundThemeBtn: {
+    color: "#fff",
+    border: "1px solid #fff",
+    borderRadius: "50%",
+    width: 56,
+    height: 56,
+    "&:hover": {
+      background: "rgba(255,255,255,0.12)",
+    },
   },
 
   userSection: (mobile) => ({
-    textAlign: "center",
     my: mobile ? 2 : 0,
   }),
 
   logoutBtn: {
-    fontSize: "1.05rem",
+    fontSize: "1rem",
     fontWeight: 600,
     color: "#fff",
     borderRadius: "12px",
     textTransform: "none",
-    width: "100%",
-    py: 1.2,
     background: "#d32f2f",
     "&:hover": {
-      filter: "brightness(1.15)",
-      boxShadow: "0 0 12px rgba(0,0,0,0.3)",
+      background: "#b71c1c",
     },
-  },
-
-  drawerUtilStack: {
-    mt: 3,
-    pb: 2,
   },
 
   toggleIcon: {
     color: "#fff",
-    width: 48,
-    height: 48,
   },
 };
 
