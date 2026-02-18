@@ -70,6 +70,7 @@ export default function Navbar() {
         sx={styles.userSection(mobile)}
       >
         <AccountCircleIcon sx={{ color: textColor() }} />
+
         <Typography sx={{ color: textColor(), fontWeight: 600 }}>
           {user?.username}
         </Typography>
@@ -88,25 +89,14 @@ export default function Navbar() {
 
   const MenuList = ({ onClick }) =>
     menuItems.map((item, idx) => (
-      <motion.div
-        key={idx}
-        initial={{ opacity: 0, y: -10 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{
-          delay: 0.15 + idx * 0.08,
-          duration: 0.4,
-          ease: [0.22, 1, 0.36, 1],
-        }}
-      >
-        <NavButton item={item} onClick={onClick} />
-      </motion.div>
+      <NavButton key={idx} item={item} onClick={onClick} />
     ));
 
   return (
     <>
       <MotionAppBar
         position="fixed"
-        elevation={scrolled ? 8 : 0}
+        elevation={scrolled ? 6 : 2}
         sx={(theme) => styles.appBar(theme, scrolled)}
         initial={{
           opacity: 0,
@@ -120,7 +110,9 @@ export default function Navbar() {
           duration: 0.7,
           ease: [0.22, 1, 0.36, 1],
         }}
-        style={{ willChange: "transform, opacity" }}
+        style={{
+          willChange: "transform, opacity",
+        }}
       >
         <Toolbar sx={styles.toolbar}>
           <Typography
@@ -204,4 +196,4 @@ export default function Navbar() {
       </Drawer>
     </>
   );
-}
+    }
