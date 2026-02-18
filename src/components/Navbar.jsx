@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useEffect } from "react";
+import { useState, useCallback, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useThemeMode } from "../context/ThemeContext";
@@ -40,16 +40,7 @@ export default function Navbar() {
   const navigate = useNavigate();
 
   const [open, setOpen] = useState(false);
-  const [mounted, setMounted] = useState(false); // 🔥 clave
   const scrolled = useScrollTrigger(50);
-
-  // 🔥 Esperar a que todo monte antes de animar
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setMounted(true);
-    }, 50); // pequeño delay para estabilizar render
-    return () => clearTimeout(timer);
-  }, []);
 
   const menuItems = useMemo(
     () => (isAuthenticated ? authMenu : guestMenu),
@@ -107,15 +98,17 @@ export default function Navbar() {
         position="fixed"
         elevation={scrolled ? 6 : 2}
         sx={(theme) => styles.appBar(theme, scrolled)}
-        initial={{ y: -120, opacity: 0 }}
-        animate={
-          mounted
-            ? { y: 0, opacity: 1 }
-            : { y: -120, opacity: 0 }
-        }
+        initial={{
+          opacity: 0,
+          filter: "blur(8px)",
+        }}
+        animate={{
+          opacity: 1,
+          filter: "blur(0px)",
+        }}
         transition={{
-          duration: 0.7,
-          ease: [0.22, 1, 0.36, 1], // ultra suave
+          duration: 0.6,
+          ease: "easeOut",
         }}
       >
         <Toolbar sx={styles.toolbar}>
@@ -149,7 +142,7 @@ export default function Navbar() {
                 initial={{ rotate: -90, opacity: 0, scale: 0.8 }}
                 animate={{ rotate: 0, opacity: 1, scale: 1 }}
                 exit={{ rotate: 90, opacity: 0, scale: 0.8 }}
-                transition={{ duration: 0.25, ease: "easeInOut" }}
+                transition={{ duration: 0.25 }}
                 style={styles.iconCenter}
               >
                 {open ? (
@@ -180,10 +173,7 @@ export default function Navbar() {
           <MenuList onClick={handleCloseMenu} />
 
           {isAuthenticated && (
-            <motion.div
-              whileHover={{ y: -2, scale: 1.05 }}
-              whileTap={{ scale: 0.95 }}
-            >
+            <motion.div whileHover={{ y: -2 }} whileTap={{ scale: 0.95 }}>
               <Button
                 onClick={handleLogout}
                 startIcon={<LogoutIcon />}
