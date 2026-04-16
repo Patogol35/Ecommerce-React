@@ -33,36 +33,14 @@ import {
   botonDetallesSx,
 } from "./ProductoCard.styles";
 
+import { getImagenesProducto } from "../utils/getImagenesProducto";
+
 export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { isAuthenticated } = useAuth();
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // 🧠 CONFIG DE IMÁGENES EXTRA (AQUÍ controlas los 15 productos)
-  const imagenesExtra = {
-    1: ["/imagenes/1-1.jpg"],
-    2: ["/imagenes/2-1.jpg"],
-    3: ["/imagenes/3-1.jpg"],
-    4: ["/imagenes/4-1.jpg"],
-    5: ["/imagenes/5-1.jpg"],
-    6: ["/imagenes/6-1.jpg"],
-    7: ["https://i.imgur.com/x1cOKEH.png"],
-    8: ["/imagenes/8-1.jpg"],
-    9: ["/imagenes/9-1.jpg"],
-    10: ["/imagenes/10-1.jpg"],
-    11: ["/imagenes/11-1.jpg"],
-    12: ["/imagenes/12-1.jpg"],
-    13: ["/imagenes/13-1.jpg"],
-    14: ["/imagenes/14-1.jpg"],
-    15: ["/imagenes/15-1.jpg"],
-  };
-
-  // 🔥 combinar imagen BD + extras si existen
-  const imagenes = [
-    producto.imagen,
-    ...(imagenesExtra[producto.id] || []),
-  ];
-
+  const imagenes = getImagenesProducto(producto);
   const [index, setIndex] = useState(0);
 
   const nextImage = () => {
@@ -96,14 +74,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   return (
     <Card sx={cardSx} elevation={0}>
       {/* IMAGEN */}
-      <Box
-        sx={{
-          ...imagenBoxSx,
-          position: "relative",
-          height: 200,
-          overflow: "hidden",
-        }}
-      >
+      <Box sx={imagenBoxSx}>
         <Box
           component="img"
           src={imagenes[index]}
@@ -112,12 +83,10 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
             width: "100%",
             height: "100%",
             objectFit: "contain",
-            backgroundColor: "#f5f5f5",
           }}
           onClick={nextImage}
         />
 
-        {/* Flechas solo si hay más de 1 imagen */}
         {imagenes.length > 1 && (
           <>
             <IconButton
@@ -214,4 +183,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-}
+            }
