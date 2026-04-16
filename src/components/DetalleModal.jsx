@@ -8,31 +8,22 @@ import {
 } from "@mui/material";
 import Slider from "react-slick";
 import CloseIcon from "@mui/icons-material/Close";
+
 import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
+
+// 🔥 MISMO HELPER QUE USA LA CARD
 import { getImagenesProducto } from "../utils/getImagenesProducto";
 
-export default function DetalleModal({ producto, open, onClose, setLightbox }) {
+export default function DetalleModal({
+  producto,
+  open,
+  onClose,
+  setLightbox,
+}) {
   if (!producto) return null;
 
-  // 🔥 1. Imágenes del helper (front + principal)
-  const imagenesHelper = getImagenesProducto(producto);
-
-  // 🔥 2. Imágenes de la base
-  const imagenesBD = Array.isArray(producto.imagenes)
-    ? producto.imagenes.filter(Boolean)
-    : [];
-
-  // 🔥 3. Unificamos TODO (sin duplicados y sin null)
-  const imagenes = [
-    ...imagenesBD,
-    ...imagenesHelper,
-  ].filter(Boolean);
-
-  // 🛡 fallback final
-  const imagenesFinal =
-    imagenes.length > 0
-      ? imagenes
-      : ["https://via.placeholder.com/400x300?text=Sin+imagen"];
+  // 🔥 EXACTAMENTE IGUAL QUE EN LA CARD
+  const imagenes = getImagenesProducto(producto);
 
   return (
     <Dialog
@@ -43,14 +34,14 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       sx={detalleModalStyles.dialog}
       PaperProps={{ sx: detalleModalStyles.dialogPaper }}
     >
-      {/* ❌ cerrar */}
+      {/* CERRAR */}
       <IconButton onClick={onClose} sx={detalleModalStyles.botonCerrar}>
         <CloseIcon />
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
         {/* 🔥 SLIDER */}
-        {imagenesFinal.length > 1 ? (
+        {imagenes.length > 1 ? (
           <Box
             sx={{
               width: "100%",
@@ -60,7 +51,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
             }}
           >
             <Slider {...sliderSettings}>
-              {imagenesFinal.map((img, i) => (
+              {imagenes.map((img, i) => (
                 <Box
                   key={i}
                   sx={detalleModalStyles.sliderBox}
@@ -69,13 +60,9 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
                   <Box
                     component="img"
                     src={img}
-                    alt={`${producto.nombre}-${i}`}
-                    loading="lazy"
+                    alt={producto.nombre}
                     sx={detalleModalStyles.imagen}
-                    onError={(e) => {
-                      e.target.src =
-                        "https://via.placeholder.com/400x300?text=Sin+imagen";
-                    }}
+                    loading="lazy"
                   />
                 </Box>
               ))}
@@ -84,23 +71,19 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
         ) : (
           <Box
             sx={detalleModalStyles.sliderBox}
-            onClick={() => setLightbox?.(imagenesFinal[0])}
+            onClick={() => setLightbox?.(imagenes[0])}
           >
             <Box
               component="img"
-              src={imagenesFinal[0]}
+              src={imagenes[0]}
               alt={producto.nombre}
-              loading="lazy"
               sx={detalleModalStyles.imagen}
-              onError={(e) => {
-                e.target.src =
-                  "https://via.placeholder.com/400x300?text=Sin+imagen";
-              }}
+              loading="lazy"
             />
           </Box>
         )}
 
-        {/* 📦 INFO */}
+        {/* INFO */}
         <Box sx={{ textAlign: "center", maxWidth: 700 }}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             {producto.nombre}
@@ -114,7 +97,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
           />
 
           <Typography sx={detalleModalStyles.descripcion}>
-            {producto.descripcion || "Sin descripción disponible"}
+            {producto.descripcion}
           </Typography>
         </Box>
       </Stack>
