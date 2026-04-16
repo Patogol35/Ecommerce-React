@@ -38,10 +38,10 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // 🧠 IMÁGENES (BD + fallback demo)
+  // 🧠 IMÁGENES (BD + extra demo)
   const imagenes = [
     producto.imagen,
-    "/imagenes/demo.jpg", // 👈 cambia por la que quieras
+    "/imagenes/demo.jpg", // 👈 cambia si quieres otra
   ];
 
   const [index, setIndex] = useState(0);
@@ -81,8 +81,8 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         sx={{
           ...imagenBoxSx,
           position: "relative",
-          height: 200,        // 👈 evita que crezca
-          overflow: "hidden", // 👈 recorta exceso
+          height: 200,
+          overflow: "hidden",
         }}
       >
         <Box
@@ -92,7 +92,8 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           sx={{
             width: "100%",
             height: "100%",
-            objectFit: "cover", // 👈 clave para mantener diseño
+            objectFit: "contain", // 👈 🔥 clave (no recorta)
+            backgroundColor: "#f5f5f5", // 👈 opcional (mejor estética)
           }}
           onClick={nextImage}
         />
@@ -196,4 +197,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-        }
+}
