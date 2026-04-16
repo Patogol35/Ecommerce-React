@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
@@ -38,12 +38,37 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const navigate = useNavigate();
 
   const [loading, setLoading] = useState(false);
+  const [index, setIndex] = useState(0);
 
-  // 🔒 Validación defensiva
   if (!producto) return null;
 
-  // 📌 Formato precio
   const precioFormateado = Number(producto.precio || 0).toFixed(2);
+
+  // 🧠 Simulación de imágenes (1 real + 2 extra demo)
+  const imagenes = [
+    producto.imagen || "/placeholder.png",
+    producto.imagen || "/placeholder.png",
+    producto.imagen || "/placeholder.png",
+  ];
+
+  // 🔁 Autoplay
+  useEffect(() => {
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % imagenes.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [imagenes.length]);
+
+  const siguiente = () => {
+    setIndex((prev) => (prev + 1) % imagenes.length);
+  };
+
+  const anterior = () => {
+    setIndex((prev) =>
+      prev === 0 ? imagenes.length - 1 : prev - 1
+    );
+  };
 
   // ➕ Agregar producto
   const onAdd = async () => {
@@ -72,7 +97,6 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
     }
   };
 
-  // 🔍 Ver detalles
   const handleVerDetalle = () => {
     if (onVerDetalle) return onVerDetalle();
 
@@ -89,15 +113,73 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       }}
       elevation={0}
     >
-      {/* Imagen */}
-      <Box sx={imagenBoxSx}>
+      {/* 🔥 Carrusel */}
+      <Box sx={{ ...imagenBoxSx, position: "relative", overflow: "hidden" }}>
         <Box
           component="img"
-          src={producto.imagen || "/placeholder.png"}
-          alt={`Imagen de ${producto.nombre}`}
-          loading="lazy"
-          sx={imagenSx}
+          src={imagenes[index]}
+          alt={`Imagen ${index}`}
+          sx={{
+            ...imagenSx,
+            transition: "0.5s ease",
+          }}
         />
+
+        {/* ← */}
+        <Button
+          onClick={anterior}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: 5,
+            minWidth: "30px",
+            color: "#fff",
+            background: "rgba(0,0,0,0.4)",
+          }}
+        >
+          {"<"}
+        </Button>
+
+        {/* → */}
+        <Button
+          onClick={siguiente}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            right: 5,
+            minWidth: "30px",
+            color: "#fff",
+            background: "rgba(0,0,0,0.4)",
+          }}
+        >
+          {">"}
+        </Button>
+
+        {/* 🔘 Dots */}
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 8,
+            width: "100%",
+            display: "flex",
+            justifyContent: "center",
+            gap: 1,
+          }}
+        >
+          {imagenes.map((_, i) => (
+            <Box
+              key={i}
+              onClick={() => setIndex(i)}
+              sx={{
+                width: 8,
+                height: 8,
+                borderRadius: "50%",
+                background: i === index ? "#fff" : "rgba(255,255,255,0.5)",
+                cursor: "pointer",
+              }}
+            />
+          ))}
+        </Box>
 
         {producto.nuevo && (
           <Chip
@@ -124,27 +206,19 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           {producto.nombre}
         </Typography>
 
-        {/* Precio */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={0.5}
-          sx={precioStackSx}
-        >
+        <Stack direction="row" alignItems="center" spacing={0.5} sx={precioStackSx}>
           <MonetizationOnIcon color="primary" />
           <Typography variant="h6" color="primary" fontWeight="bold">
             ${precioFormateado}
           </Typography>
         </Stack>
 
-        {/* Stock */}
         <Typography variant="body2" color="text.secondary">
           Stock: {producto.stock}
         </Typography>
 
         <Divider sx={dividerSx} />
 
-        {/* Botones */}
         <Stack spacing={1}>
           <Button
             variant="contained"
@@ -176,5 +250,4 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   );
 }
 
-// 🚀 Optimización
 export default React.memo(ProductoCard);
