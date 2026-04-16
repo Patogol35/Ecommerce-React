@@ -1,7 +1,9 @@
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
 import { toast } from "react-toastify";
+
 import {
   Card,
   Typography,
@@ -11,6 +13,7 @@ import {
   Divider,
   Stack,
 } from "@mui/material";
+
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
@@ -29,12 +32,23 @@ import {
   botonDetallesSx,
 } from "./ProductoCard.styles";
 
-export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
+function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { isAuthenticated } = useAuth();
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
+  const [loading, setLoading] = useState(false);
+
+  // 🔒 Validación defensiva
+  if (!producto) return null;
+
+  // 📌 Formato precio
+  const precioFormateado = Number(producto.precio || 0).toFixed(2);
+
+  // ➕ Agregar producto
   const onAdd = async () => {
+    if (loading) return;
+
     if (!isAuthenticated) {
       toast.warn("Debes iniciar sesión para agregar productos");
       navigate("/login");
@@ -46,22 +60,42 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       return;
     }
 
+    setLoading(true);
+
     try {
       await agregarAlCarrito(producto.id, 1);
       toast.success(`${producto.nombre} agregado al carrito ✅`);
     } catch (e) {
-      toast.error(e.message);
+      toast.error(e?.message || "Error al agregar producto");
+    } finally {
+      setLoading(false);
     }
   };
 
+  // 🔍 Ver detalles
+  const handleVerDetalle = () => {
+    if (onVerDetalle) return onVerDetalle();
+
+    navigate(`/producto/${producto.id}`, {
+      state: { producto },
+    });
+  };
+
   return (
-    <Card sx={cardSx} elevation={0}>
+    <Card
+      sx={{
+        ...cardSx,
+        opacity: producto.stock === 0 ? 0.7 : 1,
+      }}
+      elevation={0}
+    >
       {/* Imagen */}
       <Box sx={imagenBoxSx}>
         <Box
           component="img"
-          src={producto.imagen}
-          alt={producto.nombre}
+          src={producto.imagen || "/placeholder.png"}
+          alt={`Imagen de ${producto.nombre}`}
+          loading="lazy"
           sx={imagenSx}
         />
 
@@ -69,16 +103,24 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           <Chip
             icon={<StarIcon />}
             label="Nuevo"
-            color="secondary"
             size="small"
             sx={chipNuevoSx}
+          />
+        )}
+
+        {producto.stock === 0 && (
+          <Chip
+            label="Sin stock"
+            color="error"
+            size="small"
+            sx={{ position: "absolute", bottom: 10, right: 10 }}
           />
         )}
       </Box>
 
       {/* Contenido */}
       <Box sx={contenidoSx}>
-        <Typography variant="h6" fontWeight="bold" sx={tituloSx}>
+        <Typography variant="h6" sx={tituloSx}>
           {producto.nombre}
         </Typography>
 
@@ -91,9 +133,14 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         >
           <MonetizationOnIcon color="primary" />
           <Typography variant="h6" color="primary" fontWeight="bold">
-            {producto.precio}
+            ${precioFormateado}
           </Typography>
         </Stack>
+
+        {/* Stock */}
+        <Typography variant="body2" color="text.secondary">
+          Stock: {producto.stock}
+        </Typography>
 
         <Divider sx={dividerSx} />
 
@@ -101,29 +148,25 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         <Stack spacing={1}>
           <Button
             variant="contained"
-            color="primary"
             fullWidth
             startIcon={<AddShoppingCartIcon />}
             sx={botonAgregarSx(producto.stock)}
             onClick={onAdd}
-            disabled={producto.stock === 0}
+            disabled={producto.stock === 0 || loading}
           >
-            {producto.stock > 0 ? "Agregar al carrito" : "Agotado"}
+            {loading
+              ? "Agregando..."
+              : producto.stock > 0
+              ? "Agregar al carrito"
+              : "Agotado"}
           </Button>
 
           <Button
             variant="outlined"
-            color="inherit"
             fullWidth
             startIcon={<InfoIcon />}
             sx={botonDetallesSx}
-            onClick={() =>
-              onVerDetalle
-                ? onVerDetalle()
-                : navigate(`/producto/${producto.id}`, {
-                    state: { producto },
-                  })
-            }
+            onClick={handleVerDetalle}
           >
             Ver detalles
           </Button>
@@ -132,3 +175,6 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
     </Card>
   );
 }
+
+// 🚀 Optimización
+export default React.memo(ProductoCard);
