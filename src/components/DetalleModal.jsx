@@ -21,14 +21,23 @@ export default function DetalleModal({
   onClose,
   setLightbox,
 }) {
+  
   if (!producto) return null;
 
-  // 🔥 FUENTE ÚNICA DE IMÁGENES (backend + frontend fallback)
+
   let imagenes = getImagenesProducto(producto);
 
-  // 🛡 fallback por si el util no trae nada
+  
   if (!imagenes || imagenes.length === 0) {
-    imagenes = producto.imagenes || [producto.imagen];
+    if (Array.isArray(producto.imagenes)) {
+      imagenes = producto.imagenes.filter(Boolean);
+    } else if (producto.imagen) {
+      imagenes = [producto.imagen];
+    } else {
+      imagenes = [
+        "https://via.placeholder.com/400x300?text=Sin+imagen",
+      ];
+    }
   }
 
   return (
