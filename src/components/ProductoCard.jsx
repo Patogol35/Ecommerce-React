@@ -46,7 +46,7 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   // 🧠 Simulación de imágenes (1 real + 2 extra demo)
   const imagenes = [
-    producto.imagen || "/placeholder.png",
+    producto.imagen || "https://i.imgur.com/VgVlsE6.png",
     producto.imagen || "/placeholder.png",
     producto.imagen || "/placeholder.png",
   ];
