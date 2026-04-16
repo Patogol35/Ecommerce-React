@@ -50,7 +50,7 @@ const detalleModalStyles = {
     "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
   },
 
-  // 🔥 Flechas pro
+  // 🔥 FLECHAS PRO
   sliderGlobal: {
     "& .slick-prev, & .slick-next": {
       zIndex: 2,
@@ -75,7 +75,7 @@ const detalleModalStyles = {
     "& .slick-next": { right: 10 },
   },
 
-  // 🔵 dots pro
+  // 🔵 DOTS
   dots: {
     "& .slick-dots li button:before": {
       color: "rgba(255,255,255,0.5)",
