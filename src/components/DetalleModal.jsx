@@ -8,37 +8,31 @@ import {
 } from "@mui/material";
 import Slider from "react-slick";
 import CloseIcon from "@mui/icons-material/Close";
-
-import detalleModalStyles, {
-  sliderSettings,
-} from "./DetalleModal.styles";
-
+import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 import { getImagenesProducto } from "../utils/getImagenesProducto";
 
-export default function DetalleModal({
-  producto,
-  open,
-  onClose,
-  setLightbox,
-}) {
-  
+export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
 
+  // 🔥 1. Imágenes del helper (front + principal)
+  const imagenesHelper = getImagenesProducto(producto);
 
-  let imagenes = getImagenesProducto(producto);
+  // 🔥 2. Imágenes de la base
+  const imagenesBD = Array.isArray(producto.imagenes)
+    ? producto.imagenes.filter(Boolean)
+    : [];
 
-  
-  if (!imagenes || imagenes.length === 0) {
-    if (Array.isArray(producto.imagenes)) {
-      imagenes = producto.imagenes.filter(Boolean);
-    } else if (producto.imagen) {
-      imagenes = [producto.imagen];
-    } else {
-      imagenes = [
-        "https://via.placeholder.com/400x300?text=Sin+imagen",
-      ];
-    }
-  }
+  // 🔥 3. Unificamos TODO (sin duplicados y sin null)
+  const imagenes = [
+    ...imagenesBD,
+    ...imagenesHelper,
+  ].filter(Boolean);
+
+  // 🛡 fallback final
+  const imagenesFinal =
+    imagenes.length > 0
+      ? imagenes
+      : ["https://via.placeholder.com/400x300?text=Sin+imagen"];
 
   return (
     <Dialog
@@ -49,14 +43,14 @@ export default function DetalleModal({
       sx={detalleModalStyles.dialog}
       PaperProps={{ sx: detalleModalStyles.dialogPaper }}
     >
-      {/* ❌ BOTÓN CERRAR */}
+      {/* ❌ cerrar */}
       <IconButton onClick={onClose} sx={detalleModalStyles.botonCerrar}>
         <CloseIcon />
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
         {/* 🔥 SLIDER */}
-        {imagenes.length > 1 ? (
+        {imagenesFinal.length > 1 ? (
           <Box
             sx={{
               width: "100%",
@@ -66,7 +60,7 @@ export default function DetalleModal({
             }}
           >
             <Slider {...sliderSettings}>
-              {imagenes.map((img, i) => (
+              {imagenesFinal.map((img, i) => (
                 <Box
                   key={i}
                   sx={detalleModalStyles.sliderBox}
@@ -90,11 +84,11 @@ export default function DetalleModal({
         ) : (
           <Box
             sx={detalleModalStyles.sliderBox}
-            onClick={() => setLightbox?.(imagenes[0])}
+            onClick={() => setLightbox?.(imagenesFinal[0])}
           >
             <Box
               component="img"
-              src={imagenes[0]}
+              src={imagenesFinal[0]}
               alt={producto.nombre}
               loading="lazy"
               sx={detalleModalStyles.imagen}
