@@ -3,19 +3,19 @@
 // ================================
 export const cardSx = (theme) => ({
   width: 320,
-  height: 480,
+  height: "100%",          // 👈 clave para evitar huecos
+  minHeight: 480,          // 👈 mantiene tamaño base
   borderRadius: 3,
 
-  // Fondo principal 
   bgcolor:
     theme.palette.mode === "dark"
-      ? "#1f1f1f"   // gris oscuro elegante
+      ? "#1f1f1f"
       : "#ffffff",
 
   border: "1px solid",
   borderColor:
     theme.palette.mode === "dark"
-      ? "#ffffff"   
+      ? "#ffffff"
       : "#000000",
 
   boxShadow:
@@ -26,6 +26,7 @@ export const cardSx = (theme) => ({
   overflow: "hidden",
   display: "flex",
   flexDirection: "column",
+
   transition: "all 0.25s ease",
 
   "&:hover": {
@@ -49,8 +50,8 @@ export const imagenBoxSx = (theme) => ({
 
   bgcolor:
     theme.palette.mode === "dark"
-      ? "#2c2c2c"   // más claro que la card
-      : "#f2f4f7",  // gris suave visible en light
+      ? "#2c2c2c"
+      : "#f2f4f7",
 
   overflow: "hidden",
 });
@@ -64,6 +65,7 @@ export const imagenSx = {
   maxHeight: "100%",
   objectFit: "contain",
   transition: "transform 0.4s ease",
+
   "&:hover": {
     transform: "scale(1.06)",
   },
@@ -96,6 +98,7 @@ export const contenidoSx = {
   flexGrow: 1,
   display: "flex",
   flexDirection: "column",
+  justifyContent: "space-between", // 👈 🔥 elimina espacio muerto
 };
 
 
@@ -134,6 +137,7 @@ export const precioStackSx = (theme) => ({
 export const dividerSx = {
   my: 1.2,
 };
+
 
 // ================================
 // BOTÓN AGREGAR
