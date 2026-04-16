@@ -8,22 +8,10 @@ import {
 } from "@mui/material";
 import Slider from "react-slick";
 import CloseIcon from "@mui/icons-material/Close";
-
 import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 
-// 🔥 MISMO HELPER QUE USA LA CARD
-import { getImagenesProducto } from "../utils/getImagenesProducto";
-
-export default function DetalleModal({
-  producto,
-  open,
-  onClose,
-  setLightbox,
-}) {
+export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
-
-  // 🔥 EXACTAMENTE IGUAL QUE EN LA CARD
-  const imagenes = getImagenesProducto(producto);
 
   return (
     <Dialog
@@ -34,35 +22,27 @@ export default function DetalleModal({
       sx={detalleModalStyles.dialog}
       PaperProps={{ sx: detalleModalStyles.dialogPaper }}
     >
-      {/* CERRAR */}
       <IconButton onClick={onClose} sx={detalleModalStyles.botonCerrar}>
         <CloseIcon />
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* 🔥 SLIDER */}
-        {imagenes.length > 1 ? (
-          <Box
-            sx={{
-              width: "100%",
-              maxWidth: 600,
-              ...detalleModalStyles.sliderGlobal,
-              ...detalleModalStyles.dots,
-            }}
-          >
+        {/* Imagen o slider */}
+        {(producto.imagenes || [producto.imagen]).length > 1 ? (
+          <Box sx={{ width: "100%", maxWidth: 600 }}>
             <Slider {...sliderSettings}>
-              {imagenes.map((img, i) => (
+              {(producto.imagenes || [producto.imagen]).map((img, i) => (
                 <Box
                   key={i}
                   sx={detalleModalStyles.sliderBox}
-                  onClick={() => setLightbox?.(img)}
+                  onClick={() => setLightbox(img)}
                 >
                   <Box
                     component="img"
                     src={img}
                     alt={producto.nombre}
-                    sx={detalleModalStyles.imagen}
                     loading="lazy"
+                    sx={detalleModalStyles.imagen}
                   />
                 </Box>
               ))}
@@ -71,19 +51,19 @@ export default function DetalleModal({
         ) : (
           <Box
             sx={detalleModalStyles.sliderBox}
-            onClick={() => setLightbox?.(imagenes[0])}
+            onClick={() => setLightbox(producto.imagen)}
           >
             <Box
               component="img"
-              src={imagenes[0]}
+              src={producto.imagen}
               alt={producto.nombre}
-              sx={detalleModalStyles.imagen}
               loading="lazy"
+              sx={detalleModalStyles.imagen}
             />
           </Box>
         )}
 
-        {/* INFO */}
+        {/* Descripción + chip */}
         <Box sx={{ textAlign: "center", maxWidth: 700 }}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             {producto.nombre}
