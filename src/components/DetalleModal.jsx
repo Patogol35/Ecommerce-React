@@ -8,10 +8,14 @@ import {
 } from "@mui/material";
 import Slider from "react-slick";
 import CloseIcon from "@mui/icons-material/Close";
+
 import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
+import { getImagenesProducto } from "../utils/getImagenesProducto";
 
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
+
+  const imagenes = getImagenesProducto(producto);
 
   return (
     <Dialog
@@ -27,11 +31,11 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* Imagen o slider */}
-        {(producto.imagenes || [producto.imagen]).length > 1 ? (
+        {/* SLIDER */}
+        {imagenes.length > 1 ? (
           <Box sx={{ width: "100%", maxWidth: 600 }}>
             <Slider {...sliderSettings}>
-              {(producto.imagenes || [producto.imagen]).map((img, i) => (
+              {imagenes.map((img, i) => (
                 <Box
                   key={i}
                   sx={detalleModalStyles.sliderBox}
@@ -51,11 +55,11 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
         ) : (
           <Box
             sx={detalleModalStyles.sliderBox}
-            onClick={() => setLightbox(producto.imagen)}
+            onClick={() => setLightbox(imagenes[0])}
           >
             <Box
               component="img"
-              src={producto.imagen}
+              src={imagenes[0]}
               alt={producto.nombre}
               loading="lazy"
               sx={detalleModalStyles.imagen}
@@ -63,7 +67,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
           </Box>
         )}
 
-        {/* Descripción + chip */}
+        {/* TEXTO */}
         <Box sx={{ textAlign: "center", maxWidth: 700 }}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             {producto.nombre}
