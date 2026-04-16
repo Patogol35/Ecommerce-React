@@ -44,8 +44,18 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   const precioFormateado = Number(producto.precio || 0).toFixed(2);
 
-  // 🔥 IMÁGENES DINÁMICAS (BD + 2 del front)
+  // 🔥 IMÁGENES PERSONALIZADAS POR PRODUCTO
   const imagenes = useMemo(() => {
+    // 👇 CASO ESPECIAL: producto 1
+    if (producto.id === 1) {
+      return [
+        "https://i.imgur.com/jF2qFKH.png", // 👈 tu imagen
+        "https://i.imgur.com/8Km9tLL.jpg",
+        "https://i.imgur.com/5tj6S7Ol.jpg",
+      ];
+    }
+
+    // 👇 RESTO DE PRODUCTOS
     return [
       producto.imagen || `/img/producto-${producto.id}-1.jpg`,
       `/img/producto-${producto.id}-2.jpg`,
@@ -119,7 +129,6 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
     >
       {/* 🔥 CARRUSEL */}
       <Box sx={{ ...imagenBoxSx, position: "relative", overflow: "hidden" }}>
-        
         <Box
           component="img"
           key={index}
@@ -187,7 +196,6 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           ))}
         </Box>
 
-        {/* Chips */}
         {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
