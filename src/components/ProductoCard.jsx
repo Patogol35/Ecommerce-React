@@ -38,10 +38,29 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // 🧠 IMÁGENES (BD + extra demo)
+  // 🧠 CONFIG DE IMÁGENES EXTRA (AQUÍ controlas los 15 productos)
+  const imagenesExtra = {
+    1: ["/imagenes/1-1.jpg"],
+    2: ["/imagenes/2-1.jpg"],
+    3: ["/imagenes/3-1.jpg"],
+    4: ["/imagenes/4-1.jpg"],
+    5: ["/imagenes/5-1.jpg"],
+    6: ["/imagenes/6-1.jpg"],
+    7: ["/imagenes/7-1.jpg"],
+    8: ["/imagenes/8-1.jpg"],
+    9: ["/imagenes/9-1.jpg"],
+    10: ["/imagenes/10-1.jpg"],
+    11: ["/imagenes/11-1.jpg"],
+    12: ["/imagenes/12-1.jpg"],
+    13: ["/imagenes/13-1.jpg"],
+    14: ["/imagenes/14-1.jpg"],
+    15: ["/imagenes/15-1.jpg"],
+  };
+
+  // 🔥 combinar imagen BD + extras si existen
   const imagenes = [
     producto.imagen,
-    "/imagenes/demo.jpg", // 👈 cambia si quieres otra
+    ...(imagenesExtra[producto.id] || []),
   ];
 
   const [index, setIndex] = useState(0);
@@ -76,7 +95,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* 🔥 IMAGEN + CARRUSEL */}
+      {/* IMAGEN */}
       <Box
         sx={{
           ...imagenBoxSx,
@@ -92,45 +111,45 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           sx={{
             width: "100%",
             height: "100%",
-            objectFit: "contain", // 👈 🔥 clave (no recorta)
-            backgroundColor: "#f5f5f5", // 👈 opcional (mejor estética)
+            objectFit: "contain",
+            backgroundColor: "#f5f5f5",
           }}
           onClick={nextImage}
         />
 
-        {/* ← */}
-        <IconButton
-          onClick={prevImage}
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: 5,
-            transform: "translateY(-50%)",
-            backgroundColor: "rgba(0,0,0,0.3)",
-            color: "#fff",
-            "&:hover": { backgroundColor: "rgba(0,0,0,0.5)" },
-          }}
-        >
-          <ArrowBackIosNewIcon fontSize="small" />
-        </IconButton>
+        {/* Flechas solo si hay más de 1 imagen */}
+        {imagenes.length > 1 && (
+          <>
+            <IconButton
+              onClick={prevImage}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: 5,
+                transform: "translateY(-50%)",
+                backgroundColor: "rgba(0,0,0,0.3)",
+                color: "#fff",
+              }}
+            >
+              <ArrowBackIosNewIcon fontSize="small" />
+            </IconButton>
 
-        {/* → */}
-        <IconButton
-          onClick={nextImage}
-          sx={{
-            position: "absolute",
-            top: "50%",
-            right: 5,
-            transform: "translateY(-50%)",
-            backgroundColor: "rgba(0,0,0,0.3)",
-            color: "#fff",
-            "&:hover": { backgroundColor: "rgba(0,0,0,0.5)" },
-          }}
-        >
-          <ArrowForwardIosIcon fontSize="small" />
-        </IconButton>
+            <IconButton
+              onClick={nextImage}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                right: 5,
+                transform: "translateY(-50%)",
+                backgroundColor: "rgba(0,0,0,0.3)",
+                color: "#fff",
+              }}
+            >
+              <ArrowForwardIosIcon fontSize="small" />
+            </IconButton>
+          </>
+        )}
 
-        {/* CHIP NUEVO */}
         {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
@@ -148,7 +167,6 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           {producto.nombre}
         </Typography>
 
-        {/* PRECIO */}
         <Stack
           direction="row"
           alignItems="center"
@@ -163,7 +181,6 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
         <Divider sx={dividerSx} />
 
-        {/* BOTONES */}
         <Stack spacing={1}>
           <Button
             variant="contained"
