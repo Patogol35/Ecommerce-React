@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState } from "react"; // 👈 agregado
 
 import {
   Card,
@@ -12,15 +12,15 @@ import {
   Box,
   Divider,
   Stack,
-  IconButton,
+  IconButton, // 👈 agregado
 } from "@mui/material";
 
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"; // 👈 agregado
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"; // 👈 agregado
 
 import {
   cardSx,
@@ -40,10 +40,10 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // 👇 Carrusel index
+  // 👇 estado carrusel
   const [index, setIndex] = useState(0);
 
-  // 👇 Imágenes (base + extra)
+  // 👇 imágenes (base + extra)
   const imagenes = [
     producto.imagen,
     `/extras/${producto.id}-2.jpg`,
@@ -81,11 +81,11 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* Imagen Carrusel */}
+      {/* Imagen */}
       <Box sx={{ ...imagenBoxSx, position: "relative" }}>
         <Box
           component="img"
-          src={imagenes[index]}
+          src={imagenes[index]} // 👈 cambio clave
           alt={producto.nombre}
           sx={imagenSx}
           onError={(e) => {
@@ -94,43 +94,36 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         />
 
         {/* Flechas */}
-        {imagenes.length > 1 && (
-          <>
-            <IconButton
-              size="small"
-              onClick={prev}
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: 5,
-                transform: "translateY(-50%)",
-                bgcolor: "rgba(0,0,0,0.4)",
-                color: "#fff",
-                "&:hover": { bgcolor: "rgba(0,0,0,0.6)" },
-              }}
-            >
-              <ArrowBackIosNewIcon fontSize="small" />
-            </IconButton>
+        <IconButton
+          size="small"
+          onClick={prev}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            left: 5,
+            transform: "translateY(-50%)",
+            bgcolor: "rgba(0,0,0,0.4)",
+            color: "#fff",
+          }}
+        >
+          <ArrowBackIosNewIcon fontSize="small" />
+        </IconButton>
 
-            <IconButton
-              size="small"
-              onClick={next}
-              sx={{
-                position: "absolute",
-                top: "50%",
-                right: 5,
-                transform: "translateY(-50%)",
-                bgcolor: "rgba(0,0,0,0.4)",
-                color: "#fff",
-                "&:hover": { bgcolor: "rgba(0,0,0,0.6)" },
-              }}
-            >
-              <ArrowForwardIosIcon fontSize="small" />
-            </IconButton>
-          </>
-        )}
+        <IconButton
+          size="small"
+          onClick={next}
+          sx={{
+            position: "absolute",
+            top: "50%",
+            right: 5,
+            transform: "translateY(-50%)",
+            bgcolor: "rgba(0,0,0,0.4)",
+            color: "#fff",
+          }}
+        >
+          <ArrowForwardIosIcon fontSize="small" />
+        </IconButton>
 
-        {/* Chip nuevo */}
         {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
