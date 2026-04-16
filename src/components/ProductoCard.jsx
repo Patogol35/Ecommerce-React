@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
 import { toast } from "react-toastify";
+import { useState } from "react";
+
 import {
   Card,
   Typography,
@@ -11,6 +13,7 @@ import {
   Divider,
   Stack,
 } from "@mui/material";
+
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
@@ -33,6 +36,12 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { isAuthenticated } = useAuth();
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
+
+  // 👇 Estado hover
+  const [hover, setHover] = useState(false);
+
+  // 👇 Imagen extra desde el FRONT (sin backend)
+  const imagenExtra = `/extras/${producto.id}-2.jpg`;
 
   const onAdd = async () => {
     if (!isAuthenticated) {
@@ -57,10 +66,14 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   return (
     <Card sx={cardSx} elevation={0}>
       {/* Imagen */}
-      <Box sx={imagenBoxSx}>
+      <Box
+        sx={imagenBoxSx}
+        onMouseEnter={() => setHover(true)}
+        onMouseLeave={() => setHover(false)}
+      >
         <Box
           component="img"
-          src={producto.imagen}
+          src={hover ? imagenExtra : producto.imagen}
           alt={producto.nombre}
           sx={imagenSx}
         />
