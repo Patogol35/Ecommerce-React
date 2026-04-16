@@ -1,19 +1,24 @@
 // ================================
 // TARJETA PRINCIPAL
 // ================================
-export const cardSx = {
+export const cardSx = (theme) => ({
   width: 320,
   height: 480,
   borderRadius: 3,
 
-  bgcolor: (theme) =>
-    theme.palette.mode === "dark" ? "#1f1f1f" : "#ffffff",
+  // Fondo principal 
+  bgcolor:
+    theme.palette.mode === "dark"
+      ? "#1f1f1f"   // gris oscuro elegante
+      : "#ffffff",
 
   border: "1px solid",
-  borderColor: (theme) =>
-    theme.palette.mode === "dark" ? "#ffffff" : "#000000",
+  borderColor:
+    theme.palette.mode === "dark"
+      ? "#ffffff"   
+      : "#000000",
 
-  boxShadow: (theme) =>
+  boxShadow:
     theme.palette.mode === "dark"
       ? "0 8px 24px rgba(0,0,0,0.45)"
       : "0 8px 22px rgba(0,0,0,0.12)",
@@ -24,26 +29,31 @@ export const cardSx = {
   transition: "all 0.25s ease",
 
   "&:hover": {
-    transform: "translateY(-6px) scale(1.01)",
+    transform: "translateY(-4px)",
   },
-};
+
+  "&:focus": { outline: "none" },
+  "&:focus-visible": { outline: "none" },
+});
 
 
 // ================================
 // CONTENEDOR IMAGEN
 // ================================
-export const imagenBoxSx = {
+export const imagenBoxSx = (theme) => ({
   position: "relative",
   height: 240,
   display: "flex",
   alignItems: "center",
   justifyContent: "center",
 
-  bgcolor: (theme) =>
-    theme.palette.mode === "dark" ? "#2c2c2c" : "#f2f4f7",
+  bgcolor:
+    theme.palette.mode === "dark"
+      ? "#2c2c2c"   // más claro que la card
+      : "#f2f4f7",  // gris suave visible en light
 
   overflow: "hidden",
-};
+});
 
 
 // ================================
@@ -54,15 +64,14 @@ export const imagenSx = {
   maxHeight: "100%",
   objectFit: "contain",
   transition: "transform 0.4s ease",
-
   "&:hover": {
-    transform: "scale(1.08)",
+    transform: "scale(1.06)",
   },
 };
 
 
 // ================================
-// CHIP NUEVO
+// CHIP
 // ================================
 export const chipNuevoSx = {
   position: "absolute",
@@ -108,13 +117,15 @@ export const tituloSx = {
 // ================================
 // PRECIO
 // ================================
-export const precioStackSx = {
+export const precioStackSx = (theme) => ({
   mb: 2,
   fontSize: "1.3rem",
   fontWeight: 700,
-  color: (theme) =>
-    theme.palette.mode === "dark" ? "#4dabf5" : "#1976d2",
-};
+  color:
+    theme.palette.mode === "dark"
+      ? "#4dabf5"
+      : "#1976d2",
+});
 
 
 // ================================
@@ -123,7 +134,6 @@ export const precioStackSx = {
 export const dividerSx = {
   my: 1.2,
 };
-
 
 // ================================
 // BOTÓN AGREGAR
@@ -144,19 +154,22 @@ export const botonAgregarSx = (stock) => ({
   transition: "all 0.25s ease",
 
   "&:hover": {
-    transform: stock > 0 ? "scale(1.04)" : "none",
+    transform: stock > 0 ? "scale(1.03)" : "none",
     background:
       stock > 0
         ? "linear-gradient(135deg, #1565c0, #1e88e5)"
         : "#bdbdbd",
   },
+
+  "&:focus": { outline: "none" },
+  "&:focus-visible": { outline: "none" },
 });
 
 
 // ================================
 // BOTÓN DETALLES
 // ================================
-export const botonDetallesSx = {
+export const botonDetallesSx = (theme) => ({
   borderRadius: 2,
   textTransform: "none",
   py: 0.9,
@@ -164,20 +177,27 @@ export const botonDetallesSx = {
   fontSize: "0.9rem",
 
   border: "1px solid",
-  borderColor: (theme) =>
-    theme.palette.mode === "dark" ? "#ffffff" : "#000000",
+  borderColor:
+    theme.palette.mode === "dark"
+      ? "#ffffff"
+      : "#000000",
 
-  color: (theme) =>
-    theme.palette.mode === "dark" ? "#ffffff" : "#000000",
+  color:
+    theme.palette.mode === "dark"
+      ? "#ffffff"
+      : "#000000",
 
   backgroundColor: "transparent",
   transition: "all 0.25s ease",
 
   "&:hover": {
-    backgroundColor: (theme) =>
+    backgroundColor:
       theme.palette.mode === "dark"
         ? "rgba(255,255,255,0.08)"
         : "rgba(0,0,0,0.05)",
     transform: "scale(1.03)",
   },
-};
+
+  "&:focus": { outline: "none" },
+  "&:focus-visible": { outline: "none" },
+});
