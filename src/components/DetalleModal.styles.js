@@ -1,12 +1,21 @@
+// ================================
+// SLIDER SETTINGS (FIX REAL)
+// ================================
 export const sliderSettings = {
   dots: true,
-  infinite: true,
+  infinite: false, 
   speed: 400,
   slidesToShow: 1,
   slidesToScroll: 1,
   arrows: true,
+  initialSlide: 0, 
+  adaptiveHeight: true, 
 };
 
+
+// ================================
+// ESTILOS MODAL
+// ================================
 const detalleModalStyles = {
   dialog: {
     zIndex: 1600,
@@ -27,11 +36,11 @@ const detalleModalStyles = {
     overflowY: "auto",
     position: "relative",
     textAlign: "center",
-    // 🌟 En modo horizontal, el modal se hace más pequeño
+
     "@media (orientation: landscape)": {
-      maxHeight: "70vh", // 🔹 Reduce altura
-      marginTop: "5vh",  // 🔹 Espacio arriba
-      marginBottom: "5vh", // 🔹 Espacio abajo
+      maxHeight: "70vh",
+      marginTop: "5vh",
+      marginBottom: "5vh",
     },
   },
 
@@ -44,6 +53,9 @@ const detalleModalStyles = {
     "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
   },
 
+  // ================================
+  // SLIDER BOX
+  // ================================
   sliderBox: {
     display: "flex",
     justifyContent: "center",
@@ -52,6 +64,9 @@ const detalleModalStyles = {
     cursor: "zoom-in",
   },
 
+  // ================================
+  // IMAGEN
+  // ================================
   imagen: {
     maxWidth: "100%",
     maxHeight: "100%",
@@ -60,9 +75,15 @@ const detalleModalStyles = {
     border: "2px solid rgba(255,255,255,0.2)",
     boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
     transition: "transform 0.3s ease",
-    "&:hover": { transform: "scale(1.02)" },
+
+    "&:hover": {
+      transform: "scale(1.02)",
+    },
   },
 
+  // ================================
+  // CHIP STOCK
+  // ================================
   stockChip: {
     color: "white",
     borderColor: "white",
@@ -78,6 +99,9 @@ const detalleModalStyles = {
     color: "rgba(255,255,255,0.85)",
   },
 
+  // ================================
+  // BOTÓN AGREGAR
+  // ================================
   botonAgregar: (stock) => ({
     borderRadius: 3,
     py: 1.2,
@@ -89,6 +113,7 @@ const detalleModalStyles = {
     alignSelf: "center",
     boxShadow: "0 3px 10px rgba(0,0,0,0.3)",
     transition: "all 0.3s ease",
+
     "&:hover": {
       transform: stock > 0 ? "translateY(-2px)" : "none",
       boxShadow: stock > 0 ? "0 6px 15px rgba(0,0,0,0.4)" : "none",
