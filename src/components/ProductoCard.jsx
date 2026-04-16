@@ -44,23 +44,33 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   const precioFormateado = Number(producto.precio || 0).toFixed(2);
 
-  // 🔥 IMÁGENES PERSONALIZADAS POR PRODUCTO
+  // 🔥 TODAS LAS IMÁGENES DE LOS 15 PRODUCTOS
   const imagenes = useMemo(() => {
-    // 👇 CASO ESPECIAL: producto 1
-    if (producto.id === 1) {
-      return [
-        "https://i.imgur.com/jF2qFKH.png", // 👈 tu imagen
-        "https://i.imgur.com/8Km9tLL.jpg",
-        "https://i.imgur.com/5tj6S7Ol.jpg",
-      ];
-    }
+    const imagenesPorProducto = {
+      1: ["https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/5tj6S7Ol.jpg"],
+      2: ["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/jF2qFKH.png"],
+      3: ["https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/8Km9tLL.jpg"],
+      4: ["https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/8Km9tLL.jpg"],
+      5: ["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/5tj6S7Ol.jpg"],
+      6: ["https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/jF2qFKH.png"],
+      7: ["https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/5tj6S7Ol.jpg"],
+      8: ["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/jF2qFKH.png"],
+      9: ["https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/8Km9tLL.jpg"],
+      10:["https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/8Km9tLL.jpg"],
+      11:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/5tj6S7Ol.jpg"],
+      12:["https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/jF2qFKH.png"],
+      13:["https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/5tj6S7Ol.jpg"],
+      14:["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/jF2qFKH.png"],
+      15:["https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/8Km9tLL.jpg"],
+    };
 
-    // 👇 RESTO DE PRODUCTOS
-    return [
-      producto.imagen || `/img/producto-${producto.id}-1.jpg`,
-      `/img/producto-${producto.id}-2.jpg`,
-      `/img/producto-${producto.id}-3.jpg`,
-    ];
+    return (
+      imagenesPorProducto[producto.id] || [
+        producto.imagen,
+        producto.imagen,
+        producto.imagen,
+      ]
+    );
   }, [producto]);
 
   // 🔁 AUTOPLAY
@@ -72,7 +82,11 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [imagenes]);
+  }, [imagenes.length]);
+
+  useEffect(() => {
+    setIndex(0);
+  }, [producto.id]);
 
   const siguiente = () => {
     setIndex((prev) => (prev + 1) % imagenes.length);
@@ -84,7 +98,6 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
     );
   };
 
-  // ➕ Agregar producto
   const onAdd = async () => {
     if (loading) return;
 
@@ -94,93 +107,33 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       return;
     }
 
-    if (onAgregar) {
-      onAgregar(producto);
-      return;
-    }
-
     setLoading(true);
 
     try {
       await agregarAlCarrito(producto.id, 1);
       toast.success(`${producto.nombre} agregado al carrito ✅`);
     } catch (e) {
-      toast.error(e?.message || "Error al agregar producto");
+      toast.error("Error al agregar producto");
     } finally {
       setLoading(false);
     }
   };
 
-  const handleVerDetalle = () => {
-    if (onVerDetalle) return onVerDetalle();
-
-    navigate(`/producto/${producto.id}`, {
-      state: { producto },
-    });
-  };
-
   return (
-    <Card
-      sx={{
-        ...cardSx,
-        opacity: producto.stock === 0 ? 0.7 : 1,
-      }}
-      elevation={0}
-    >
-      {/* 🔥 CARRUSEL */}
-      <Box sx={{ ...imagenBoxSx, position: "relative", overflow: "hidden" }}>
+    <Card sx={{ ...cardSx, opacity: producto.stock === 0 ? 0.7 : 1 }}>
+      
+      <Box sx={{ ...imagenBoxSx, position: "relative" }}>
         <Box
           component="img"
           key={index}
           src={imagenes[index]}
-          alt={`Imagen ${index}`}
-          sx={{
-            ...imagenSx,
-            transition: "0.5s ease",
-          }}
+          sx={{ ...imagenSx, transition: "0.5s" }}
         />
 
-        {/* ← */}
-        <Button
-          onClick={anterior}
-          sx={{
-            position: "absolute",
-            top: "50%",
-            left: 5,
-            minWidth: "30px",
-            color: "#fff",
-            background: "rgba(0,0,0,0.4)",
-          }}
-        >
-          {"<"}
-        </Button>
+        <Button onClick={anterior} sx={{ position: "absolute", left: 5, top: "50%" }}>{"<"}</Button>
+        <Button onClick={siguiente} sx={{ position: "absolute", right: 5, top: "50%" }}>{">"}</Button>
 
-        {/* → */}
-        <Button
-          onClick={siguiente}
-          sx={{
-            position: "absolute",
-            top: "50%",
-            right: 5,
-            minWidth: "30px",
-            color: "#fff",
-            background: "rgba(0,0,0,0.4)",
-          }}
-        >
-          {">"}
-        </Button>
-
-        {/* 🔘 DOTS */}
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 8,
-            width: "100%",
-            display: "flex",
-            justifyContent: "center",
-            gap: 1,
-          }}
-        >
+        <Box sx={{ position: "absolute", bottom: 5, width: "100%", display: "flex", justifyContent: "center", gap: 1 }}>
           {imagenes.map((_, i) => (
             <Box
               key={i}
@@ -189,77 +142,21 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
                 width: 8,
                 height: 8,
                 borderRadius: "50%",
-                background: i === index ? "#fff" : "rgba(255,255,255,0.5)",
+                background: i === index ? "#fff" : "#999",
                 cursor: "pointer",
               }}
             />
           ))}
         </Box>
-
-        {producto.nuevo && (
-          <Chip
-            icon={<StarIcon />}
-            label="Nuevo"
-            size="small"
-            sx={chipNuevoSx}
-          />
-        )}
-
-        {producto.stock === 0 && (
-          <Chip
-            label="Sin stock"
-            color="error"
-            size="small"
-            sx={{ position: "absolute", bottom: 10, right: 10 }}
-          />
-        )}
       </Box>
 
-      {/* CONTENIDO */}
       <Box sx={contenidoSx}>
-        <Typography variant="h6" sx={tituloSx}>
-          {producto.nombre}
-        </Typography>
+        <Typography>{producto.nombre}</Typography>
+        <Typography>${precioFormateado}</Typography>
 
-        <Stack direction="row" alignItems="center" spacing={0.5} sx={precioStackSx}>
-          <MonetizationOnIcon color="primary" />
-          <Typography variant="h6" color="primary" fontWeight="bold">
-            ${precioFormateado}
-          </Typography>
-        </Stack>
-
-        <Typography variant="body2" color="text.secondary">
-          Stock: {producto.stock}
-        </Typography>
-
-        <Divider sx={dividerSx} />
-
-        <Stack spacing={1}>
-          <Button
-            variant="contained"
-            fullWidth
-            startIcon={<AddShoppingCartIcon />}
-            sx={botonAgregarSx(producto.stock)}
-            onClick={onAdd}
-            disabled={producto.stock === 0 || loading}
-          >
-            {loading
-              ? "Agregando..."
-              : producto.stock > 0
-              ? "Agregar al carrito"
-              : "Agotado"}
-          </Button>
-
-          <Button
-            variant="outlined"
-            fullWidth
-            startIcon={<InfoIcon />}
-            sx={botonDetallesSx}
-            onClick={handleVerDetalle}
-          >
-            Ver detalles
-          </Button>
-        </Stack>
+        <Button onClick={onAdd} disabled={loading}>
+          {loading ? "Agregando..." : "Agregar"}
+        </Button>
       </Box>
     </Card>
   );
