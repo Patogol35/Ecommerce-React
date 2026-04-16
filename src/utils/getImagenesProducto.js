@@ -1,5 +1,4 @@
-// 🔥 Helper centralizado para imágenes de productos
-
+// 🔥 Imágenes extra del front (por ID)
 const imagenesExtra = {
   1: ["https://i.imgur.com/4r9ScxM.png"],
   2: ["https://i.imgur.com/IiHG04G.png"],
@@ -21,8 +20,33 @@ const imagenesExtra = {
 export const getImagenesProducto = (producto) => {
   if (!producto) return [];
 
-  return [
-    producto.imagen,
-    ...(imagenesExtra[producto.id] || []),
-  ];
+  // 🟢 imágenes desde BD (si existen)
+  const imagenesBD = Array.isArray(producto.imagenes)
+    ? producto.imagenes.filter(Boolean)
+    : [];
+
+  // 🔵 imagen principal
+  const imagenPrincipal = producto.imagen
+    ? [producto.imagen]
+    : [];
+
+  // 🟣 imágenes extra del front
+  const extras = imagenesExtra[producto.id] || [];
+
+  // 🔥 UNIFICAR TODO
+  const todas = [
+    ...imagenesBD,
+    ...imagenPrincipal,
+    ...extras,
+  ].filter(Boolean);
+
+  // 🛡 eliminar duplicados
+  const unicas = [...new Set(todas)];
+
+  // 🧱 fallback final
+  if (unicas.length === 0) {
+    return ["https://via.placeholder.com/400x300?text=Sin+imagen"];
+  }
+
+  return unicas;
 };
