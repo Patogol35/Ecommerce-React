@@ -1,10 +1,16 @@
 export const sliderSettings = {
   dots: true,
   infinite: true,
-  speed: 400,
+  speed: 500,
   slidesToShow: 1,
   slidesToScroll: 1,
+
+  autoplay: true,
+  autoplaySpeed: 3500,
+  pauseOnHover: true,
+
   arrows: true,
+  adaptiveHeight: true,
 };
 
 const detalleModalStyles = {
@@ -27,11 +33,11 @@ const detalleModalStyles = {
     overflowY: "auto",
     position: "relative",
     textAlign: "center",
-    // 🌟 En modo horizontal, el modal se hace más pequeño
+
     "@media (orientation: landscape)": {
-      maxHeight: "70vh", // 🔹 Reduce altura
-      marginTop: "5vh",  // 🔹 Espacio arriba
-      marginBottom: "5vh", // 🔹 Espacio abajo
+      maxHeight: "70vh",
+      marginTop: "5vh",
+      marginBottom: "5vh",
     },
   },
 
@@ -42,6 +48,42 @@ const detalleModalStyles = {
     bgcolor: "rgba(0,0,0,0.6)",
     color: "white",
     "&:hover": { bgcolor: "rgba(255,255,255,0.2)" },
+  },
+
+  // 🔥 Flechas pro
+  sliderGlobal: {
+    "& .slick-prev, & .slick-next": {
+      zIndex: 2,
+      width: 36,
+      height: 36,
+      borderRadius: "50%",
+      background: "rgba(0,0,0,0.5)",
+      backdropFilter: "blur(6px)",
+
+      "&:hover": {
+        background: "rgba(0,0,0,0.8)",
+        transform: "scale(1.1)",
+      },
+    },
+
+    "& .slick-prev:before, & .slick-next:before": {
+      fontSize: 18,
+      color: "#fff",
+    },
+
+    "& .slick-prev": { left: 10 },
+    "& .slick-next": { right: 10 },
+  },
+
+  // 🔵 dots pro
+  dots: {
+    "& .slick-dots li button:before": {
+      color: "rgba(255,255,255,0.5)",
+      fontSize: 10,
+    },
+    "& .slick-dots li.slick-active button:before": {
+      color: "#fff",
+    },
   },
 
   sliderBox: {
@@ -60,7 +102,10 @@ const detalleModalStyles = {
     border: "2px solid rgba(255,255,255,0.2)",
     boxShadow: "0 4px 15px rgba(0,0,0,0.5)",
     transition: "transform 0.3s ease",
-    "&:hover": { transform: "scale(1.02)" },
+
+    "&:hover": {
+      transform: "scale(1.03)",
+    },
   },
 
   stockChip: {
@@ -69,31 +114,10 @@ const detalleModalStyles = {
     fontWeight: "bold",
   },
 
-  divider: {
-    bgcolor: "rgba(255,255,255,0.3)",
-  },
-
   descripcion: {
     lineHeight: 1.6,
     color: "rgba(255,255,255,0.85)",
   },
-
-  botonAgregar: (stock) => ({
-    borderRadius: 3,
-    py: 1.2,
-    px: 2.5,
-    width: "fit-content",
-    color: "white",
-    fontWeight: "bold",
-    background: "linear-gradient(135deg, #1976d2, #42a5f5)",
-    alignSelf: "center",
-    boxShadow: "0 3px 10px rgba(0,0,0,0.3)",
-    transition: "all 0.3s ease",
-    "&:hover": {
-      transform: stock > 0 ? "translateY(-2px)" : "none",
-      boxShadow: stock > 0 ? "0 6px 15px rgba(0,0,0,0.4)" : "none",
-    },
-  }),
 };
 
 export default detalleModalStyles;
