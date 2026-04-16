@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
@@ -43,6 +43,17 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const imagenes = getImagenesProducto(producto);
   const [index, setIndex] = useState(0);
 
+  // 🔥 AUTOPLAY
+  useEffect(() => {
+    if (imagenes.length <= 1) return;
+
+    const interval = setInterval(() => {
+      setIndex((prev) => (prev + 1) % imagenes.length);
+    }, 3000);
+
+    return () => clearInterval(interval);
+  }, [imagenes.length]);
+
   const nextImage = () => {
     setIndex((prev) => (prev + 1) % imagenes.length);
   };
@@ -79,14 +90,17 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           component="img"
           src={imagenes[index]}
           alt={producto.nombre}
+          key={index}
           sx={{
             width: "100%",
             height: "100%",
             objectFit: "contain",
+            transition: "transform 0.4s ease, opacity 0.4s ease",
           }}
           onClick={nextImage}
         />
 
+        {/* FLECHAS */}
         {imagenes.length > 1 && (
           <>
             <IconButton
@@ -94,10 +108,15 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
               sx={{
                 position: "absolute",
                 top: "50%",
-                left: 5,
+                left: 10,
                 transform: "translateY(-50%)",
-                backgroundColor: "rgba(0,0,0,0.3)",
+                bgcolor: "rgba(0,0,0,0.45)",
                 color: "#fff",
+                backdropFilter: "blur(6px)",
+                "&:hover": {
+                  bgcolor: "rgba(0,0,0,0.7)",
+                  transform: "translateY(-50%) scale(1.1)",
+                },
               }}
             >
               <ArrowBackIosNewIcon fontSize="small" />
@@ -108,10 +127,15 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
               sx={{
                 position: "absolute",
                 top: "50%",
-                right: 5,
+                right: 10,
                 transform: "translateY(-50%)",
-                backgroundColor: "rgba(0,0,0,0.3)",
+                bgcolor: "rgba(0,0,0,0.45)",
                 color: "#fff",
+                backdropFilter: "blur(6px)",
+                "&:hover": {
+                  bgcolor: "rgba(0,0,0,0.7)",
+                  transform: "translateY(-50%) scale(1.1)",
+                },
               }}
             >
               <ArrowForwardIosIcon fontSize="small" />
@@ -119,6 +143,36 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           </>
         )}
 
+        {/* DOTS */}
+        {imagenes.length > 1 && (
+          <Box
+            sx={{
+              position: "absolute",
+              bottom: 10,
+              width: "100%",
+              display: "flex",
+              justifyContent: "center",
+              gap: 1,
+            }}
+          >
+            {imagenes.map((_, i) => (
+              <Box
+                key={i}
+                onClick={() => setIndex(i)}
+                sx={{
+                  width: i === index ? 10 : 7,
+                  height: i === index ? 10 : 7,
+                  borderRadius: "50%",
+                  bgcolor: i === index ? "#fff" : "rgba(255,255,255,0.5)",
+                  cursor: "pointer",
+                  transition: "all 0.3s ease",
+                }}
+              />
+            ))}
+          </Box>
+        )}
+
+        {/* CHIP */}
         {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
@@ -136,12 +190,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           {producto.nombre}
         </Typography>
 
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={0.5}
-          sx={precioStackSx}
-        >
+        <Stack direction="row" alignItems="center" spacing={0.5} sx={precioStackSx}>
           <MonetizationOnIcon color="primary" />
           <Typography variant="h6" color="primary" fontWeight="bold">
             {producto.precio}
@@ -183,4 +232,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-            }
+                  }
