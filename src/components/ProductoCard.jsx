@@ -46,7 +46,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
     4: ["/imagenes/4-1.jpg"],
     5: ["/imagenes/5-1.jpg"],
     6: ["/imagenes/6-1.jpg"],
-    7: ["/imagenes/7-1.jpg"],
+    7: ["https://i.imgur.com/x1cOKEH.png"],
     8: ["/imagenes/8-1.jpg"],
     9: ["/imagenes/9-1.jpg"],
     10: ["/imagenes/10-1.jpg"],
