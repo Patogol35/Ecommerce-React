@@ -31,10 +31,13 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* SLIDER */}
+        {/* 🔥 SLIDER CORREGIDO */}
         {imagenes.length > 1 ? (
           <Box sx={{ width: "100%", maxWidth: 600 }}>
-            <Slider {...sliderSettings}>
+            <Slider
+              {...sliderSettings}
+              key={producto.id} // 👈 🔥 reinicia slider correctamente
+            >
               {imagenes.map((img, i) => (
                 <Box
                   key={i}
