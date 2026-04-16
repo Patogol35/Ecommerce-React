@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
@@ -44,21 +44,25 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   const precioFormateado = Number(producto.precio || 0).toFixed(2);
 
-  // 🧠 Simulación de imágenes (1 real + 2 extra demo)
-  const imagenes = [
-    producto.imagen || "https://i.imgur.com/VgVlsE6.png",
-    producto.imagen || "/placeholder.png",
-    producto.imagen || "/placeholder.png",
-  ];
+  // 🔥 IMÁGENES DINÁMICAS (BD + 2 del front)
+  const imagenes = useMemo(() => {
+    return [
+      producto.imagen || `/img/producto-${producto.id}-1.jpg`,
+      `/img/producto-${producto.id}-2.jpg`,
+      `/img/producto-${producto.id}-3.jpg`,
+    ];
+  }, [producto]);
 
-  // 🔁 Autoplay
+  // 🔁 AUTOPLAY
   useEffect(() => {
+    if (imagenes.length <= 1) return;
+
     const interval = setInterval(() => {
       setIndex((prev) => (prev + 1) % imagenes.length);
     }, 3000);
 
     return () => clearInterval(interval);
-  }, [imagenes.length]);
+  }, [imagenes]);
 
   const siguiente = () => {
     setIndex((prev) => (prev + 1) % imagenes.length);
@@ -113,10 +117,12 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       }}
       elevation={0}
     >
-      {/* 🔥 Carrusel */}
+      {/* 🔥 CARRUSEL */}
       <Box sx={{ ...imagenBoxSx, position: "relative", overflow: "hidden" }}>
+        
         <Box
           component="img"
+          key={index}
           src={imagenes[index]}
           alt={`Imagen ${index}`}
           sx={{
@@ -155,7 +161,7 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           {">"}
         </Button>
 
-        {/* 🔘 Dots */}
+        {/* 🔘 DOTS */}
         <Box
           sx={{
             position: "absolute",
@@ -181,6 +187,7 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           ))}
         </Box>
 
+        {/* Chips */}
         {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
@@ -200,7 +207,7 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         )}
       </Box>
 
-      {/* Contenido */}
+      {/* CONTENIDO */}
       <Box sx={contenidoSx}>
         <Typography variant="h6" sx={tituloSx}>
           {producto.nombre}
