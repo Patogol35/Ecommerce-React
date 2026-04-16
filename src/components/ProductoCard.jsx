@@ -13,6 +13,7 @@ import {
   Stack,
   IconButton,
 } from "@mui/material";
+
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
@@ -23,7 +24,6 @@ import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 import {
   cardSx,
   imagenBoxSx,
-  imagenSx,
   chipNuevoSx,
   contenidoSx,
   tituloSx,
@@ -38,9 +38,11 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // 🧠 IMÁGENES (BD + extra del front)
-  const imagenExtra = `/imagenes/productos/${producto.id}.jpg`; // opcional dinámico
-  const imagenes = [producto.imagen, imagenExtra];
+  // 🧠 IMÁGENES (BD + fallback demo)
+  const imagenes = [
+    producto.imagen,
+    "/imagenes/demo.jpg", // 👈 cambia por la que quieras
+  ];
 
   const [index, setIndex] = useState(0);
 
@@ -74,17 +76,28 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* Imagen + carrusel */}
-      <Box sx={{ ...imagenBoxSx, position: "relative" }}>
+      {/* 🔥 IMAGEN + CARRUSEL */}
+      <Box
+        sx={{
+          ...imagenBoxSx,
+          position: "relative",
+          height: 200,        // 👈 evita que crezca
+          overflow: "hidden", // 👈 recorta exceso
+        }}
+      >
         <Box
           component="img"
           src={imagenes[index]}
           alt={producto.nombre}
-          sx={imagenSx}
-          onClick={nextImage} // 👈 click cambia imagen
+          sx={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover", // 👈 clave para mantener diseño
+          }}
+          onClick={nextImage}
         />
 
-        {/* Botón izquierda */}
+        {/* ← */}
         <IconButton
           onClick={prevImage}
           sx={{
@@ -94,12 +107,13 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
             transform: "translateY(-50%)",
             backgroundColor: "rgba(0,0,0,0.3)",
             color: "#fff",
+            "&:hover": { backgroundColor: "rgba(0,0,0,0.5)" },
           }}
         >
           <ArrowBackIosNewIcon fontSize="small" />
         </IconButton>
 
-        {/* Botón derecha */}
+        {/* → */}
         <IconButton
           onClick={nextImage}
           sx={{
@@ -109,12 +123,13 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
             transform: "translateY(-50%)",
             backgroundColor: "rgba(0,0,0,0.3)",
             color: "#fff",
+            "&:hover": { backgroundColor: "rgba(0,0,0,0.5)" },
           }}
         >
           <ArrowForwardIosIcon fontSize="small" />
         </IconButton>
 
-        {/* Chip Nuevo */}
+        {/* CHIP NUEVO */}
         {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
@@ -126,13 +141,13 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         )}
       </Box>
 
-      {/* Contenido */}
+      {/* CONTENIDO */}
       <Box sx={contenidoSx}>
         <Typography variant="h6" fontWeight="bold" sx={tituloSx}>
           {producto.nombre}
         </Typography>
 
-        {/* Precio */}
+        {/* PRECIO */}
         <Stack
           direction="row"
           alignItems="center"
@@ -147,7 +162,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
         <Divider sx={dividerSx} />
 
-        {/* Botones */}
+        {/* BOTONES */}
         <Stack spacing={1}>
           <Button
             variant="contained"
@@ -181,4 +196,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-}
+        }
