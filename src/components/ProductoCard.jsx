@@ -53,7 +53,7 @@ function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       4: ["https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/8Km9tLL.jpg"],
       5: ["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/5tj6S7Ol.jpg"],
       6: ["https://i.imgur.com/0Ra4FYX.png"],
-      7: ["https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/5tj6S7Ol.jpg"],
+      7: ["https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/x1cOKEH.png"],
       8: ["https://i.imgur.com/8Km9tLL.jpg","https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/jF2qFKH.png"],
       9: ["https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/8Km9tLL.jpg"],
       10:["https://i.imgur.com/jF2qFKH.png","https://i.imgur.com/5tj6S7Ol.jpg","https://i.imgur.com/8Km9tLL.jpg"],
