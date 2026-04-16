@@ -1,3 +1,4 @@
+import React, { useState } from "react";
 import {
   Card,
   CardMedia,
@@ -7,41 +8,74 @@ import {
   Chip,
   TextField,
   IconButton,
+  Tooltip,
+  CircularProgress,
 } from "@mui/material";
+
 import RemoveIcon from "@mui/icons-material/Remove";
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from "@mui/icons-material/Delete";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+
 import { toast } from "react-toastify";
 import { calcularSubtotal } from "../utils/carritoUtils";
 import carritoItemStyles from "./CarritoItem.styles";
 
-export default function CarritoItem({
+function CarritoItem({
   it,
-  theme,
   incrementar,
   decrementar,
   setCantidad,
   eliminarItem,
 }) {
   const stock = it.producto?.stock ?? 0;
+  const [loading, setLoading] = useState(false);
+
+  // 🧠 Formateo precio
+  const subtotal = calcularSubtotal(it).toFixed(2);
+
+  // ➕ Incrementar con control
+  const handleIncrementar = async () => {
+    if (loading || it.cantidad >= stock) return;
+
+    setLoading(true);
+    try {
+      await incrementar(it);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  // ➖ Decrementar
+  const handleDecrementar = async () => {
+    if (loading || it.cantidad <= 1) return;
+
+    setLoading(true);
+    try {
+      await decrementar(it);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <Card sx={carritoItemStyles.card}>
-      {/* Imagen producto */}
+      {/* Imagen */}
       <CardMedia
         component="img"
-        image={it.producto?.imagen || undefined}
-        alt={it.producto?.nombre}
+        image={it.producto?.imagen || "/placeholder.png"}
+        alt={`Imagen de ${it.producto?.nombre}`}
+        loading="lazy"
         sx={(theme) => carritoItemStyles.media(theme)}
       />
 
-      {/* Info producto */}
+      {/* Info */}
       <CardContent sx={carritoItemStyles.content}>
         <Box>
           <Typography variant="h6" fontWeight="bold" gutterBottom>
             {it.producto?.nombre}
           </Typography>
+
           <Typography
             variant="body2"
             color="text.secondary"
@@ -51,35 +85,36 @@ export default function CarritoItem({
           </Typography>
         </Box>
 
-        {/* Precio + Stock */}
+        {/* Chips */}
         <Box sx={{ display: "flex", gap: 1, flexWrap: "wrap" }}>
           <Chip
             icon={<MonetizationOnIcon />}
-            label={calcularSubtotal(it).toFixed(2)}
+            label={`$${subtotal}`}
             color="success"
             sx={carritoItemStyles.chipSubtotal}
           />
+
           <Chip
-            label={`Stock: ${stock} unidades`}
-            color={stock > 0 ? "info" : "default"}
+            label={
+              stock > 0 ? `Stock: ${stock}` : "Sin stock"
+            }
+            color={stock > 0 ? "info" : "error"}
             sx={carritoItemStyles.chipStock}
           />
         </Box>
       </CardContent>
 
-      {/* Controles cantidad + eliminar */}
+      {/* Controles */}
       <Box sx={carritoItemStyles.controlesWrapper}>
         <Box sx={carritoItemStyles.cantidadWrapper}>
-          {/* Botón restar */}
           <IconButton
-            onClick={() => decrementar(it)}
-            disabled={it.cantidad <= 1}
+            onClick={handleDecrementar}
+            disabled={it.cantidad <= 1 || loading}
             sx={carritoItemStyles.botonCantidad}
           >
             <RemoveIcon />
           </IconButton>
 
-          {/* Input cantidad */}
           <TextField
             type="number"
             size="small"
@@ -88,7 +123,6 @@ export default function CarritoItem({
             onChange={(e) => {
               const value = e.target.value;
 
-              // Si está vacío → resetear a 1
               if (value === "") {
                 setCantidad(it.id, 1);
                 return;
@@ -99,34 +133,36 @@ export default function CarritoItem({
               if (nuevaCantidad >= 1 && nuevaCantidad <= stock) {
                 setCantidad(it.id, nuevaCantidad);
               } else if (nuevaCantidad > stock) {
-                toast.warning(`No puedes pedir más de ${stock} unidades`);
+                toast.warning(`Máximo disponible: ${stock}`);
                 setCantidad(it.id, stock);
               } else {
-                // Si es menor a 1
                 setCantidad(it.id, 1);
               }
             }}
             sx={carritoItemStyles.cantidadInput}
           />
 
-          {/* Botón sumar */}
           <IconButton
-            onClick={() => incrementar(it)}
-            disabled={it.cantidad >= stock}
+            onClick={handleIncrementar}
+            disabled={it.cantidad >= stock || loading}
             sx={carritoItemStyles.botonCantidad}
           >
             <AddIcon />
           </IconButton>
         </Box>
 
-        {/* Botón eliminar */}
-        <IconButton
-          onClick={() => eliminarItem(it.id)}
-          sx={carritoItemStyles.botonEliminar}
-        >
-          <DeleteIcon />
-        </IconButton>
+        {/* Eliminar */}
+        <Tooltip title="Eliminar producto">
+          <IconButton
+            onClick={() => eliminarItem(it.id)}
+            sx={carritoItemStyles.botonEliminar}
+          >
+            {loading ? <CircularProgress size={20} /> : <DeleteIcon />}
+          </IconButton>
+        </Tooltip>
       </Box>
     </Card>
   );
 }
+
+export default React.memo(CarritoItem);
