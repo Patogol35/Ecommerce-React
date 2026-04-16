@@ -13,6 +13,8 @@ import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
 
+  const imagenes = producto.imagenes || [producto.imagen];
+
   return (
     <Dialog
       open={open}
@@ -22,16 +24,24 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       sx={detalleModalStyles.dialog}
       PaperProps={{ sx: detalleModalStyles.dialogPaper }}
     >
+      {/* BOTÓN CERRAR */}
       <IconButton onClick={onClose} sx={detalleModalStyles.botonCerrar}>
         <CloseIcon />
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* Imagen o slider */}
-        {(producto.imagenes || [producto.imagen]).length > 1 ? (
-          <Box sx={{ width: "100%", maxWidth: 600 }}>
+        {/* 🔥 SLIDER PRO */}
+        {imagenes.length > 1 ? (
+          <Box
+            sx={{
+              width: "100%",
+              maxWidth: 600,
+              ...detalleModalStyles.sliderGlobal,
+              ...detalleModalStyles.dots,
+            }}
+          >
             <Slider {...sliderSettings}>
-              {(producto.imagenes || [producto.imagen]).map((img, i) => (
+              {imagenes.map((img, i) => (
                 <Box
                   key={i}
                   sx={detalleModalStyles.sliderBox}
@@ -63,7 +73,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
           </Box>
         )}
 
-        {/* Descripción + chip */}
+        {/* INFO */}
         <Box sx={{ textAlign: "center", maxWidth: 700 }}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             {producto.nombre}
