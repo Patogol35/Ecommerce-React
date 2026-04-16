@@ -8,20 +8,16 @@ import {
 } from "@mui/material";
 import Slider from "react-slick";
 import CloseIcon from "@mui/icons-material/Close";
-
 import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
-import { getImagenesProducto } from "../utils/getImagenesProducto";
 
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
-
-  const imagenes = getImagenesProducto(producto);
 
   return (
     <Dialog
       open={open}
       onClose={onClose}
-      maxWidth="sm" // 👈 más compacto
+      maxWidth="md"
       fullWidth
       sx={detalleModalStyles.dialog}
       PaperProps={{ sx: detalleModalStyles.dialogPaper }}
@@ -30,45 +26,46 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
         <CloseIcon />
       </IconButton>
 
-      <Stack spacing={2}>
-
-        {/* 🔥 IMAGEN / SLIDER LIMPIO */}
-        <Box sx={detalleModalStyles.sliderContainer}>
-          {imagenes.length > 1 ? (
-            <Slider {...sliderSettings} key={producto.id}>
-              {imagenes.map((img, i) => (
+      <Stack spacing={3} alignItems="center">
+        {/* Imagen o slider */}
+        {(producto.imagenes || [producto.imagen]).length > 1 ? (
+          <Box sx={{ width: "100%", maxWidth: 600 }}>
+            <Slider {...sliderSettings}>
+              {(producto.imagenes || [producto.imagen]).map((img, i) => (
                 <Box
                   key={i}
-                  onClick={() => setLightbox(img)}
                   sx={detalleModalStyles.sliderBox}
+                  onClick={() => setLightbox(img)}
                 >
                   <Box
                     component="img"
                     src={img}
                     alt={producto.nombre}
+                    loading="lazy"
                     sx={detalleModalStyles.imagen}
                   />
                 </Box>
               ))}
             </Slider>
-          ) : (
+          </Box>
+        ) : (
+          <Box
+            sx={detalleModalStyles.sliderBox}
+            onClick={() => setLightbox(producto.imagen)}
+          >
             <Box
-              onClick={() => setLightbox(imagenes[0])}
-              sx={detalleModalStyles.sliderBox}
-            >
-              <Box
-                component="img"
-                src={imagenes[0]}
-                alt={producto.nombre}
-                sx={detalleModalStyles.imagen}
-              />
-            </Box>
-          )}
-        </Box>
+              component="img"
+              src={producto.imagen}
+              alt={producto.nombre}
+              loading="lazy"
+              sx={detalleModalStyles.imagen}
+            />
+          </Box>
+        )}
 
-        {/* 🔥 INFO (SIEMPRE VISIBLE) */}
-        <Box sx={detalleModalStyles.infoBox}>
-          <Typography variant="h6" fontWeight="bold">
+        {/* Descripción + chip */}
+        <Box sx={{ textAlign: "center", maxWidth: 700 }}>
+          <Typography variant="h5" fontWeight="bold" gutterBottom>
             {producto.nombre}
           </Typography>
 
@@ -76,7 +73,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
             label={producto.stock > 0 ? "En stock" : "Agotado"}
             color={producto.stock > 0 ? "success" : "error"}
             variant="outlined"
-            sx={detalleModalStyles.stockChip}
+            sx={{ ...detalleModalStyles.stockChip, mb: 2 }}
           />
 
           <Typography sx={detalleModalStyles.descripcion}>
