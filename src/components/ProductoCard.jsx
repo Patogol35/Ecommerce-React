@@ -12,12 +12,15 @@ import {
   Box,
   Divider,
   Stack,
+  IconButton,
 } from "@mui/material";
 
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import {
   cardSx,
@@ -37,11 +40,24 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // 👇 Estado hover
-  const [hover, setHover] = useState(false);
+  // 👇 Carrusel index
+  const [index, setIndex] = useState(0);
 
-  // 👇 Imagen extra desde el FRONT (sin backend)
-  const imagenExtra = `/extras/${producto.id}-2.jpg`;
+  // 👇 Imágenes (base + extra)
+  const imagenes = [
+    producto.imagen,
+    `/extras/${producto.id}-2.jpg`,
+  ];
+
+  const next = () => {
+    setIndex((prev) => (prev + 1) % imagenes.length);
+  };
+
+  const prev = () => {
+    setIndex((prev) =>
+      prev === 0 ? imagenes.length - 1 : prev - 1
+    );
+  };
 
   const onAdd = async () => {
     if (!isAuthenticated) {
@@ -65,19 +81,56 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* Imagen */}
-      <Box
-        sx={imagenBoxSx}
-        onMouseEnter={() => setHover(true)}
-        onMouseLeave={() => setHover(false)}
-      >
+      {/* Imagen Carrusel */}
+      <Box sx={{ ...imagenBoxSx, position: "relative" }}>
         <Box
           component="img"
-          src={hover ? imagenExtra : producto.imagen}
+          src={imagenes[index]}
           alt={producto.nombre}
           sx={imagenSx}
+          onError={(e) => {
+            e.target.src = producto.imagen;
+          }}
         />
 
+        {/* Flechas */}
+        {imagenes.length > 1 && (
+          <>
+            <IconButton
+              size="small"
+              onClick={prev}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                left: 5,
+                transform: "translateY(-50%)",
+                bgcolor: "rgba(0,0,0,0.4)",
+                color: "#fff",
+                "&:hover": { bgcolor: "rgba(0,0,0,0.6)" },
+              }}
+            >
+              <ArrowBackIosNewIcon fontSize="small" />
+            </IconButton>
+
+            <IconButton
+              size="small"
+              onClick={next}
+              sx={{
+                position: "absolute",
+                top: "50%",
+                right: 5,
+                transform: "translateY(-50%)",
+                bgcolor: "rgba(0,0,0,0.4)",
+                color: "#fff",
+                "&:hover": { bgcolor: "rgba(0,0,0,0.6)" },
+              }}
+            >
+              <ArrowForwardIosIcon fontSize="small" />
+            </IconButton>
+          </>
+        )}
+
+        {/* Chip nuevo */}
         {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
