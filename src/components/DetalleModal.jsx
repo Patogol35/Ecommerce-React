@@ -8,12 +8,28 @@ import {
 } from "@mui/material";
 import Slider from "react-slick";
 import CloseIcon from "@mui/icons-material/Close";
-import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 
-export default function DetalleModal({ producto, open, onClose, setLightbox }) {
+import detalleModalStyles, {
+  sliderSettings,
+} from "./DetalleModal.styles";
+
+import { getImagenesProducto } from "../utils/getImagenesProducto";
+
+export default function DetalleModal({
+  producto,
+  open,
+  onClose,
+  setLightbox,
+}) {
   if (!producto) return null;
 
-  const imagenes = producto.imagenes || [producto.imagen];
+  // 🔥 FUENTE ÚNICA DE IMÁGENES (backend + frontend fallback)
+  let imagenes = getImagenesProducto(producto);
+
+  // 🛡 fallback por si el util no trae nada
+  if (!imagenes || imagenes.length === 0) {
+    imagenes = producto.imagenes || [producto.imagen];
+  }
 
   return (
     <Dialog
@@ -24,13 +40,13 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       sx={detalleModalStyles.dialog}
       PaperProps={{ sx: detalleModalStyles.dialogPaper }}
     >
-      {/* BOTÓN CERRAR */}
+      {/* ❌ BOTÓN CERRAR */}
       <IconButton onClick={onClose} sx={detalleModalStyles.botonCerrar}>
         <CloseIcon />
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* 🔥 SLIDER PRO */}
+        {/* 🔥 SLIDER */}
         {imagenes.length > 1 ? (
           <Box
             sx={{
@@ -45,14 +61,18 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
                 <Box
                   key={i}
                   sx={detalleModalStyles.sliderBox}
-                  onClick={() => setLightbox(img)}
+                  onClick={() => setLightbox?.(img)}
                 >
                   <Box
                     component="img"
                     src={img}
-                    alt={producto.nombre}
+                    alt={`${producto.nombre}-${i}`}
                     loading="lazy"
                     sx={detalleModalStyles.imagen}
+                    onError={(e) => {
+                      e.target.src =
+                        "https://via.placeholder.com/400x300?text=Sin+imagen";
+                    }}
                   />
                 </Box>
               ))}
@@ -61,19 +81,23 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
         ) : (
           <Box
             sx={detalleModalStyles.sliderBox}
-            onClick={() => setLightbox(producto.imagen)}
+            onClick={() => setLightbox?.(imagenes[0])}
           >
             <Box
               component="img"
-              src={producto.imagen}
+              src={imagenes[0]}
               alt={producto.nombre}
               loading="lazy"
               sx={detalleModalStyles.imagen}
+              onError={(e) => {
+                e.target.src =
+                  "https://via.placeholder.com/400x300?text=Sin+imagen";
+              }}
             />
           </Box>
         )}
 
-        {/* INFO */}
+        {/* 📦 INFO */}
         <Box sx={{ textAlign: "center", maxWidth: 700 }}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             {producto.nombre}
@@ -87,7 +111,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
           />
 
           <Typography sx={detalleModalStyles.descripcion}>
-            {producto.descripcion}
+            {producto.descripcion || "Sin descripción disponible"}
           </Typography>
         </Box>
       </Stack>
