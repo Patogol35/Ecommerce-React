@@ -1,9 +1,8 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
 import { toast } from "react-toastify";
-import { useState } from "react"; // 👈 agregado
-
 import {
   Card,
   Typography,
@@ -12,15 +11,14 @@ import {
   Box,
   Divider,
   Stack,
-  IconButton, // 👈 agregado
+  IconButton,
 } from "@mui/material";
-
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew"; // 👈 agregado
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos"; // 👈 agregado
+import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
+import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import {
   cardSx,
@@ -40,23 +38,18 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // 👇 estado carrusel
+  // 🧠 IMÁGENES (BD + extra del front)
+  const imagenExtra = `/imagenes/productos/${producto.id}.jpg`; // opcional dinámico
+  const imagenes = [producto.imagen, imagenExtra];
+
   const [index, setIndex] = useState(0);
 
-  // 👇 imágenes (base + extra)
-  const imagenes = [
-    producto.imagen,
-    `/extras/${producto.id}-2.jpg`,
-  ];
-
-  const next = () => {
+  const nextImage = () => {
     setIndex((prev) => (prev + 1) % imagenes.length);
   };
 
-  const prev = () => {
-    setIndex((prev) =>
-      prev === 0 ? imagenes.length - 1 : prev - 1
-    );
+  const prevImage = () => {
+    setIndex((prev) => (prev - 1 + imagenes.length) % imagenes.length);
   };
 
   const onAdd = async () => {
@@ -81,49 +74,47 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* Imagen */}
+      {/* Imagen + carrusel */}
       <Box sx={{ ...imagenBoxSx, position: "relative" }}>
         <Box
           component="img"
-          src={imagenes[index]} // 👈 cambio clave
+          src={imagenes[index]}
           alt={producto.nombre}
           sx={imagenSx}
-          onError={(e) => {
-            e.target.src = producto.imagen;
-          }}
+          onClick={nextImage} // 👈 click cambia imagen
         />
 
-        {/* Flechas */}
+        {/* Botón izquierda */}
         <IconButton
-          size="small"
-          onClick={prev}
+          onClick={prevImage}
           sx={{
             position: "absolute",
             top: "50%",
             left: 5,
             transform: "translateY(-50%)",
-            bgcolor: "rgba(0,0,0,0.4)",
+            backgroundColor: "rgba(0,0,0,0.3)",
             color: "#fff",
           }}
         >
           <ArrowBackIosNewIcon fontSize="small" />
         </IconButton>
 
+        {/* Botón derecha */}
         <IconButton
-          size="small"
-          onClick={next}
+          onClick={nextImage}
           sx={{
             position: "absolute",
             top: "50%",
             right: 5,
             transform: "translateY(-50%)",
-            bgcolor: "rgba(0,0,0,0.4)",
+            backgroundColor: "rgba(0,0,0,0.3)",
             color: "#fff",
           }}
         >
           <ArrowForwardIosIcon fontSize="small" />
         </IconButton>
 
+        {/* Chip Nuevo */}
         {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
