@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
@@ -11,19 +10,16 @@ import {
   Box,
   Divider,
   Stack,
-  IconButton,
 } from "@mui/material";
-
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
 import MonetizationOnIcon from "@mui/icons-material/MonetizationOn";
-import ArrowBackIosNewIcon from "@mui/icons-material/ArrowBackIosNew";
-import ArrowForwardIosIcon from "@mui/icons-material/ArrowForwardIos";
 
 import {
   cardSx,
   imagenBoxSx,
+  imagenSx,
   chipNuevoSx,
   contenidoSx,
   tituloSx,
@@ -33,34 +29,10 @@ import {
   botonDetallesSx,
 } from "./ProductoCard.styles";
 
-import { getImagenesProducto } from "../utils/getImagenesProducto";
-
 export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { isAuthenticated } = useAuth();
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
-
-  const imagenes = getImagenesProducto(producto);
-  const [index, setIndex] = useState(0);
-
-  // 🔥 AUTOPLAY
-  useEffect(() => {
-    if (imagenes.length <= 1) return;
-
-    const interval = setInterval(() => {
-      setIndex((prev) => (prev + 1) % imagenes.length);
-    }, 3000);
-
-    return () => clearInterval(interval);
-  }, [imagenes.length]);
-
-  const nextImage = () => {
-    setIndex((prev) => (prev + 1) % imagenes.length);
-  };
-
-  const prevImage = () => {
-    setIndex((prev) => (prev - 1 + imagenes.length) % imagenes.length);
-  };
 
   const onAdd = async () => {
     if (!isAuthenticated) {
@@ -84,95 +56,15 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* IMAGEN */}
+      {/* Imagen */}
       <Box sx={imagenBoxSx}>
         <Box
           component="img"
-          src={imagenes[index]}
+          src={producto.imagen}
           alt={producto.nombre}
-          key={index}
-          sx={{
-            width: "100%",
-            height: "100%",
-            objectFit: "contain",
-            transition: "transform 0.4s ease, opacity 0.4s ease",
-          }}
-          onClick={nextImage}
+          sx={imagenSx}
         />
 
-        {/* FLECHAS */}
-        {imagenes.length > 1 && (
-          <>
-            <IconButton
-              onClick={prevImage}
-              sx={{
-                position: "absolute",
-                top: "50%",
-                left: 10,
-                transform: "translateY(-50%)",
-                bgcolor: "rgba(0,0,0,0.45)",
-                color: "#fff",
-                backdropFilter: "blur(6px)",
-                "&:hover": {
-                  bgcolor: "rgba(0,0,0,0.7)",
-                  transform: "translateY(-50%) scale(1.1)",
-                },
-              }}
-            >
-              <ArrowBackIosNewIcon fontSize="small" />
-            </IconButton>
-
-            <IconButton
-              onClick={nextImage}
-              sx={{
-                position: "absolute",
-                top: "50%",
-                right: 10,
-                transform: "translateY(-50%)",
-                bgcolor: "rgba(0,0,0,0.45)",
-                color: "#fff",
-                backdropFilter: "blur(6px)",
-                "&:hover": {
-                  bgcolor: "rgba(0,0,0,0.7)",
-                  transform: "translateY(-50%) scale(1.1)",
-                },
-              }}
-            >
-              <ArrowForwardIosIcon fontSize="small" />
-            </IconButton>
-          </>
-        )}
-
-        {/* DOTS */}
-        {imagenes.length > 1 && (
-          <Box
-            sx={{
-              position: "absolute",
-              bottom: 10,
-              width: "100%",
-              display: "flex",
-              justifyContent: "center",
-              gap: 1,
-            }}
-          >
-            {imagenes.map((_, i) => (
-              <Box
-                key={i}
-                onClick={() => setIndex(i)}
-                sx={{
-                  width: i === index ? 10 : 7,
-                  height: i === index ? 10 : 7,
-                  borderRadius: "50%",
-                  bgcolor: i === index ? "#fff" : "rgba(255,255,255,0.5)",
-                  cursor: "pointer",
-                  transition: "all 0.3s ease",
-                }}
-              />
-            ))}
-          </Box>
-        )}
-
-        {/* CHIP */}
         {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
@@ -184,13 +76,19 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         )}
       </Box>
 
-      {/* CONTENIDO */}
+      {/* Contenido */}
       <Box sx={contenidoSx}>
         <Typography variant="h6" fontWeight="bold" sx={tituloSx}>
           {producto.nombre}
         </Typography>
 
-        <Stack direction="row" alignItems="center" spacing={0.5} sx={precioStackSx}>
+        {/* Precio */}
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={0.5}
+          sx={precioStackSx}
+        >
           <MonetizationOnIcon color="primary" />
           <Typography variant="h6" color="primary" fontWeight="bold">
             {producto.precio}
@@ -199,6 +97,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
         <Divider sx={dividerSx} />
 
+        {/* Botones */}
         <Stack spacing={1}>
           <Button
             variant="contained"
@@ -232,4 +131,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-                  }
+}
