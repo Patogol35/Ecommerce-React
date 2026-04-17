@@ -1,9 +1,8 @@
+import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
 import { toast } from "react-toastify";
-import { useState } from "react";
-
 import {
   Card,
   Typography,
@@ -13,7 +12,6 @@ import {
   Divider,
   Stack,
 } from "@mui/material";
-
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
@@ -37,30 +35,14 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
+  // ✅ Estado del carrusel
   const [index, setIndex] = useState(0);
 
-  // 🔥 NORMALIZADOR REAL (aquí estaba el problema)
-  const imagenes = (() => {
-    if (!producto) return [];
-
-    // Django: [{imagen: "..."}]
-    if (Array.isArray(producto.imagenes)) {
-      if (producto.imagenes.length === 0) return [];
-
-      if (typeof producto.imagenes[0] === "object") {
-        return producto.imagenes.map((img) => img.imagen);
-      }
-
-      return producto.imagenes;
-    }
-
-    // Imagen única
-    if (producto.imagen) {
-      return [producto.imagen];
-    }
-
-    return [];
-  })();
+  // ✅ Unir imagen principal + adicionales
+  const imagenes = [
+    producto.imagen,
+    ...(producto.imagenes?.map((img) => img.imagen) || []),
+  ].filter(Boolean); // evita null/undefined
 
   const onAdd = async () => {
     if (!isAuthenticated) {
@@ -82,68 +64,66 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
     }
   };
 
+  // navegación
+  const prevImage = () => {
+    setIndex((prev) =>
+      prev === 0 ? imagenes.length - 1 : prev - 1
+    );
+  };
+
+  const nextImage = () => {
+    setIndex((prev) =>
+      prev === imagenes.length - 1 ? 0 : prev + 1
+    );
+  };
+
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* IMAGEN */}
+      {/* Imagen */}
       <Box sx={{ ...imagenBoxSx, position: "relative" }}>
         <Box
           component="img"
-          src={imagenes[index] || ""}
-          alt={producto?.nombre}
+          src={imagenes[index] || producto.imagen}
+          alt={producto.nombre}
           sx={imagenSx}
         />
 
-        {/* FLECHAS */}
+        {/* Flechas solo si hay varias imágenes */}
         {imagenes.length > 1 && (
           <>
-            <Box
-              onClick={() =>
-                setIndex((prev) =>
-                  prev === 0 ? imagenes.length - 1 : prev - 1
-                )
-              }
+            <Button
+              size="small"
+              onClick={prevImage}
               sx={{
                 position: "absolute",
-                left: 8,
-                top: "50%",
-                transform: "translateY(-50%)",
+                left: 5,
+                top: "45%",
+                minWidth: "30px",
                 background: "rgba(0,0,0,0.4)",
                 color: "#fff",
-                px: 1,
-                borderRadius: 1,
-                cursor: "pointer",
-                zIndex: 2,
               }}
             >
               ◀
-            </Box>
+            </Button>
 
-            <Box
-              onClick={() =>
-                setIndex((prev) =>
-                  prev === imagenes.length - 1 ? 0 : prev + 1
-                )
-              }
+            <Button
+              size="small"
+              onClick={nextImage}
               sx={{
                 position: "absolute",
-                right: 8,
-                top: "50%",
-                transform: "translateY(-50%)",
+                right: 5,
+                top: "45%",
+                minWidth: "30px",
                 background: "rgba(0,0,0,0.4)",
                 color: "#fff",
-                px: 1,
-                borderRadius: 1,
-                cursor: "pointer",
-                zIndex: 2,
               }}
             >
               ▶
-            </Box>
+            </Button>
           </>
         )}
 
-        {/* BADGE */}
-        {producto?.nuevo && (
+        {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
             label="Nuevo"
@@ -154,12 +134,13 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         )}
       </Box>
 
-      {/* CONTENIDO */}
+      {/* Contenido */}
       <Box sx={contenidoSx}>
         <Typography variant="h6" fontWeight="bold" sx={tituloSx}>
-          {producto?.nombre}
+          {producto.nombre}
         </Typography>
 
+        {/* Precio */}
         <Stack
           direction="row"
           alignItems="center"
@@ -168,23 +149,24 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         >
           <MonetizationOnIcon color="primary" />
           <Typography variant="h6" color="primary" fontWeight="bold">
-            {producto?.precio}
+            {producto.precio}
           </Typography>
         </Stack>
 
         <Divider sx={dividerSx} />
 
+        {/* Botones */}
         <Stack spacing={1}>
           <Button
             variant="contained"
             color="primary"
             fullWidth
             startIcon={<AddShoppingCartIcon />}
-            sx={botonAgregarSx(producto?.stock)}
+            sx={botonAgregarSx(producto.stock)}
             onClick={onAdd}
-            disabled={producto?.stock === 0}
+            disabled={producto.stock === 0}
           >
-            {producto?.stock > 0 ? "Agregar al carrito" : "Agotado"}
+            {producto.stock > 0 ? "Agregar al carrito" : "Agotado"}
           </Button>
 
           <Button
@@ -207,4 +189,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-          }
+}
