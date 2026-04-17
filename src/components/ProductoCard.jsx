@@ -35,7 +35,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // ✅ SOLO lógica (no tocamos estilos)
+  // Carrusel
   const [index, setIndex] = useState(0);
 
   const imagenes = [
@@ -64,7 +64,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   };
 
   const prevImage = (e) => {
-    e.stopPropagation(); // 🔥 evita que dispare click del card
+    e.stopPropagation();
     setIndex((prev) =>
       prev === 0 ? imagenes.length - 1 : prev - 1
     );
@@ -85,7 +85,12 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           component="img"
           src={imagenes[index] || producto.imagen}
           alt={producto.nombre}
-          sx={imagenSx} // ✅ intacto como tú lo tenías
+          sx={{
+            ...imagenSx,
+            maxWidth: "100%",
+            maxHeight: "100%",
+            objectFit: "contain", // 🔥 mantiene proporción sin agrandar
+          }}
         />
 
         {/* Flechas */}
@@ -193,4 +198,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-          }
+}
