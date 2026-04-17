@@ -2,6 +2,8 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
 import { toast } from "react-toastify";
+import { useState } from "react";
+
 import {
   Card,
   Typography,
@@ -11,6 +13,7 @@ import {
   Divider,
   Stack,
 } from "@mui/material";
+
 import AddShoppingCartIcon from "@mui/icons-material/AddShoppingCart";
 import InfoIcon from "@mui/icons-material/Info";
 import StarIcon from "@mui/icons-material/Star";
@@ -34,6 +37,13 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
+  // 🔥 IMAGEN ACTIVA
+  const [imagenActiva, setImagenActiva] = useState(
+    producto.imagenes?.length > 0
+      ? producto.imagenes[0].imagen
+      : producto.imagen
+  );
+
   const onAdd = async () => {
     if (!isAuthenticated) {
       toast.warn("Debes iniciar sesión para agregar productos");
@@ -56,14 +66,63 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* Imagen */}
+      {/* 🔥 GALERÍA */}
       <Box sx={imagenBoxSx}>
+        {/* Imagen principal */}
         <Box
           component="img"
-          src={producto.imagen}
+          src={imagenActiva}
           alt={producto.nombre}
           sx={imagenSx}
         />
+
+        {/* Miniaturas */}
+        <Box
+          sx={{
+            position: "absolute",
+            bottom: 5,
+            display: "flex",
+            gap: 1,
+            justifyContent: "center",
+            width: "100%",
+          }}
+        >
+          {/* Imagen principal */}
+          <Box
+            component="img"
+            src={producto.imagen}
+            onClick={() => setImagenActiva(producto.imagen)}
+            sx={{
+              width: 40,
+              height: 40,
+              objectFit: "cover",
+              borderRadius: 1,
+              cursor: "pointer",
+              border: imagenActiva === producto.imagen ? "2px solid #1976d2" : "1px solid #ccc",
+            }}
+          />
+
+          {/* Imágenes extra */}
+          {producto.imagenes?.map((img, i) => (
+            <Box
+              key={i}
+              component="img"
+              src={img.imagen}
+              onClick={() => setImagenActiva(img.imagen)}
+              sx={{
+                width: 40,
+                height: 40,
+                objectFit: "cover",
+                borderRadius: 1,
+                cursor: "pointer",
+                border:
+                  imagenActiva === img.imagen
+                    ? "2px solid #1976d2"
+                    : "1px solid #ccc",
+              }}
+            />
+          ))}
+        </Box>
 
         {producto.nuevo && (
           <Chip
@@ -76,19 +135,13 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         )}
       </Box>
 
-      {/* Contenido */}
+      {/* CONTENIDO */}
       <Box sx={contenidoSx}>
         <Typography variant="h6" fontWeight="bold" sx={tituloSx}>
           {producto.nombre}
         </Typography>
 
-        {/* Precio */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={0.5}
-          sx={precioStackSx}
-        >
+        <Stack direction="row" alignItems="center" spacing={0.5} sx={precioStackSx}>
           <MonetizationOnIcon color="primary" />
           <Typography variant="h6" color="primary" fontWeight="bold">
             {producto.precio}
@@ -97,7 +150,6 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
         <Divider sx={dividerSx} />
 
-        {/* Botones */}
         <Stack spacing={1}>
           <Button
             variant="contained"
@@ -131,4 +183,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-}
+          }
