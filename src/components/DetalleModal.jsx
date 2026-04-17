@@ -1,4 +1,4 @@
-import {
+    import {
   Box,
   Typography,
   Stack,
@@ -13,10 +13,19 @@ import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
 
-  // ✅ FIX AQUÍ
+  // 🔥 BASE URL (ajusta si usas otro dominio)
+  const BASE_URL = "http://127.0.0.1:8000";
+
+  // 🔥 NORMALIZAR IMÁGENES
   const imagenes = [
     producto.imagen,
-    ...(producto.imagenes?.map((img) => img.imagen) || []),
+    ...(producto.imagenes?.map((img) =>
+      typeof img === "string"
+        ? img
+        : img.imagen?.startsWith("http")
+        ? img.imagen
+        : BASE_URL + img.imagen
+    ) || []),
   ].filter(Boolean);
 
   return (
@@ -41,7 +50,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
                 <Box
                   key={i}
                   sx={detalleModalStyles.sliderBox}
-                  onClick={() => setLightbox(img)}
+                  onClick={() => setLightbox && setLightbox(img)}
                 >
                   <Box
                     component="img"
@@ -57,11 +66,11 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
         ) : (
           <Box
             sx={detalleModalStyles.sliderBox}
-            onClick={() => setLightbox(producto.imagen)}
+            onClick={() => setLightbox && setLightbox(imagenes[0])}
           >
             <Box
               component="img"
-              src={producto.imagen}
+              src={imagenes[0]}
               alt={producto.nombre}
               loading="lazy"
               sx={detalleModalStyles.imagen}
