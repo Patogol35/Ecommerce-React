@@ -143,7 +143,7 @@ export default function Login() {
       }
 
       login(data.access, data.refresh);
-      toast.success("Bienvenido con Google 🚀");
+      toast.success("Bienvenido con Google");
       navigate("/");
     } catch (error) {
       console.error(error);
