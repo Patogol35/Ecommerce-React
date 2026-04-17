@@ -37,12 +37,12 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // 🔥 IMAGEN ACTIVA
-  const [imagenActiva, setImagenActiva] = useState(
-    producto.imagenes?.length > 0
-      ? producto.imagenes[0].imagen
-      : producto.imagen
-  );
+  // 🔥 NUEVO: manejo de múltiples imágenes
+  const imagenes = producto.imagenes?.length
+    ? producto.imagenes
+    : [producto.imagen];
+
+  const [index, setIndex] = useState(0);
 
   const onAdd = async () => {
     if (!isAuthenticated) {
@@ -66,64 +66,61 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* 🔥 GALERÍA */}
-      <Box sx={imagenBoxSx}>
-        {/* Imagen principal */}
+      {/* 🔥 IMAGEN CON SLIDER */}
+      <Box sx={{ ...imagenBoxSx, position: "relative" }}>
         <Box
           component="img"
-          src={imagenActiva}
+          src={imagenes[index]}
           alt={producto.nombre}
           sx={imagenSx}
         />
 
-        {/* Miniaturas */}
-        <Box
-          sx={{
-            position: "absolute",
-            bottom: 5,
-            display: "flex",
-            gap: 1,
-            justifyContent: "center",
-            width: "100%",
-          }}
-        >
-          {/* Imagen principal */}
-          <Box
-            component="img"
-            src={producto.imagen}
-            onClick={() => setImagenActiva(producto.imagen)}
-            sx={{
-              width: 40,
-              height: 40,
-              objectFit: "cover",
-              borderRadius: 1,
-              cursor: "pointer",
-              border: imagenActiva === producto.imagen ? "2px solid #1976d2" : "1px solid #ccc",
-            }}
-          />
-
-          {/* Imágenes extra */}
-          {producto.imagenes?.map((img, i) => (
-            <Box
-              key={i}
-              component="img"
-              src={img.imagen}
-              onClick={() => setImagenActiva(img.imagen)}
+        {/* Flechas */}
+        {imagenes.length > 1 && (
+          <>
+            <Button
+              size="small"
+              onClick={() =>
+                setIndex((prev) =>
+                  prev === 0 ? imagenes.length - 1 : prev - 1
+                )
+              }
               sx={{
-                width: 40,
-                height: 40,
-                objectFit: "cover",
-                borderRadius: 1,
-                cursor: "pointer",
-                border:
-                  imagenActiva === img.imagen
-                    ? "2px solid #1976d2"
-                    : "1px solid #ccc",
+                position: "absolute",
+                left: 5,
+                top: "50%",
+                transform: "translateY(-50%)",
+                minWidth: "30px",
+                background: "rgba(0,0,0,0.4)",
+                color: "#fff",
               }}
-            />
-          ))}
-        </Box>
+            >
+              ◀
+            </Button>
 
+            <Button
+              size="small"
+              onClick={() =>
+                setIndex((prev) =>
+                  prev === imagenes.length - 1 ? 0 : prev + 1
+                )
+              }
+              sx={{
+                position: "absolute",
+                right: 5,
+                top: "50%",
+                transform: "translateY(-50%)",
+                minWidth: "30px",
+                background: "rgba(0,0,0,0.4)",
+                color: "#fff",
+              }}
+            >
+              ▶
+            </Button>
+          </>
+        )}
+
+        {/* Badge nuevo */}
         {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
@@ -135,13 +132,42 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         )}
       </Box>
 
+      {/* 🔥 MINIATURAS */}
+      {imagenes.length > 1 && (
+        <Stack direction="row" spacing={1} mt={1} px={1}>
+          {imagenes.map((img, i) => (
+            <Box
+              key={i}
+              component="img"
+              src={img}
+              onClick={() => setIndex(i)}
+              sx={{
+                width: 45,
+                height: 45,
+                objectFit: "cover",
+                cursor: "pointer",
+                border:
+                  index === i ? "2px solid #1976d2" : "1px solid #ccc",
+                borderRadius: "6px",
+              }}
+            />
+          ))}
+        </Stack>
+      )}
+
       {/* CONTENIDO */}
       <Box sx={contenidoSx}>
         <Typography variant="h6" fontWeight="bold" sx={tituloSx}>
           {producto.nombre}
         </Typography>
 
-        <Stack direction="row" alignItems="center" spacing={0.5} sx={precioStackSx}>
+        {/* Precio */}
+        <Stack
+          direction="row"
+          alignItems="center"
+          spacing={0.5}
+          sx={precioStackSx}
+        >
           <MonetizationOnIcon color="primary" />
           <Typography variant="h6" color="primary" fontWeight="bold">
             {producto.precio}
@@ -150,6 +176,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
         <Divider sx={dividerSx} />
 
+        {/* BOTONES */}
         <Stack spacing={1}>
           <Button
             variant="contained"
@@ -183,4 +210,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-          }
+}
