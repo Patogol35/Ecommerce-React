@@ -7,28 +7,46 @@ import {
   Dialog,
 } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import detalleModalStyles from "./DetalleModal.styles";
 
-export default function DetalleModal({ producto, open, onClose, setLightbox }) {
-  const [imagenActiva, setImagenActiva] = useState(null);
-
+export default function DetalleModal({
+  producto,
+  open,
+  onClose,
+  setLightbox,
+}) {
+  // 🔒 Guardas anti-crash
   if (!producto) return null;
 
-  // 🔥 Unificar imágenes (string + objeto)
-  const imagenes = [
-    producto.imagen,
-    ...(producto.imagenes || []),
-  ]
-    .map((img) => (typeof img === "string" ? img : img?.imagen))
-    .filter(Boolean);
+  // 🔥 Normalizar imágenes (soporta string y { imagen })
+  const imagenes = useMemo(() => {
+    const base = [
+      producto.imagen,
+      ...(Array.isArray(producto.imagenes) ? producto.imagenes : []),
+    ];
 
-  // 🔥 Reset imagen al abrir modal
+    return base
+      .map((img) => (typeof img === "string" ? img : img?.imagen))
+      .filter((url) => typeof url === "string" && url.length > 0);
+  }, [producto]);
+
+  // 🔥 Imagen activa segura
+  const [imagenActiva, setImagenActiva] = useState(
+    imagenes[0] || producto.imagen || ""
+  );
+
+  // 🔄 Reset al abrir / cambiar producto
   useEffect(() => {
-    if (open && imagenes.length > 0) {
-      setImagenActiva(imagenes[0]);
+    if (open) {
+      const primera = imagenes[0] || producto.imagen || "";
+      setImagenActiva(primera);
     }
-  }, [open, producto]);
+  }, [open, producto, imagenes]);
+
+  // 🔒 Fallback final (evita pantalla blanca)
+  const imagenSegura =
+    imagenActiva || imagenes[0] || producto.imagen || "";
 
   return (
     <Dialog
@@ -49,23 +67,32 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* 🔥 Imagen principal */}
-        <Box
-          sx={detalleModalStyles.sliderBox}
-          onClick={() => setLightbox(imagenActiva)}
-        >
+        {/* 🖼 Imagen principal (SEGURA) */}
+        {imagenSegura ? (
           <Box
-            component="img"
-            src={imagenActiva}
-            alt={producto.nombre}
-            loading="lazy"
-            sx={detalleModalStyles.imagen}
-          />
-        </Box>
+            sx={detalleModalStyles.sliderBox}
+            onClick={() => setLightbox && setLightbox(imagenSegura)}
+          >
+            <Box
+              component="img"
+              src={imagenSegura}
+              alt={producto.nombre || "producto"}
+              loading="lazy"
+              sx={detalleModalStyles.imagen}
+            />
+          </Box>
+        ) : (
+          <Typography>No hay imagen disponible</Typography>
+        )}
 
-        {/* 🔥 Miniaturas (igual que tu card) */}
+        {/* 🔥 Miniaturas */}
         {imagenes.length > 1 && (
-          <Stack direction="row" spacing={1} flexWrap="wrap" justifyContent="center">
+          <Stack
+            direction="row"
+            spacing={1}
+            flexWrap="wrap"
+            justifyContent="center"
+          >
             {imagenes.map((img, i) => (
               <Box
                 key={i}
@@ -80,7 +107,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
                   borderRadius: 1,
                   cursor: "pointer",
                   border:
-                    imagenActiva === img
+                    imagenSegura === img
                       ? "2px solid #1976d2"
                       : "1px solid #777",
                   transition: "all 0.2s",
@@ -93,7 +120,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
           </Stack>
         )}
 
-        {/* Info */}
+        {/* 📝 Info */}
         <Box sx={{ textAlign: "center", maxWidth: 700 }}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             {producto.nombre}
