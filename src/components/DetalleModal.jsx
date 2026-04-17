@@ -13,6 +13,12 @@ import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
 
+  // ✅ FIX AQUÍ
+  const imagenes = [
+    producto.imagen,
+    ...(producto.imagenes?.map((img) => img.imagen) || []),
+  ].filter(Boolean);
+
   return (
     <Dialog
       open={open}
@@ -27,11 +33,11 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* Imagen o slider */}
-        {(producto.imagenes || [producto.imagen]).length > 1 ? (
+        {/* Slider */}
+        {imagenes.length > 1 ? (
           <Box sx={{ width: "100%", maxWidth: 600 }}>
             <Slider {...sliderSettings}>
-              {(producto.imagenes || [producto.imagen]).map((img, i) => (
+              {imagenes.map((img, i) => (
                 <Box
                   key={i}
                   sx={detalleModalStyles.sliderBox}
@@ -63,7 +69,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
           </Box>
         )}
 
-        {/* Descripción + chip */}
+        {/* Info */}
         <Box sx={{ textAlign: "center", maxWidth: 700 }}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             {producto.nombre}
