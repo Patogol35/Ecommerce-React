@@ -16,10 +16,9 @@ export default function DetalleModal({
   onClose,
   setLightbox,
 }) {
-  // 🔒 Guardas anti-crash
   if (!producto) return null;
 
-  // 🔥 Normalizar imágenes (soporta string y { imagen })
+  // 🔥 Normalizar imágenes
   const imagenes = useMemo(() => {
     const base = [
       producto.imagen,
@@ -31,20 +30,16 @@ export default function DetalleModal({
       .filter((url) => typeof url === "string" && url.length > 0);
   }, [producto]);
 
-  // 🔥 Imagen activa segura
   const [imagenActiva, setImagenActiva] = useState(
     imagenes[0] || producto.imagen || ""
   );
 
-  // 🔄 Reset al abrir / cambiar producto
   useEffect(() => {
     if (open) {
-      const primera = imagenes[0] || producto.imagen || "";
-      setImagenActiva(primera);
+      setImagenActiva(imagenes[0] || producto.imagen || "");
     }
   }, [open, producto, imagenes]);
 
-  // 🔒 Fallback final (evita pantalla blanca)
   const imagenSegura =
     imagenActiva || imagenes[0] || producto.imagen || "";
 
@@ -58,7 +53,16 @@ export default function DetalleModal({
       PaperProps={{
         sx: {
           ...detalleModalStyles.dialogPaper,
-          overflow: "visible",
+
+          // 🔥 FIX HORIZONTAL REAL
+          maxHeight: "90vh",
+          overflowY: "auto",
+
+          "@media (orientation: landscape)": {
+            maxHeight: "75vh", // más pequeño en horizontal
+            marginTop: "5vh",
+            marginBottom: "5vh",
+          },
         },
       }}
     >
@@ -66,78 +70,86 @@ export default function DetalleModal({
         <CloseIcon />
       </IconButton>
 
-      <Stack spacing={3} alignItems="center">
-        {/* 🖼 Imagen principal (SEGURA) */}
-        {imagenSegura ? (
-          <Box
-            sx={detalleModalStyles.sliderBox}
-            onClick={() => setLightbox && setLightbox(imagenSegura)}
-          >
+      {/* 🔥 CONTENEDOR SCROLLABLE */}
+      <Box
+        sx={{
+          width: "100%",
+          overflowY: "auto",
+          px: { xs: 1, md: 2 },
+        }}
+      >
+        <Stack spacing={3} alignItems="center">
+          {/* 🖼 Imagen principal */}
+          {imagenSegura ? (
             <Box
-              component="img"
-              src={imagenSegura}
-              alt={producto.nombre || "producto"}
-              loading="lazy"
-              sx={detalleModalStyles.imagen}
-            />
-          </Box>
-        ) : (
-          <Typography>No hay imagen disponible</Typography>
-        )}
-
-        {/* 🔥 Miniaturas */}
-        {imagenes.length > 1 && (
-          <Stack
-            direction="row"
-            spacing={1}
-            flexWrap="wrap"
-            justifyContent="center"
-          >
-            {imagenes.map((img, i) => (
+              sx={{
+                ...detalleModalStyles.sliderBox,
+                height: { xs: 250, md: 350 }, // 🔥 control de altura responsive
+              }}
+              onClick={() => setLightbox && setLightbox(imagenSegura)}
+            >
               <Box
-                key={i}
                 component="img"
-                src={img}
-                alt={`img-${i}`}
-                onClick={() => setImagenActiva(img)}
-                sx={{
-                  width: 60,
-                  height: 60,
-                  objectFit: "cover",
-                  borderRadius: 1,
-                  cursor: "pointer",
-                  border:
-                    imagenSegura === img
-                      ? "2px solid #1976d2"
-                      : "1px solid #777",
-                  transition: "all 0.2s",
-                  "&:hover": {
-                    transform: "scale(1.05)",
-                  },
-                }}
+                src={imagenSegura}
+                alt={producto.nombre}
+                loading="lazy"
+                sx={detalleModalStyles.imagen}
               />
-            ))}
-          </Stack>
-        )}
+            </Box>
+          ) : (
+            <Typography>No hay imagen disponible</Typography>
+          )}
 
-        {/* 📝 Info */}
-        <Box sx={{ textAlign: "center", maxWidth: 700 }}>
-          <Typography variant="h5" fontWeight="bold" gutterBottom>
-            {producto.nombre}
-          </Typography>
+          {/* 🔥 Miniaturas */}
+          {imagenes.length > 1 && (
+            <Stack
+              direction="row"
+              spacing={1}
+              flexWrap="wrap"
+              justifyContent="center"
+            >
+              {imagenes.map((img, i) => (
+                <Box
+                  key={i}
+                  component="img"
+                  src={img}
+                  alt={`img-${i}`}
+                  onClick={() => setImagenActiva(img)}
+                  sx={{
+                    width: 55,
+                    height: 55,
+                    objectFit: "cover",
+                    borderRadius: 1,
+                    cursor: "pointer",
+                    border:
+                      imagenSegura === img
+                        ? "2px solid #1976d2"
+                        : "1px solid #777",
+                  }}
+                />
+              ))}
+            </Stack>
+          )}
 
-          <Chip
-            label={producto.stock > 0 ? "En stock" : "Agotado"}
-            color={producto.stock > 0 ? "success" : "error"}
-            variant="outlined"
-            sx={{ ...detalleModalStyles.stockChip, mb: 2 }}
-          />
+          {/* 📝 Info */}
+          <Box sx={{ textAlign: "center", maxWidth: 700 }}>
+            <Typography variant="h5" fontWeight="bold" gutterBottom>
+              {producto.nombre}
+            </Typography>
 
-          <Typography sx={detalleModalStyles.descripcion}>
-            {producto.descripcion}
-          </Typography>
-        </Box>
-      </Stack>
+            <Chip
+              label={producto.stock > 0 ? "En stock" : "Agotado"}
+              color={producto.stock > 0 ? "success" : "error"}
+              variant="outlined"
+              sx={{ ...detalleModalStyles.stockChip, mb: 2 }}
+            />
+
+            <Typography sx={detalleModalStyles.descripcion}>
+              {producto.descripcion}
+            </Typography>
+          </Box>
+        </Stack>
+      </Box>
     </Dialog>
   );
-}
+    }
