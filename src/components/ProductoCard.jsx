@@ -35,14 +35,14 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // ✅ Estado del carrusel
+  // ✅ Estado carrusel
   const [index, setIndex] = useState(0);
 
-  // ✅ Unir imagen principal + adicionales
+  // ✅ Imágenes (principal + extras)
   const imagenes = [
     producto.imagen,
     ...(producto.imagenes?.map((img) => img.imagen) || []),
-  ].filter(Boolean); // evita null/undefined
+  ].filter(Boolean);
 
   const onAdd = async () => {
     if (!isAuthenticated) {
@@ -64,7 +64,6 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
     }
   };
 
-  // navegación
   const prevImage = () => {
     setIndex((prev) =>
       prev === 0 ? imagenes.length - 1 : prev - 1
@@ -80,15 +79,27 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   return (
     <Card sx={cardSx} elevation={0}>
       {/* Imagen */}
-      <Box sx={{ ...imagenBoxSx, position: "relative" }}>
+      <Box
+        sx={{
+          ...imagenBoxSx,
+          position: "relative",
+          height: 200,        // 🔥 tamaño fijo
+          overflow: "hidden", // 🔥 evita desbordes
+        }}
+      >
         <Box
           component="img"
           src={imagenes[index] || producto.imagen}
           alt={producto.nombre}
-          sx={imagenSx}
+          sx={{
+            ...imagenSx,
+            width: "100%",
+            height: "100%",
+            objectFit: "cover", // 🔥 clave
+          }}
         />
 
-        {/* Flechas solo si hay varias imágenes */}
+        {/* Flechas */}
         {imagenes.length > 1 && (
           <>
             <Button
@@ -189,4 +200,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-}
+        }
