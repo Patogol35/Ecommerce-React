@@ -13,22 +13,6 @@ import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
 
-  const BASE_URL = "http://127.0.0.1:8000";
-
-  // 🔥 NORMALIZAR Y LIMPIAR
-  const imagenes = [
-    producto.imagen,
-    ...(producto.imagenes || []).map((img) =>
-      typeof img === "string"
-        ? img
-        : img.imagen?.startsWith("http")
-        ? img.imagen
-        : BASE_URL + img.imagen
-    ),
-  ]
-    .filter(Boolean)
-    .filter((img) => img !== "null" && img !== "undefined");
-
   return (
     <Dialog
       open={open}
@@ -43,11 +27,11 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* 👇 SOLO USAMOS IMAGENES LIMPIAS */}
-        {imagenes.length > 1 ? (
+        {/* Imagen o slider */}
+        {(producto.imagenes || [producto.imagen]).length > 1 ? (
           <Box sx={{ width: "100%", maxWidth: 600 }}>
             <Slider {...sliderSettings}>
-              {imagenes.map((img, i) => (
+              {(producto.imagenes || [producto.imagen]).map((img, i) => (
                 <Box
                   key={i}
                   sx={detalleModalStyles.sliderBox}
@@ -56,12 +40,9 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
                   <Box
                     component="img"
                     src={img}
-                    alt={`img-${i}`}
+                    alt={producto.nombre}
                     loading="lazy"
                     sx={detalleModalStyles.imagen}
-                    onError={(e) => {
-                      e.target.style.display = "none";
-                    }}
                   />
                 </Box>
               ))}
@@ -70,11 +51,11 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
         ) : (
           <Box
             sx={detalleModalStyles.sliderBox}
-            onClick={() => setLightbox(imagenes[0])}
+            onClick={() => setLightbox(producto.imagen)}
           >
             <Box
               component="img"
-              src={imagenes[0]}
+              src={producto.imagen}
               alt={producto.nombre}
               loading="lazy"
               sx={detalleModalStyles.imagen}
@@ -82,7 +63,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
           </Box>
         )}
 
-        {/* Info */}
+        {/* Descripción + chip */}
         <Box sx={{ textAlign: "center", maxWidth: 700 }}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             {producto.nombre}
