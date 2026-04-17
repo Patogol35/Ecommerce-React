@@ -6,20 +6,29 @@ import {
   Chip,
   Dialog,
 } from "@mui/material";
-import Slider from "react-slick";
 import CloseIcon from "@mui/icons-material/Close";
-import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
+import { useState, useEffect } from "react";
+import detalleModalStyles from "./DetalleModal.styles";
 
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
+  const [imagenActiva, setImagenActiva] = useState(null);
+
   if (!producto) return null;
 
-  // 🔥 UNIFICAR TODAS LAS IMÁGENES (IGUAL QUE EN TU CARD)
+  // 🔥 Unificar imágenes (string + objeto)
   const imagenes = [
     producto.imagen,
     ...(producto.imagenes || []),
   ]
     .map((img) => (typeof img === "string" ? img : img?.imagen))
     .filter(Boolean);
+
+  // 🔥 Reset imagen al abrir modal
+  useEffect(() => {
+    if (open && imagenes.length > 0) {
+      setImagenActiva(imagenes[0]);
+    }
+  }, [open, producto]);
 
   return (
     <Dialog
@@ -28,47 +37,60 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       maxWidth="md"
       fullWidth
       sx={detalleModalStyles.dialog}
-      PaperProps={{ sx: detalleModalStyles.dialogPaper }}
+      PaperProps={{
+        sx: {
+          ...detalleModalStyles.dialogPaper,
+          overflow: "visible",
+        },
+      }}
     >
       <IconButton onClick={onClose} sx={detalleModalStyles.botonCerrar}>
         <CloseIcon />
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* 🔥 Slider */}
-        {imagenes.length > 1 ? (
-          <Box sx={{ width: "100%", maxWidth: 600 }}>
-            <Slider {...sliderSettings}>
-              {imagenes.map((img, i) => (
-                <Box
-                  key={i}
-                  sx={detalleModalStyles.sliderBox}
-                  onClick={() => setLightbox(img)}
-                >
-                  <Box
-                    component="img"
-                    src={img}
-                    alt={producto.nombre}
-                    loading="lazy"
-                    sx={detalleModalStyles.imagen}
-                  />
-                </Box>
-              ))}
-            </Slider>
-          </Box>
-        ) : (
+        {/* 🔥 Imagen principal */}
+        <Box
+          sx={detalleModalStyles.sliderBox}
+          onClick={() => setLightbox(imagenActiva)}
+        >
           <Box
-            sx={detalleModalStyles.sliderBox}
-            onClick={() => setLightbox(imagenes[0])}
-          >
-            <Box
-              component="img"
-              src={imagenes[0]}
-              alt={producto.nombre}
-              loading="lazy"
-              sx={detalleModalStyles.imagen}
-            />
-          </Box>
+            component="img"
+            src={imagenActiva}
+            alt={producto.nombre}
+            loading="lazy"
+            sx={detalleModalStyles.imagen}
+          />
+        </Box>
+
+        {/* 🔥 Miniaturas (igual que tu card) */}
+        {imagenes.length > 1 && (
+          <Stack direction="row" spacing={1} flexWrap="wrap" justifyContent="center">
+            {imagenes.map((img, i) => (
+              <Box
+                key={i}
+                component="img"
+                src={img}
+                alt={`img-${i}`}
+                onClick={() => setImagenActiva(img)}
+                sx={{
+                  width: 60,
+                  height: 60,
+                  objectFit: "cover",
+                  borderRadius: 1,
+                  cursor: "pointer",
+                  border:
+                    imagenActiva === img
+                      ? "2px solid #1976d2"
+                      : "1px solid #777",
+                  transition: "all 0.2s",
+                  "&:hover": {
+                    transform: "scale(1.05)",
+                  },
+                }}
+              />
+            ))}
+          </Stack>
         )}
 
         {/* Info */}
