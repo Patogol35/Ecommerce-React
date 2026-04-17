@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import {
   Box,
   Typography,
@@ -12,34 +11,12 @@ import CloseIcon from "@mui/icons-material/Close";
 import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
-  const [ready, setReady] = useState(false);
-
   if (!producto) return null;
 
-  // 🔥 Espera a que el modal renderice (FIX react-slick)
-  useEffect(() => {
-    if (open) {
-      const t = setTimeout(() => setReady(true), 100);
-      return () => clearTimeout(t);
-    } else {
-      setReady(false);
-    }
-  }, [open]);
-
-  // 🔥 BASE URL (ajusta si estás en producción)
-  const BASE_URL = "http://127.0.0.1:8000";
-
-  // 🔥 Normalizar imágenes
-  const imagenes = [
-    producto.imagen,
-    ...(producto.imagenes?.map((img) =>
-      typeof img === "string"
-        ? img
-        : img.imagen?.startsWith("http")
-        ? img.imagen
-        : BASE_URL + img.imagen
-    ) || []),
-  ].filter(Boolean);
+  // 🔥 NORMALIZACIÓN (LA CLAVE)
+  const imagenes = producto.imagenes?.length
+    ? producto.imagenes.map((img) => img.imagen)
+    : [producto.imagen];
 
   return (
     <Dialog
@@ -55,33 +32,31 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* 🔥 Slider FIXED */}
+        {/* Imagen o slider */}
         {imagenes.length > 1 ? (
           <Box sx={{ width: "100%", maxWidth: 600 }}>
-            {ready && (
-              <Slider key={open} {...sliderSettings}>
-                {imagenes.map((img, i) => (
+            <Slider {...sliderSettings}>
+              {imagenes.map((img, i) => (
+                <Box
+                  key={i}
+                  sx={detalleModalStyles.sliderBox}
+                  onClick={() => setLightbox(img)}
+                >
                   <Box
-                    key={i}
-                    sx={detalleModalStyles.sliderBox}
-                    onClick={() => setLightbox && setLightbox(img)}
-                  >
-                    <Box
-                      component="img"
-                      src={img}
-                      alt={producto.nombre}
-                      loading="lazy"
-                      sx={detalleModalStyles.imagen}
-                    />
-                  </Box>
-                ))}
-              </Slider>
-            )}
+                    component="img"
+                    src={img}
+                    alt={producto.nombre}
+                    loading="lazy"
+                    sx={detalleModalStyles.imagen}
+                  />
+                </Box>
+              ))}
+            </Slider>
           </Box>
         ) : (
           <Box
             sx={detalleModalStyles.sliderBox}
-            onClick={() => setLightbox && setLightbox(imagenes[0])}
+            onClick={() => setLightbox(imagenes[0])}
           >
             <Box
               component="img"
@@ -93,7 +68,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
           </Box>
         )}
 
-        {/* Info */}
+        {/* Descripción + chip */}
         <Box sx={{ textAlign: "center", maxWidth: 700 }}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             {producto.nombre}
@@ -113,4 +88,4 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </Stack>
     </Dialog>
   );
-      }
+                  }
