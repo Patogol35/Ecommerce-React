@@ -113,7 +113,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
                 border:
                   imagenActiva === img
                     ? "2px solid #1976d2"
-                    : "1px solid #ddd",
+                    : "1px solid #999",
               }}
             />
           ))}
