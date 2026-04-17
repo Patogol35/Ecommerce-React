@@ -43,17 +43,19 @@ export default function Login() {
   const [loading, setLoading] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
 
-  const handleChange = useCallback(
-    (e) => setForm({ ...form, [e.target.name]: e.target.value }),
-    [form]
-  );
+  // =====================
+  // HANDLERS
+  // =====================
+  const handleChange = useCallback((e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  }, []);
 
-  const togglePasswordVisibility = useCallback(
-    () => setShowPassword((prev) => !prev),
-    []
-  );
+  const togglePasswordVisibility = useCallback(() => {
+    setShowPassword((prev) => !prev);
+  }, []);
 
-  const validateForm = () => {
+  const validateForm = useCallback(() => {
     for (const key in validators) {
       const error = validators[key](form[key]);
       if (error) {
@@ -62,22 +64,25 @@ export default function Login() {
       }
     }
     return true;
-  };
+  }, [form]);
 
   const handleErrors = useCallback((error) => {
     const data = error?.response?.data;
     const status = error?.response?.status;
 
-    const message =
+    let message =
       data?.message ||
       data?.detail ||
       (status === 401 && "Usuario o contraseña incorrectos");
 
-    if (!message) return toast.error("Ocurrió un error al iniciar sesión");
+    if (!message) {
+      toast.error("Ocurrió un error al iniciar sesión");
+      return;
+    }
 
-    const normalized = message.toLowerCase();
-    if (normalized.includes("credentials"))
-      return toast.error("Usuario o contraseña incorrectos");
+    if (message.toLowerCase().includes("credentials")) {
+      message = "Usuario o contraseña incorrectos";
+    }
 
     toast.error(message);
   }, []);
@@ -87,17 +92,19 @@ export default function Login() {
   // =====================
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validateForm()) return;
+
+    if (loading || !validateForm()) return;
 
     setLoading(true);
     try {
       const data = await apiLogin(form);
 
-      if (!data?.access || !data?.refresh)
-        return toast.error("Credenciales inválidas");
+      if (!data?.access || !data?.refresh) {
+        toast.error("Credenciales inválidas");
+        return;
+      }
 
       login(data.access, data.refresh);
-
       toast.success(`Bienvenido/a, ${form.username} 👋`);
       navigate("/");
     } catch (error) {
@@ -108,9 +115,13 @@ export default function Login() {
   };
 
   // =====================
-  // LOGIN GOOGLE (SIN AXIOS)
+  // LOGIN GOOGLE
   // =====================
   const handleGoogleSuccess = async (credentialResponse) => {
+    if (!credentialResponse?.credential) {
+      return toast.error("Error con Google");
+    }
+
     try {
       const res = await fetch(
         "https://ecommerce-django-e44l.onrender.com/api/google-login/",
@@ -132,7 +143,6 @@ export default function Login() {
       }
 
       login(data.access, data.refresh);
-
       toast.success("Bienvenido con Google 🚀");
       navigate("/");
     } catch (error) {
@@ -213,12 +223,13 @@ export default function Login() {
               variant="contained"
               fullWidth
               disabled={loading}
-              startIcon={
-                loading && <CircularProgress size={20} color="inherit" />
-              }
               sx={loginStyles.botonLogin(theme)}
             >
-              {loading ? "Entrando..." : "Iniciar sesión"}
+              {loading ? (
+                <CircularProgress size={24} color="inherit" />
+              ) : (
+                "Iniciar sesión"
+              )}
             </Button>
 
             <Button
