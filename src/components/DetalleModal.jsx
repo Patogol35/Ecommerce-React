@@ -13,10 +13,11 @@ import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
 
-  // 🔥 NORMALIZACIÓN (LA CLAVE)
-  const imagenes = producto.imagenes?.length
-    ? producto.imagenes.map((img) => img.imagen)
-    : [producto.imagen];
+  // 🔥 CLAVE: incluir imagen principal + adicionales
+  const imagenes = [
+    producto.imagen,
+    ...(producto.imagenes?.map((img) => img.imagen) || []),
+  ].filter(Boolean);
 
   return (
     <Dialog
@@ -88,4 +89,4 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </Stack>
     </Dialog>
   );
-                  }
+}
