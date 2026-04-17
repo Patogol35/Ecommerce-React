@@ -35,10 +35,9 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // ✅ Estado carrusel
+  // ✅ SOLO lógica (no tocamos estilos)
   const [index, setIndex] = useState(0);
 
-  // ✅ Imágenes (principal + extras)
   const imagenes = [
     producto.imagen,
     ...(producto.imagenes?.map((img) => img.imagen) || []),
@@ -64,13 +63,15 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
     }
   };
 
-  const prevImage = () => {
+  const prevImage = (e) => {
+    e.stopPropagation(); // 🔥 evita que dispare click del card
     setIndex((prev) =>
       prev === 0 ? imagenes.length - 1 : prev - 1
     );
   };
 
-  const nextImage = () => {
+  const nextImage = (e) => {
+    e.stopPropagation();
     setIndex((prev) =>
       prev === imagenes.length - 1 ? 0 : prev + 1
     );
@@ -79,24 +80,12 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   return (
     <Card sx={cardSx} elevation={0}>
       {/* Imagen */}
-      <Box
-        sx={{
-          ...imagenBoxSx,
-          position: "relative",
-          height: 200,        // 🔥 tamaño fijo
-          overflow: "hidden", // 🔥 evita desbordes
-        }}
-      >
+      <Box sx={{ ...imagenBoxSx, position: "relative" }}>
         <Box
           component="img"
           src={imagenes[index] || producto.imagen}
           alt={producto.nombre}
-          sx={{
-            ...imagenSx,
-            width: "100%",
-            height: "100%",
-            objectFit: "cover", // 🔥 clave
-          }}
+          sx={imagenSx} // ✅ intacto como tú lo tenías
         />
 
         {/* Flechas */}
@@ -108,10 +97,12 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
               sx={{
                 position: "absolute",
                 left: 5,
-                top: "45%",
-                minWidth: "30px",
-                background: "rgba(0,0,0,0.4)",
+                top: "50%",
+                transform: "translateY(-50%)",
+                minWidth: "28px",
+                padding: 0,
                 color: "#fff",
+                background: "rgba(0,0,0,0.3)",
               }}
             >
               ◀
@@ -123,10 +114,12 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
               sx={{
                 position: "absolute",
                 right: 5,
-                top: "45%",
-                minWidth: "30px",
-                background: "rgba(0,0,0,0.4)",
+                top: "50%",
+                transform: "translateY(-50%)",
+                minWidth: "28px",
+                padding: 0,
                 color: "#fff",
+                background: "rgba(0,0,0,0.3)",
               }}
             >
               ▶
@@ -200,4 +193,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-        }
+          }
