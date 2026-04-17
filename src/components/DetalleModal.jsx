@@ -1,4 +1,5 @@
-    import {
+import { useEffect, useState } from "react";
+import {
   Box,
   Typography,
   Stack,
@@ -11,12 +12,24 @@ import CloseIcon from "@mui/icons-material/Close";
 import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
+  const [ready, setReady] = useState(false);
+
   if (!producto) return null;
 
-  // 🔥 BASE URL (ajusta si usas otro dominio)
+  // 🔥 Espera a que el modal renderice (FIX react-slick)
+  useEffect(() => {
+    if (open) {
+      const t = setTimeout(() => setReady(true), 100);
+      return () => clearTimeout(t);
+    } else {
+      setReady(false);
+    }
+  }, [open]);
+
+  // 🔥 BASE URL (ajusta si estás en producción)
   const BASE_URL = "http://127.0.0.1:8000";
 
-  // 🔥 NORMALIZAR IMÁGENES
+  // 🔥 Normalizar imágenes
   const imagenes = [
     producto.imagen,
     ...(producto.imagenes?.map((img) =>
@@ -42,26 +55,28 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* Slider */}
+        {/* 🔥 Slider FIXED */}
         {imagenes.length > 1 ? (
           <Box sx={{ width: "100%", maxWidth: 600 }}>
-            <Slider {...sliderSettings}>
-              {imagenes.map((img, i) => (
-                <Box
-                  key={i}
-                  sx={detalleModalStyles.sliderBox}
-                  onClick={() => setLightbox && setLightbox(img)}
-                >
+            {ready && (
+              <Slider key={open} {...sliderSettings}>
+                {imagenes.map((img, i) => (
                   <Box
-                    component="img"
-                    src={img}
-                    alt={producto.nombre}
-                    loading="lazy"
-                    sx={detalleModalStyles.imagen}
-                  />
-                </Box>
-              ))}
-            </Slider>
+                    key={i}
+                    sx={detalleModalStyles.sliderBox}
+                    onClick={() => setLightbox && setLightbox(img)}
+                  >
+                    <Box
+                      component="img"
+                      src={img}
+                      alt={producto.nombre}
+                      loading="lazy"
+                      sx={detalleModalStyles.imagen}
+                    />
+                  </Box>
+                ))}
+              </Slider>
+            )}
           </Box>
         ) : (
           <Box
@@ -98,4 +113,4 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </Stack>
     </Dialog>
   );
-}
+      }
