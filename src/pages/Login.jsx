@@ -3,7 +3,6 @@ import { login as apiLogin } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import axios from "axios";
 
 import {
   Container,
@@ -27,7 +26,9 @@ import { GoogleLogin } from "@react-oauth/google";
 
 import loginStyles from "./Login.styles";
 
-// Validaciones
+// =====================
+// VALIDACIONES
+// =====================
 const validators = {
   username: (v) => (!v.trim() ? "El usuario es obligatorio" : null),
   password: (v) => (!v.trim() ? "La contraseña es obligatoria" : null),
@@ -81,7 +82,9 @@ export default function Login() {
     toast.error(message);
   }, []);
 
-  // 🔥 LOGIN NORMAL
+  // =====================
+  // LOGIN NORMAL
+  // =====================
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -104,17 +107,31 @@ export default function Login() {
     }
   };
 
-  // 🔥 LOGIN CON GOOGLE
+  // =====================
+  // LOGIN GOOGLE (SIN AXIOS)
+  // =====================
   const handleGoogleSuccess = async (credentialResponse) => {
     try {
-      const res = await axios.post(
+      const res = await fetch(
         "https://ecommerce-django-e44l.onrender.com/api/google-login/",
         {
-          token: credentialResponse.credential,
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: credentialResponse.credential,
+          }),
         }
       );
 
-      login(res.data.access, res.data.refresh);
+      const data = await res.json();
+
+      if (!res.ok) {
+        throw new Error(data.error || "Error con Google");
+      }
+
+      login(data.access, data.refresh);
 
       toast.success("Bienvenido con Google 🚀");
       navigate("/");
@@ -189,7 +206,7 @@ export default function Login() {
             }}
           />
 
-          {/* Botones */}
+          {/* BOTONES */}
           <Box mt={3} display="flex" flexDirection="column" gap={2}>
             <Button
               type="submit"
@@ -215,14 +232,14 @@ export default function Login() {
           </Box>
         </form>
 
-        {/* 🔥 DIVIDER */}
+        {/* DIVIDER */}
         <Box mt={3} textAlign="center">
           <Typography variant="body2" color="text.secondary">
             o continuar con
           </Typography>
         </Box>
 
-        {/* 🔥 GOOGLE LOGIN */}
+        {/* GOOGLE LOGIN */}
         <Box mt={2} display="flex" justifyContent="center">
           <GoogleLogin
             onSuccess={handleGoogleSuccess}
