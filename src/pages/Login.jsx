@@ -3,6 +3,7 @@ import { login as apiLogin } from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
+import axios from "axios";
 
 import {
   Container,
@@ -21,9 +22,12 @@ import Visibility from "@mui/icons-material/Visibility";
 import VisibilityOff from "@mui/icons-material/VisibilityOff";
 import PersonOutline from "@mui/icons-material/PersonOutline";
 import LockOutlined from "@mui/icons-material/LockOutlined";
+
+import { GoogleLogin } from "@react-oauth/google";
+
 import loginStyles from "./Login.styles";
 
-// Validaciones compactadas
+// Validaciones
 const validators = {
   username: (v) => (!v.trim() ? "El usuario es obligatorio" : null),
   password: (v) => (!v.trim() ? "La contraseña es obligatoria" : null),
@@ -77,6 +81,7 @@ export default function Login() {
     toast.error(message);
   }, []);
 
+  // 🔥 LOGIN NORMAL
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validateForm()) return;
@@ -90,14 +95,32 @@ export default function Login() {
 
       login(data.access, data.refresh);
 
-      // FIX: Template string correcto
       toast.success(`Bienvenido/a, ${form.username} 👋`);
-
       navigate("/");
     } catch (error) {
       handleErrors(error);
     } finally {
       setLoading(false);
+    }
+  };
+
+  // 🔥 LOGIN CON GOOGLE
+  const handleGoogleSuccess = async (credentialResponse) => {
+    try {
+      const res = await axios.post(
+        "https://ecommerce-django-e44l.onrender.com/api/google-login/",
+        {
+          token: credentialResponse.credential,
+        }
+      );
+
+      login(res.data.access, res.data.refresh);
+
+      toast.success("Bienvenido con Google 🚀");
+      navigate("/");
+    } catch (error) {
+      console.error(error);
+      toast.error("Error al iniciar con Google");
     }
   };
 
@@ -157,12 +180,12 @@ export default function Login() {
                 </InputAdornment>
               ),
               endAdornment: (
-  <InputAdornment position="end">
-    <IconButton onClick={togglePasswordVisibility} edge="end">
-      {showPassword ? <Visibility /> : <VisibilityOff />}
-    </IconButton>
-  </InputAdornment>
-),
+                <InputAdornment position="end">
+                  <IconButton onClick={togglePasswordVisibility}>
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              ),
             }}
           />
 
@@ -191,6 +214,21 @@ export default function Login() {
             </Button>
           </Box>
         </form>
+
+        {/* 🔥 DIVIDER */}
+        <Box mt={3} textAlign="center">
+          <Typography variant="body2" color="text.secondary">
+            o continuar con
+          </Typography>
+        </Box>
+
+        {/* 🔥 GOOGLE LOGIN */}
+        <Box mt={2} display="flex" justifyContent="center">
+          <GoogleLogin
+            onSuccess={handleGoogleSuccess}
+            onError={() => toast.error("Error con Google")}
+          />
+        </Box>
       </Paper>
     </Container>
   );
