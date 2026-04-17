@@ -13,11 +13,12 @@ import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
 
-  // 🔥 NORMALIZAR IMÁGENES (IGUAL QUE EN TU CARD)
-  const imagenes = [
-    producto.imagen,
-    ...(producto.imagenes?.map((img) => img.imagen) || []),
-  ].filter(Boolean);
+  // 🔥 Soporta string y objeto { imagen: "" }
+  const imagenes = (
+    producto.imagenes && producto.imagenes.length > 0
+      ? producto.imagenes
+      : [producto.imagen]
+  ).map((img) => (typeof img === "string" ? img : img?.imagen)).filter(Boolean);
 
   return (
     <Dialog
@@ -33,7 +34,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* 🔥 Slider o imagen única */}
+        {/* 🔥 Imagen o slider */}
         {imagenes.length > 1 ? (
           <Box sx={{ width: "100%", maxWidth: 600 }}>
             <Slider {...sliderSettings}>
@@ -57,11 +58,11 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
         ) : (
           <Box
             sx={detalleModalStyles.sliderBox}
-            onClick={() => setLightbox(producto.imagen)}
+            onClick={() => setLightbox(imagenes[0])}
           >
             <Box
               component="img"
-              src={producto.imagen}
+              src={imagenes[0]}
               alt={producto.nombre}
               loading="lazy"
               sx={detalleModalStyles.imagen}
