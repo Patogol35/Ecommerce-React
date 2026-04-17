@@ -13,11 +13,21 @@ import detalleModalStyles, { sliderSettings } from "./DetalleModal.styles";
 export default function DetalleModal({ producto, open, onClose, setLightbox }) {
   if (!producto) return null;
 
-  // 🔥 CLAVE: incluir imagen principal + adicionales
+  const BASE_URL = "http://127.0.0.1:8000";
+
+  // 🔥 NORMALIZAR Y LIMPIAR
   const imagenes = [
     producto.imagen,
-    ...(producto.imagenes?.map((img) => img.imagen) || []),
-  ].filter(Boolean);
+    ...(producto.imagenes || []).map((img) =>
+      typeof img === "string"
+        ? img
+        : img.imagen?.startsWith("http")
+        ? img.imagen
+        : BASE_URL + img.imagen
+    ),
+  ]
+    .filter(Boolean)
+    .filter((img) => img !== "null" && img !== "undefined");
 
   return (
     <Dialog
@@ -33,7 +43,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
       </IconButton>
 
       <Stack spacing={3} alignItems="center">
-        {/* Imagen o slider */}
+        {/* 👇 SOLO USAMOS IMAGENES LIMPIAS */}
         {imagenes.length > 1 ? (
           <Box sx={{ width: "100%", maxWidth: 600 }}>
             <Slider {...sliderSettings}>
@@ -46,9 +56,12 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
                   <Box
                     component="img"
                     src={img}
-                    alt={producto.nombre}
+                    alt={`img-${i}`}
                     loading="lazy"
                     sx={detalleModalStyles.imagen}
+                    onError={(e) => {
+                      e.target.style.display = "none";
+                    }}
                   />
                 </Box>
               ))}
@@ -69,7 +82,7 @@ export default function DetalleModal({ producto, open, onClose, setLightbox }) {
           </Box>
         )}
 
-        {/* Descripción + chip */}
+        {/* Info */}
         <Box sx={{ textAlign: "center", maxWidth: 700 }}>
           <Typography variant="h5" fontWeight="bold" gutterBottom>
             {producto.nombre}
