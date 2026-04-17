@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
 import { toast } from "react-toastify";
-import { useState } from "react";
+import { useState, useMemo } from "react";
 
 import {
   Card,
@@ -37,10 +37,16 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // 🔥 NUEVO: manejo de múltiples imágenes
-  const imagenes = producto.imagenes?.length
-    ? producto.imagenes
-    : [producto.imagen];
+  // 🔥 NORMALIZAR IMÁGENES (clave del fix)
+  const imagenes = useMemo(() => {
+    if (producto?.imagenes && Array.isArray(producto.imagenes)) {
+      return producto.imagenes;
+    }
+    if (producto?.imagen) {
+      return [producto.imagen];
+    }
+    return ["/placeholder.jpg"]; // fallback
+  }, [producto]);
 
   const [index, setIndex] = useState(0);
 
@@ -66,7 +72,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* 🔥 IMAGEN CON SLIDER */}
+      {/* IMAGEN */}
       <Box sx={{ ...imagenBoxSx, position: "relative" }}>
         <Box
           component="img"
@@ -75,11 +81,10 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           sx={imagenSx}
         />
 
-        {/* Flechas */}
+        {/* Flechas SOLO si hay más de una */}
         {imagenes.length > 1 && (
           <>
-            <Button
-              size="small"
+            <Box
               onClick={() =>
                 setIndex((prev) =>
                   prev === 0 ? imagenes.length - 1 : prev - 1
@@ -90,16 +95,17 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
                 left: 5,
                 top: "50%",
                 transform: "translateY(-50%)",
-                minWidth: "30px",
-                background: "rgba(0,0,0,0.4)",
+                cursor: "pointer",
+                background: "rgba(0,0,0,0.3)",
                 color: "#fff",
+                px: 1,
+                borderRadius: 1,
               }}
             >
               ◀
-            </Button>
+            </Box>
 
-            <Button
-              size="small"
+            <Box
               onClick={() =>
                 setIndex((prev) =>
                   prev === imagenes.length - 1 ? 0 : prev + 1
@@ -110,17 +116,19 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
                 right: 5,
                 top: "50%",
                 transform: "translateY(-50%)",
-                minWidth: "30px",
-                background: "rgba(0,0,0,0.4)",
+                cursor: "pointer",
+                background: "rgba(0,0,0,0.3)",
                 color: "#fff",
+                px: 1,
+                borderRadius: 1,
               }}
             >
               ▶
-            </Button>
+            </Box>
           </>
         )}
 
-        {/* Badge nuevo */}
+        {/* Badge */}
         {producto.nuevo && (
           <Chip
             icon={<StarIcon />}
@@ -132,7 +140,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         )}
       </Box>
 
-      {/* 🔥 MINIATURAS */}
+      {/* MINIATURAS */}
       {imagenes.length > 1 && (
         <Stack direction="row" spacing={1} mt={1} px={1}>
           {imagenes.map((img, i) => (
@@ -142,13 +150,15 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
               src={img}
               onClick={() => setIndex(i)}
               sx={{
-                width: 45,
-                height: 45,
+                width: 40,
+                height: 40,
                 objectFit: "cover",
                 cursor: "pointer",
                 border:
-                  index === i ? "2px solid #1976d2" : "1px solid #ccc",
-                borderRadius: "6px",
+                  index === i
+                    ? "2px solid #1976d2"
+                    : "1px solid #ccc",
+                borderRadius: 1,
               }}
             />
           ))}
@@ -161,7 +171,6 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           {producto.nombre}
         </Typography>
 
-        {/* Precio */}
         <Stack
           direction="row"
           alignItems="center"
@@ -176,7 +185,6 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
         <Divider sx={dividerSx} />
 
-        {/* BOTONES */}
         <Stack spacing={1}>
           <Button
             variant="contained"
