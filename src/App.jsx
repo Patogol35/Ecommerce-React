@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
+import { GoogleOAuthProvider } from "@react-oauth/google";
 
 import Home from "./pages/Home";
 import Login from "./pages/Login";
@@ -15,42 +16,44 @@ import Layout from "./components/Layout";
 
 function App() {
   return (
-    <BrowserRouter>
-      <AuthProvider>
-        <CarritoProvider>
-          <Routes>
-            <Route element={<Layout />}>
-              <Route path="/" element={<Home />} />
-              <Route path="/login" element={<Login />} />
-              <Route path="/register" element={<Register />} />
+    <GoogleOAuthProvider clientId="TU_CLIENT_ID">
+      <BrowserRouter>
+        <AuthProvider>
+          <CarritoProvider>
+            <Routes>
+              <Route element={<Layout />}>
+                <Route path="/" element={<Home />} />
+                <Route path="/login" element={<Login />} />
+                <Route path="/register" element={<Register />} />
 
-              <Route
-                path="/carrito"
-                element={
-                  <ProtectedRoute>
-                    <Carrito />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/carrito"
+                  element={
+                    <ProtectedRoute>
+                      <Carrito />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/pedidos"
-                element={
-                  <ProtectedRoute>
-                    <Pedidos />
-                  </ProtectedRoute>
-                }
-              />
+                <Route
+                  path="/pedidos"
+                  element={
+                    <ProtectedRoute>
+                      <Pedidos />
+                    </ProtectedRoute>
+                  }
+                />
 
-              <Route
-                path="/producto/:id"
-                element={<ProductoDetalle />}
-              />
-            </Route>
-          </Routes>
-        </CarritoProvider>
-      </AuthProvider>
-    </BrowserRouter>
+                <Route
+                  path="/producto/:id"
+                  element={<ProductoDetalle />}
+                />
+              </Route>
+            </Routes>
+          </CarritoProvider>
+        </AuthProvider>
+      </BrowserRouter>
+    </GoogleOAuthProvider>
   );
 }
 
