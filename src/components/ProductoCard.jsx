@@ -35,9 +35,10 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
-  // Carrusel
-  const [index, setIndex] = useState(0);
+  // 👇 imagen seleccionada
+  const [imagenActiva, setImagenActiva] = useState(producto.imagen);
 
+  // 👇 todas las imágenes
   const imagenes = [
     producto.imagen,
     ...(producto.imagenes?.map((img) => img.imagen) || []),
@@ -63,74 +64,16 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
     }
   };
 
-  const prevImage = (e) => {
-    e.stopPropagation();
-    setIndex((prev) =>
-      prev === 0 ? imagenes.length - 1 : prev - 1
-    );
-  };
-
-  const nextImage = (e) => {
-    e.stopPropagation();
-    setIndex((prev) =>
-      prev === imagenes.length - 1 ? 0 : prev + 1
-    );
-  };
-
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* Imagen */}
-      <Box sx={{ ...imagenBoxSx, position: "relative" }}>
+      {/* Imagen principal (MISMO TAMAÑO QUE SIEMPRE) */}
+      <Box sx={imagenBoxSx}>
         <Box
           component="img"
-          src={imagenes[index] || producto.imagen}
+          src={imagenActiva}
           alt={producto.nombre}
-          sx={{
-            ...imagenSx,
-            maxWidth: "100%",
-            maxHeight: "100%",
-            objectFit: "contain", // 🔥 mantiene proporción sin agrandar
-          }}
+          sx={imagenSx}
         />
-
-        {/* Flechas */}
-        {imagenes.length > 1 && (
-          <>
-            <Button
-              size="small"
-              onClick={prevImage}
-              sx={{
-                position: "absolute",
-                left: 5,
-                top: "50%",
-                transform: "translateY(-50%)",
-                minWidth: "28px",
-                padding: 0,
-                color: "#fff",
-                background: "rgba(0,0,0,0.3)",
-              }}
-            >
-              ◀
-            </Button>
-
-            <Button
-              size="small"
-              onClick={nextImage}
-              sx={{
-                position: "absolute",
-                right: 5,
-                top: "50%",
-                transform: "translateY(-50%)",
-                minWidth: "28px",
-                padding: 0,
-                color: "#fff",
-                background: "rgba(0,0,0,0.3)",
-              }}
-            >
-              ▶
-            </Button>
-          </>
-        )}
 
         {producto.nuevo && (
           <Chip
@@ -142,6 +85,40 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           />
         )}
       </Box>
+
+      {/* 🔥 Miniaturas clicables */}
+      {imagenes.length > 1 && (
+        <Stack
+          direction="row"
+          spacing={1}
+          sx={{
+            px: 1,
+            mt: 1,
+            justifyContent: "center",
+          }}
+        >
+          {imagenes.map((img, i) => (
+            <Box
+              key={i}
+              component="img"
+              src={img}
+              alt={`img-${i}`}
+              onClick={() => setImagenActiva(img)}
+              sx={{
+                width: 45,
+                height: 45,
+                objectFit: "cover",
+                borderRadius: 1,
+                cursor: "pointer",
+                border:
+                  imagenActiva === img
+                    ? "2px solid #1976d2"
+                    : "1px solid #ddd",
+              }}
+            />
+          ))}
+        </Stack>
+      )}
 
       {/* Contenido */}
       <Box sx={contenidoSx}>
@@ -198,4 +175,4 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       </Box>
     </Card>
   );
-}
+          }
