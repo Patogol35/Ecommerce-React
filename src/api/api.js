@@ -29,6 +29,7 @@ async function authFetch(url, options = {}, token) {
 
   let res = await fetch(url, { ...options, headers });
 
+  // Auto-refresh del token
   if (res.status === 401 && localStorage.getItem("refresh")) {
     try {
       const newTokens = await refreshToken(localStorage.getItem("refresh"));
@@ -41,7 +42,6 @@ async function authFetch(url, options = {}, token) {
           ...(options.body && { "Content-Type": "application/json" }),
           Authorization: `Bearer ${token}`,
         };
-
         res = await fetch(url, { ...options, headers });
       }
     } catch (err) {
@@ -52,6 +52,7 @@ async function authFetch(url, options = {}, token) {
     }
   }
 
+  // Leer la respuesta como texto primero
   const text = await res.text();
   let data = null;
 
@@ -61,9 +62,12 @@ async function authFetch(url, options = {}, token) {
     data = null;
   }
 
+  // -----------------------
+  //  FIX IMPORTANTE AQUÍ 👇
+  // -----------------------
   if (!res.ok) {
     const error = new Error("Error en la petición");
-    error.response = { data };
+    error.response = { data }; // ← Esto permite usar resp.username/email/password en el frontend
     throw error;
   }
 
@@ -71,8 +75,10 @@ async function authFetch(url, options = {}, token) {
 }
 
 // =====================
-// AUTH
+// ENDPOINTS
 // =====================
+
+// AUTH
 export const login = async (credentials) => {
   return authFetch(`${BASE_URL}/token/`, {
     method: "POST",
@@ -87,36 +93,31 @@ export const register = async (data) => {
   });
 };
 
-// =====================
 // PRODUCTOS
-// =====================
 export const getProductos = async (params = {}) => {
   const query = new URLSearchParams(params).toString();
   const url = query ? `${BASE_URL}/productos/?${query}` : `${BASE_URL}/productos/`;
   return authFetch(url, { method: "GET" });
 };
 
-// =====================
 // CATEGORÍAS
-// =====================
 export const getCategorias = async () => {
   return authFetch(`${BASE_URL}/categorias/`, { method: "GET" });
 };
 
 // =====================
-// 🛒 CARRITO
+// CARRITO
 // =====================
 export const getCarrito = async (token) => {
   return authFetch(`${BASE_URL}/carrito/`, { method: "GET" }, token);
 };
 
-// 🔥 CAMBIO AQUÍ
-export const agregarAlCarrito = async (variante_id, cantidad = 1, token) => {
+export const agregarAlCarrito = async (producto_id, cantidad = 1, token) => {
   return authFetch(
     `${BASE_URL}/carrito/agregar/`,
     {
       method: "POST",
-      body: JSON.stringify({ variante_id, cantidad }),
+      body: JSON.stringify({ producto_id, cantidad }),
     },
     token
   );
@@ -141,9 +142,7 @@ export const setCantidadItem = async (itemId, cantidad, token) => {
   );
 };
 
-// =====================
 // PEDIDOS
-// =====================
 export const crearPedido = async (token) => {
   return authFetch(`${BASE_URL}/pedido/crear/`, { method: "POST" }, token);
 };
@@ -156,9 +155,7 @@ export const getPedidos = async (token, page = 1) => {
   );
 };
 
-// =====================
 // PERFIL
-// =====================
 export const getUserProfile = async (token) => {
   return authFetch(`${BASE_URL}/user/profile/`, { method: "GET" }, token);
 };
