@@ -52,7 +52,7 @@ export function CarritoProvider({ children }) {
             ? {
                 ...it,
                 cantidad: cantidadFinal,
-                subtotal: cantidadFinal * it.producto.precio,
+                subtotal: cantidadFinal * it.variante.precio, // 🔥 FIX
               }
             : it
         ),
@@ -65,10 +65,12 @@ export function CarritoProvider({ children }) {
     }
   };
 
-  const agregarAlCarrito = async (producto_id, cantidad = 1) => {
+  // 🔥 CAMBIO IMPORTANTE
+  const agregarAlCarrito = async (variante_id, cantidad = 1) => {
     if (!access) throw new Error("Debes iniciar sesión.");
+
     try {
-      const nuevoItem = await apiAgregar(producto_id, cantidad, access);
+      const nuevoItem = await apiAgregar(variante_id, cantidad, access);
 
       setCarrito((prev) => {
         const items = prev.items.filter((it) => it.id !== nuevoItem.id);
@@ -77,13 +79,14 @@ export function CarritoProvider({ children }) {
     } catch (e) {
       console.error(e);
       throw new Error(
-        e?.response?.data?.error || e.message || "No se pudo agregar el producto"
+        e?.response?.data?.error || e.message || "No se pudo agregar al carrito"
       );
     }
   };
 
   const eliminarItem = async (itemId) => {
     if (!access) throw new Error("Debes iniciar sesión.");
+
     try {
       await apiEliminar(itemId, access);
 
