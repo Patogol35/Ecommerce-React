@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import { useCarrito } from "../context/CarritoContext";
@@ -35,6 +35,14 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
   const { agregarAlCarrito } = useCarrito();
   const navigate = useNavigate();
 
+  // 🔥 TODAS LAS VARIANTES
+  const variantes = producto.variantes || [];
+
+  // 🔥 seleccionar variante por defecto (la primera)
+  const [varianteSeleccionada, setVarianteSeleccionada] = useState(
+    variantes[0] || null
+  );
+
   // 👇 imagen seleccionada
   const [imagenActiva, setImagenActiva] = useState(producto.imagen);
 
@@ -44,6 +52,18 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
     ...(producto.imagenes?.map((img) => img.imagen) || []),
   ].filter(Boolean);
 
+  // 🔥 precio dinámico
+  const precioMostrar = varianteSeleccionada
+    ? varianteSeleccionada.precio
+    : variantes.length > 0
+    ? Math.min(...variantes.map((v) => v.precio))
+    : producto.precio;
+
+  // 🔥 stock dinámico
+  const stockDisponible = varianteSeleccionada
+    ? varianteSeleccionada.stock
+    : variantes.reduce((acc, v) => acc + v.stock, 0);
+
   const onAdd = async () => {
     if (!isAuthenticated) {
       toast.warn("Debes iniciar sesión para agregar productos");
@@ -51,13 +71,18 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
       return;
     }
 
+    if (!varianteSeleccionada) {
+      toast.warn("Selecciona una variante");
+      return;
+    }
+
     if (onAgregar) {
-      onAgregar(producto);
+      onAgregar(varianteSeleccionada);
       return;
     }
 
     try {
-      await agregarAlCarrito(producto.id, 1);
+      await agregarAlCarrito(varianteSeleccionada.id, 1);
       toast.success(`${producto.nombre} agregado al carrito ✅`);
     } catch (e) {
       toast.error(e.message);
@@ -66,7 +91,7 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
 
   return (
     <Card sx={cardSx} elevation={0}>
-      {/* Imagen principal (MISMO TAMAÑO QUE SIEMPRE) */}
+      {/* Imagen */}
       <Box sx={imagenBoxSx}>
         <Box
           component="img"
@@ -86,17 +111,9 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
         )}
       </Box>
 
-      {/* 🔥 Miniaturas clicables */}
+      {/* Miniaturas */}
       {imagenes.length > 1 && (
-        <Stack
-          direction="row"
-          spacing={1}
-          sx={{
-            px: 1,
-            mt: 1,
-            justifyContent: "center",
-          }}
-        >
+        <Stack direction="row" spacing={1} sx={{ px: 1, mt: 1, justifyContent: "center" }}>
           {imagenes.map((img, i) => (
             <Box
               key={i}
@@ -126,16 +143,28 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
           {producto.nombre}
         </Typography>
 
+        {/* 🔥 VARIANTES (selector simple) */}
+        {variantes.length > 0 && (
+          <Stack direction="row" spacing={1} sx={{ mb: 1, flexWrap: "wrap" }}>
+            {variantes.map((v) => (
+              <Chip
+                key={v.id}
+                label={v.nombre}
+                clickable
+                color={
+                  varianteSeleccionada?.id === v.id ? "primary" : "default"
+                }
+                onClick={() => setVarianteSeleccionada(v)}
+              />
+            ))}
+          </Stack>
+        )}
+
         {/* Precio */}
-        <Stack
-          direction="row"
-          alignItems="center"
-          spacing={0.5}
-          sx={precioStackSx}
-        >
+        <Stack direction="row" alignItems="center" spacing={0.5} sx={precioStackSx}>
           <MonetizationOnIcon color="primary" />
           <Typography variant="h6" color="primary" fontWeight="bold">
-            {producto.precio}
+            ${precioMostrar}
           </Typography>
         </Stack>
 
@@ -148,11 +177,11 @@ export default function ProductoCard({ producto, onVerDetalle, onAgregar }) {
             color="primary"
             fullWidth
             startIcon={<AddShoppingCartIcon />}
-            sx={botonAgregarSx(producto.stock)}
+            sx={botonAgregarSx(stockDisponible)}
             onClick={onAdd}
-            disabled={producto.stock === 0}
+            disabled={stockDisponible === 0}
           >
-            {producto.stock > 0 ? "Agregar al carrito" : "Agotado"}
+            {stockDisponible > 0 ? "Agregar al carrito" : "Agotado"}
           </Button>
 
           <Button
